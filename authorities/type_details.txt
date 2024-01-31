@@ -1,0 +1,11 @@
+acct_xfer
+ach_credit
+ach_debit
+check_paid
+debit_card
+fee_transaction
+loan_pmt
+misc_credit
+misc_debit
+wire_incoming
+\.

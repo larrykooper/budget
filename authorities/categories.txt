@@ -1,0 +1,56 @@
+Alcohol & Bars
+Birding
+Books
+Building Staff
+Cash & ATM
+Charity
+Clothing
+Coffee Shops
+Credit Card Membership Fees
+Dentist
+Doctor
+Education Books & Supplies
+Electronics & Software
+Entertainment NEC
+Fast Food
+Federal Tax
+Finance Charges
+Food Delivery
+Gas & Fuel
+Gifts
+Groceries
+Hair Care
+Health Insurance
+Hobbies
+Home Furnishings
+Home Improvement
+Home Insurance
+Home Services
+Home Supplies
+Internet
+Investments
+Late Fees
+Laundry
+Mobile Phone
+Mortgage & Rent
+Movies
+Museums
+Music
+Newspapers & Magazines
+Office Supplies
+Pharmacy
+Public Transportation
+Rental Cars
+Restaurants
+Shopping NEC
+Sporting Goods
+State Tax
+Taxis & Taxi Apps
+Television
+Theater
+Tuition
+Uncategorized
+Utilities
+Vacation
+Vision Care
+\.
