@@ -1,4 +1,5 @@
 credit
 debit
 transfer
+unknown
 \.

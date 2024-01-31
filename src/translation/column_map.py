@@ -6,8 +6,8 @@ class ColumnMap:
         "Transaction Date": "transaction_date",
         "Post Date": "post_date",
         "Description": "description",
-        "Category": "AUTHORITY",
-        "Type": "AUTHORITY",
+        "Category": "CATEGORY",
+        "Type": "TRANSACTION_TYPE",
         "Amount": "amount",  #  must reverse sign 
         "Memo": "DROP"
     }

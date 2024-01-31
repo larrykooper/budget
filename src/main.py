@@ -5,7 +5,9 @@ from sqlalchemy.orm import sessionmaker
 from src.adapters.larry_repository import LarryRepository
 from src.authorities.authority_finder import AuthorityFinder
 from src.models.line_item import LineItem
+from src.translation.category_setter import CategorySetter
 from src.translation.column_map import ColumnMap
+from src.translation.transaction_type_setter import TransactionTypeSetter
 from src.translation.translator import Translator
 
 # Start things up - initialize the repo 
@@ -29,6 +31,8 @@ account_id = authority_finder.authority_lookup("account", account)
 # App-specific initialization 
 
 translator = Translator()
+category_setter = CategorySetter()
+trans_type_setter = TransactionTypeSetter()
 
 # Reading file stuff
 
@@ -37,17 +41,20 @@ filepath = '/Users/larry1mbp/mycode/python/budget/sample_data/Chase3307_small.CS
 with open(filepath, mode='r') as f:
     csv_reader = csv.DictReader(f)
     line_count = 0
-    for row in csv_reader:
+    for row in csv_reader:        
         if line_count == 0:
             translator.process_first_line()
         line_item_dict = {"account_id": account_id}    
-        # Iterate thru the fields in this line
-        #  Refactor this later? 
+        # Iterate thru the fields in this line       
         for csv_key, value in row.items():
             db_key = ColumnMap.chase_cc_map[csv_key]
             match db_key:
-                case "AUTHORITY":
-                    print("looking up authority now")
+                case "CATEGORY":
+                    cat = category_setter.get_category(value, row["Description"])
+                    line_item_dict["category_id"] = cat
+                case "TRANSACTION_TYPE":
+                    trans_type_id = trans_type_setter.get_trans_type(value)
+                    line_item_dict["transaction_type_id"] = trans_type_id                    
                 case "DROP":
                     pass
                 case _:            

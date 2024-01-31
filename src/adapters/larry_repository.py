@@ -18,15 +18,15 @@ class LarryRepository(AbstractRepository):
         VALUES (%s, %s, %s, %s, %s, %s, %s)          
         """
         values = (
-            line_item["transaction_date"], 
-            line_item["post_date"],   
-            line_item["description"],           
-            line_item["amount"], 
-            line_item["category_id"], 
-            line_item["transaction_type_id"],
-            line_item["account_id"]
+            line_item.transaction_date, 
+            line_item.post_date,   
+            line_item.description,           
+            line_item.amount, 
+            line_item.category_id, 
+            line_item.transaction_type_id,
+            line_item.account_id
         )  
-        with mydb.db_cursor as cur:    
+        with mydb.db_cursor() as cur:    
             cur.execute(query, values)
 
 
@@ -34,5 +34,5 @@ class LarryRepository(AbstractRepository):
         query = """
         SELECT * FROM line_item
         """
-        with mydb.db_cursor as cur:
+        with mydb.db_cursor() as cur:
             cur.execute(query)
