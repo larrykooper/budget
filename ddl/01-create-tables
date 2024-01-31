@@ -1,4 +1,4 @@
-CREATE TABLE spending(
+CREATE TABLE line_item(
   id SERIAL,
   transaction_date DATE,
   post_date DATE, 
