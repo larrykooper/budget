@@ -2,18 +2,20 @@ from datetime import date
 from decimal import * 
 from typing import Optional 
 
-class LineItem:
+
+class LineItem:  
+
     def __init__(
-        self, 
+        self,
         transaction_date: date,
         post_date: date,
         description: str,
-        amount: Decimal, 
+        amount: Decimal,
         category_id: int,
         transaction_type_id: int,
         account_id: int,
-        check_number: str,
-        type_detail_id: Optional[int]
+        check_number: Optional[str] = None,
+        type_detail_id: Optional[int] = None      
     ):
         self.transaction_date = transaction_date
         self.post_date = post_date
@@ -24,3 +26,7 @@ class LineItem:
         self.account_id = account_id
         self.check_number = check_number
         self.type_detail_id = type_detail_id
+
+    
+    
+        
