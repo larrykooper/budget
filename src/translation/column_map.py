@@ -8,6 +8,6 @@ class ColumnMap:
         "Description": "description",
         "Category": "CATEGORY",
         "Type": "TRANSACTION_TYPE",
-        "Amount": "amount",  #  must reverse sign 
+        "Amount": "AMOUNT",  
         "Memo": "DROP"
     }

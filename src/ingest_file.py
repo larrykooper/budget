@@ -10,8 +10,7 @@ from src.translation.column_map import ColumnMap
 from src.translation.transaction_type_setter import TransactionTypeSetter
 from src.translation.translator import Translator
 
-# Start things up - initialize the repo 
-
+# Intialize the repo 
 
 repo = LarryRepository()
 authority_finder = AuthorityFinder()
@@ -34,7 +33,7 @@ translator = Translator()
 category_setter = CategorySetter()
 trans_type_setter = TransactionTypeSetter()
 
-# Reading file stuff
+# Reading the file 
 
 filepath = '/Users/larry1mbp/mycode/python/budget/sample_data/Chase3307_small.CSV'
 
@@ -54,7 +53,9 @@ with open(filepath, mode='r') as f:
                     line_item_dict["category_id"] = cat
                 case "TRANSACTION_TYPE":
                     trans_type_id = trans_type_setter.get_trans_type(value)
-                    line_item_dict["transaction_type_id"] = trans_type_id                    
+                    line_item_dict["transaction_type_id"] = trans_type_id  
+                case "AMOUNT":
+                    line_item_dict['amount'] = -1 * value                       
                 case "DROP":
                     pass
                 case _:            

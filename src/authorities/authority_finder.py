@@ -1,19 +1,25 @@
-import src.adapters.mydb as mydb 
+import src.flask_app.database.db_pool as db_pool 
 
-class AuthorityFinder:
-    
+class AuthorityFinder:    
 
     def authority_lookup(self, table: str, name: str) -> int:
+        """
+        Used when ingesting bank data
+        """
         query = f"""
             SELECT id FROM {table}
-            WHERE name = %s
+            WHERE name = %(name)s
         """
-        values = (name, )
-        with mydb.db_cursor() as cur:    
-            cur.execute(query, values)
-            result = cur.fetchone()   
-        if result:
-            return result[0] 
-        else:
-            return None 
+        params = {'name': name}
+        data = db_pool.get_data(query, params, single_row=True)
+        return data 
+    
+    def authority_display(self, table: str, id: int) -> str:
+        query = f"""
+            SELECT name FROM {table}
+            WHERE id = %(id)s
+        """
+        params = {'id': id} 
+        data = db_pool.get_data(query, params, single_row=True)
+        return data['name']    
 

@@ -27,9 +27,7 @@ class LarryRepository(AbstractRepository):
             'account_id': line_item.account_id
         }
         results = db_pool.insert(query, params)
-        return results 
-
-       
+        return results      
 
 
     def get(self):
