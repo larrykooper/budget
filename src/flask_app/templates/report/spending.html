@@ -1,0 +1,25 @@
+<!-- display one line for each line item  -->
+<h1>Spending Report</h1>
+
+
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{% block title %} Spending {% endblock %}</h1>
+    {% for line_item in line_items %}
+        <div class='line_item'>
+            {{ line_item['transaction_date'] }} 
+            {{ line_item['post_date'] }} 
+            {{ line_item['description'] }}
+            {{ line_item['amount']}}
+            {{ line_item['category_id'] }}
+            {{ line_item['transaction_type_id']}}
+            {{ line_item['account_id']}}
+            {{ line_item['check_number'] }}
+            {{ line_item['type_detail_id']}}
+
+            
+        </div>
+    {% endfor %}
+{% endblock %}
+
