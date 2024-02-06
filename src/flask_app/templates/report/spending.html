@@ -7,6 +7,20 @@
 {% block content %}
     <h1>{% block title %}{% endblock %}</h1>
     <table>
+        
+        <tr>
+            <th>Transaction Date</th>
+            <th>Post Date</th>
+            <th>Description</th>
+            <th>Amount</th>
+            <th>Category</th>
+            <th>Transaction Type</th>
+            <th>Account Name</th>
+            <th>Check Number</th>
+            <th>Type Detail</th>
+        </tr>
+       
+        
     {% for line_item in line_items %}
         <tr class='line_item'>
             <td>{{ line_item['transaction_date'] }}</td> 
@@ -17,11 +31,10 @@
             <td>{{ line_item['transaction_type_id']}}</td> 
             <td>{{ line_item['account_id']}}</td> 
             <td>{{ line_item['check_number'] }}</td> 
-            <td>{{ line_item['type_detail_id']}}</td> 
-
-            
+            <td>{{ line_item['type_detail_id']}}</td>             
         </tr>
     {% endfor %}
+   
     </table>
 {% endblock %}
 
