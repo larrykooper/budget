@@ -8,7 +8,6 @@ from random import random
 import src.adapters.config as config 
 
 
-
 pool_default = psycopg_pool.ConnectionPool(config.DATABASE_STRING,
                                             min_size=config.POOL_MIN_SIZE,
                                             max_size=config.POOL_MAX_SIZE,
