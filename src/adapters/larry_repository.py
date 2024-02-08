@@ -20,12 +20,13 @@ class LarryRepository(AbstractRepository):
         params = {
             'transaction_date': line_item.transaction_date, 
             'post_date': line_item.post_date,   
-            'description':line_item.description,           
+            'description': line_item.description,           
             'amount': line_item.amount, 
             'category_id': line_item.category_id, 
             'transaction_type_id': line_item.transaction_type_id,
             'account_id': line_item.account_id
-        }
+        }        
+
         results = db_pool.insert(query, params)
         return results      
 
