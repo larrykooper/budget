@@ -12,7 +12,7 @@ class TransactionTypeSetter:
             type_to_lookup = input_type     
         id = authority_finder.authority_lookup("transaction_type", type_to_lookup)
         if id:
-            return id 
+            return id
         else: 
             return TransactionType.id_for_unknown()
 

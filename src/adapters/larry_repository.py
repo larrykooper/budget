@@ -11,20 +11,40 @@ class LarryRepository(AbstractRepository):
     def add(self, line_item):
         print("in repo add")
 
-        qry4 = """
-        INSERT INTO line_item (transaction_date, description, account_id, amount, check_number)  
-            VALUES (now(), %(description)s, %(account_id)s, %(amount)s, %(check_number)s);
+        transaction_date = line_item.transaction_date
+        post_date = line_item.post_date
+        description = line_item.description
+        amount = line_item.amount
+        category_id = line_item.category_id
+        transaction_type_id = line_item.transaction_type_id
+        account_id = line_item.account_id 
+        #breakpoint()
+
+        query = """
+        INSERT INTO line_item (
+            transaction_date,
+            post_date,
+            description,
+            amount,
+            category_id,
+            transaction_type_id,
+            account_id
+        )  
+        
+            VALUES (%(transaction_date)s, %(post_date)s, %(description)s, %(amount)s, %(category_id)s, %(transaction_type_id)s, %(account_id)s);
         """
         
-        amount = Decimal('20.32')
-        check_number = '9787'
+        # amount = Decimal('20.32')
+        # check_number = '9787'
 
-        params_both = {
-            'description': "Larry larry larry",
-            'account_id': 170,
+        params = {
+            'transaction_date': transaction_date,
+            'post_date': post_date,
+            'description': description,
             'amount': amount,
-            'check_number': check_number 
-            
+            'category_id': category_id,
+            'transaction_type_id': transaction_type_id,
+            'account_id': account_id          
         }
 
 
@@ -68,7 +88,7 @@ class LarryRepository(AbstractRepository):
         with sel_pool.connection() as conn:
             cur = conn.cursor(row_factory=psycopg.rows.dict_row)
 
-            cur.execute(qry4, params_both)
+            cur.execute(query, params)
             conn.commit()
 
 

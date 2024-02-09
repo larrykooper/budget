@@ -12,7 +12,11 @@ class AuthorityFinder:
         """
         params = {'name': name}
         data = db_pool.get_data(query, params, single_row=True)
-        return data 
+        if data:
+            return data['id']
+        else: 
+            return None
+       
     
     def authority_display(self, table: str, id: int) -> str:
         query = f"""
