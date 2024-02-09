@@ -12,7 +12,6 @@ from src.translation.translator import Translator
 def ingest_file():
 
     # Intialize the repo
-    print("starting ingest_file")  # debug
 
     repo = LarryRepository()
     authority_finder = AuthorityFinder()
@@ -66,12 +65,6 @@ def ingest_file():
 
             line_item = LineItem(**line_item_dict)
             line_count += 1
-            print("I am adding a line item")
-
-            """
-            type(line_item)
-            <class 'src.models.line_item.LineItem'>
-            """
             repo.add(line_item)
 
 

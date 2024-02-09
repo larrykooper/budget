@@ -1,11 +1,9 @@
 from collections import defaultdict
-import logging
 import psycopg
 import psycopg_pool
 import threading
 import time
-from random import random
-import src.adapters.config as config 
+import src.adapters.config as config
 
 
 pool_default = psycopg_pool.ConnectionPool(config.DATABASE_STRING,
@@ -134,7 +132,7 @@ def _execute_query(sql_raw, params, qry_type, pool_name='default'):
     with sel_pool.connection() as conn:
         cur = conn.cursor(row_factory=psycopg.rows.dict_row)
 
-       
+
         if qry_type == 'sel_multi':
             results = cur.execute(sql_raw, params).fetchall()
         elif qry_type == 'sel_single':
@@ -149,12 +147,9 @@ def _execute_query(sql_raw, params, qry_type, pool_name='default'):
             results = True
         else:
             raise Exception('Invalid query type defined.')
-        
+
 
     return results
-
-
-
 
 def _create_log_table():
     sql_raw = """CREATE TABLE IF NOT EXISTS public.psycopg3_pool_log
