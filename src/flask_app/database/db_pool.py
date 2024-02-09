@@ -134,29 +134,22 @@ def _execute_query(sql_raw, params, qry_type, pool_name='default'):
     with sel_pool.connection() as conn:
         cur = conn.cursor(row_factory=psycopg.rows.dict_row)
 
-        try:
-            if qry_type == 'sel_multi':
-                results = cur.execute(sql_raw, params).fetchall()
-            elif qry_type == 'sel_single':
-                results = cur.execute(sql_raw, params).fetchone()
-            elif qry_type == 'insert':
-                cur.execute(sql_raw, params)
-                conn.commit()
-                results = True
-            elif qry_type == 'update':
-                cur.execute(sql_raw, params)
-                conn.commit()
-                results = True
-            else:
-                raise Exception('Invalid query type defined.')
-        except psycopg.OperationalError as err:
-            current_app.logger.error(f'Error querying: {err}')
-        except psycopg.ProgrammingError as err:
-            current_app.logger.error('Database error via psycopg.  %s', err)
-            results = False
-        except psycopg.IntegrityError as err:
-            current_app.logger.error('PostgreSQL integrity error via psycopg.  %s', err)
-            results = False
+       
+        if qry_type == 'sel_multi':
+            results = cur.execute(sql_raw, params).fetchall()
+        elif qry_type == 'sel_single':
+            results = cur.execute(sql_raw, params).fetchone()
+        elif qry_type == 'insert':
+            cur.execute(sql_raw, params)
+            conn.commit()
+            results = True
+        elif qry_type == 'update':
+            cur.execute(sql_raw, params)
+            conn.commit()
+            results = True
+        else:
+            raise Exception('Invalid query type defined.')
+        
 
     return results
 

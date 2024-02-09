@@ -1,6 +1,4 @@
 import csv
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
 
 from src.adapters.larry_repository import LarryRepository
 from src.authorities.authority_finder import AuthorityFinder
@@ -10,70 +8,78 @@ from src.translation.column_map import ColumnMap
 from src.translation.transaction_type_setter import TransactionTypeSetter
 from src.translation.translator import Translator
 
-# Intialize the repo 
+def ingest_file():
 
-repo = LarryRepository()
-authority_finder = AuthorityFinder()
+    # Intialize the repo 
+    print("starting ingest_file")  # debug 
 
-#  version 0 - file path is hard coded 
-#  version 1 - user puts the file path on command line
-#  version 2 - User can browse in a dialog box for the file name 
+    repo = LarryRepository()
+    authority_finder = AuthorityFinder()
 
-"""
-I have to tell the program which account the file being uploaded is for.
-Version 0 - I will hard-code the account
-""" 
+    #  version 0 - file path is hard coded 
+    #  version 1 - user puts the file path on command line
+    #  version 2 - User can browse in a dialog box for the file name 
 
-account = "Amazon-3307"
-account_id = authority_finder.authority_lookup("account", account)
+    """
+    I have to tell the program which account the file being uploaded is for.
+    Version 0 - I will hard-code the account
+    """ 
 
-# App-specific initialization 
+    account = "Amazon-3307"
+    account_id = authority_finder.authority_lookup("account", account)
 
-translator = Translator()
-category_setter = CategorySetter()
-trans_type_setter = TransactionTypeSetter()
+    # App-specific initialization 
 
-# Reading the file 
+    translator = Translator()
+    category_setter = CategorySetter()
+    trans_type_setter = TransactionTypeSetter()
 
-filepath = '/Users/larry1mbp/mycode/python/budget/sample_data/Chase3307_small.CSV'
+    # Reading the file 
 
-with open(filepath, mode='r') as f:
-    csv_reader = csv.DictReader(f)
-    line_count = 0
-    for row in csv_reader:        
-        if line_count == 0:
-            translator.process_first_line()
-        line_item_dict = {"account_id": account_id}    
-        # Iterate thru the fields in this line       
-        for csv_key, value in row.items():
-            db_key = ColumnMap.chase_cc_map[csv_key]
-            match db_key:
-                case "CATEGORY":
-                    cat = category_setter.get_category(value, row["Description"])
-                    line_item_dict["category_id"] = cat
-                case "TRANSACTION_TYPE":
-                    trans_type_id = trans_type_setter.get_trans_type(value)
-                    line_item_dict["transaction_type_id"] = trans_type_id  
-                case "AMOUNT":
-                    line_item_dict['amount'] = -1 * value                       
-                case "DROP":
-                    pass
-                case _:            
-                    line_item_dict[db_key] = value
-          
-        line_item = LineItem(**line_item_dict)       
-        line_count += 1   
-        print("I am adding a line item")
-        repo.add(line_item)
+    filepath = '/Users/larry1mbp/mycode/python/budget/sample_data/Chase3307_small.CSV'
 
-    
+    with open(filepath, mode='r') as f:
+        csv_reader = csv.DictReader(f)
+        line_count = 0
+        for row in csv_reader:        
+            if line_count == 0:
+                translator.process_first_line()
+            line_item_dict = {"account_id": account_id}    
+            # Iterate thru the fields in this line       
+            for csv_key, value in row.items():
+                db_key = ColumnMap.chase_cc_map[csv_key]
+                match db_key:
+                    case "CATEGORY":
+                        cat = category_setter.get_category(value, row["Description"])
+                        line_item_dict["category_id"] = cat
+                    case "TRANSACTION_TYPE":
+                        trans_type_id = trans_type_setter.get_trans_type(value)
+                        line_item_dict["transaction_type_id"] = trans_type_id  
+                    case "AMOUNT":
+                        line_item_dict['amount'] = -1 * value                       
+                    case "DROP":
+                        pass
+                    case _:            
+                        line_item_dict[db_key] = value
+            
+            line_item = LineItem(**line_item_dict)       
+            line_count += 1   
+            print("I am adding a line item")
+            
+            """
+            type(line_item)
+            <class 'src.models.line_item.LineItem'>
+            """
+            repo.add(line_item)
 
-# for each line: 
-  # translate some columns into authorities 
-  #   Category and Type need to be changed to authorities 
-  #   later - autocategorize based on payee 
-  # Write 1 row to the line_item table 
-    
+        
+
+    # for each line: 
+    # translate some columns into authorities 
+    #   Category and Type need to be changed to authorities 
+    #   later - autocategorize based on payee 
+    # Write 1 row to the line_item table 
+        
 
 
 

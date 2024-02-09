@@ -51,4 +51,7 @@ def create_app(test_config=None):
     from . import report
     app.register_blueprint(report.bp)
 
+    from . import ingest
+    app.register_blueprint(ingest.bp)
+
     return app 
