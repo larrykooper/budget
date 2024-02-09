@@ -4,6 +4,9 @@ from flask import Flask
 from flask import render_template
 from logging.config import dictConfig
 
+from src.flask_app.ingesting import ingest_blueprint
+from src.flask_app.reporting import report_blueprint
+
 
 def create_app(test_config=None):
     dictConfig({
@@ -25,7 +28,7 @@ def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
-        SECRET_KEY='q.3-bNRts7V4JUKKLDQxvB*AaxeKVnobXy-MnRKksHnWsnPZi!',        
+        SECRET_KEY='q.3-bNRts7V4JUKKLDQxvB*AaxeKVnobXy-MnRKksHnWsnPZi!',
     )
 
     if test_config is None:
@@ -41,17 +44,15 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-
-    # Home Page 
+    # Home Page
     @app.route('/')
     def homepage():
         return render_template('homepage/homepage.html')
-        
 
-    from . import report
-    app.register_blueprint(report.bp)
+    # Register blueprints
 
-    from . import ingest
-    app.register_blueprint(ingest.bp)
+    app.register_blueprint(report_blueprint.bp)
+    app.register_blueprint(ingest_blueprint.bp)
 
-    return app 
+    return app
+

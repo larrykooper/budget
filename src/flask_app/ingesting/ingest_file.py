@@ -9,7 +9,7 @@ from src.translation.column_map import ColumnMap
 from src.translation.transaction_type_setter import TransactionTypeSetter
 from src.translation.translator import Translator
 
-def ingest_file():
+def ingest_file(filename):
 
     # Intialize the repo
 
@@ -17,8 +17,7 @@ def ingest_file():
     authority_finder = AuthorityFinder()
 
     #  version 0 - file path is hard coded
-    #  version 1 - user puts the file path on command line
-    #  version 2 - User can browse in a dialog box for the file name
+    #  version 1 - User can browse in a dialog box for the file
 
     """
     I have to tell the program which account the file being uploaded is for.
@@ -67,16 +66,8 @@ def ingest_file():
             line_count += 1
             repo.add(line_item)
 
-
-
     # for each line:
     # translate some columns into authorities
     #   Category and Type need to be changed to authorities
     #   later - autocategorize based on payee
     # Write 1 row to the line_item table
-
-
-
-
-
-

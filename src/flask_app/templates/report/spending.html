@@ -5,7 +5,7 @@
 
 {% block content %}
     <h1>{% block title %}{% endblock %}</h1>
-    <table>        
+    <table>
         <tr>
             <th>Transaction Date</th>
             <th>Post Date</th>
@@ -16,22 +16,22 @@
             <th>Account Name</th>
             <th>Check Number</th>
             <th>Type Detail</th>
-        </tr>       
-        
+        </tr>
+
     {% for line_item in line_items %}
         <tr class='line_item'>
-            <td>{{ line_item['transaction_date'] }}</td> 
-            <td>{{ line_item['post_date'] }}</td>  
-            <td>{{ line_item['description'] }}</td> 
-            <td>{{ line_item['amount']}}</td> 
-            <td>{{ line_item['category_name'] }}</td> 
-            <td>{{ line_item['transaction_type']}}</td> 
-            <td>{{ line_item['account_name']}}</td> 
-            <td>{{ line_item['check_number'] }}</td> 
-            <td>{{ line_item['type_detail_id']}}</td>             
+            <td>{{ line_item['transaction_date'] }}</td>
+            <td>{{ line_item['post_date'] }}</td>
+            <td>{{ line_item['description'] }}</td>
+            <td class="amount">{{ line_item['amount']}}</td>
+            <td>{{ line_item['category_name'] }}</td>
+            <td>{{ line_item['transaction_type']}}</td>
+            <td>{{ line_item['account_name']}}</td>
+            <td>{{ line_item['check_number'] }}</td>
+            <td>{{ line_item['type_detail_id']}}</td>
         </tr>
     {% endfor %}
-   
+
     </table>
 {% endblock %}
 

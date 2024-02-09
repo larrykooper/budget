@@ -1,6 +1,5 @@
 import os
-import logging
-import sys 
+import sys
 
 APP_NAME = 'budget'
 
@@ -11,10 +10,6 @@ POOL_MIN_SIZE = 1
 POOL_MAX_SIZE = 10
 POOL_MAX_IDLE = 60
 POOL_STAT_SLEEP = 300
-
-
-if not REPORTING_POOL:
-    pool_max_size += 5
 
 
 CURR_PATH = os.path.abspath(os.path.dirname(__file__))
