@@ -20,6 +20,7 @@ def upload_file(request):
             flash('No file part')
             return redirect(request.url)
         file = request.files['file']
+        account = request.values['account']
         # If the user does not select a file, the browser submits an
         # empty file without a filename.
         if file.filename == '':
@@ -29,4 +30,4 @@ def upload_file(request):
             filename = secure_filename(file.filename)
             file.save(os.path.join(UPLOAD_FOLDER, filename))
             # ingest the file
-            ingest_file.ingest_file(filename)
+            ingest_file.ingest_file(filename, account)

@@ -11,17 +11,13 @@ bp = Blueprint('report', __name__, url_prefix='/report')
 def report_home():
     return render_template('report/home.html')
 
-
-
 @bp.route('/spending', methods=['GET'])
 def spending():
     repo = LarryRepository()
-     # Query the database for what we need to report    
+     # Query the database for what we need to report
 
-    line_items = repo.get()  
-    line_items_translated = translate_ids_to_names(line_items)    
-    
-
+    line_items = repo.get()
+    line_items_translated = translate_ids_to_names(line_items)
     return render_template('report/spending.html', line_items=line_items_translated)
 
 def translate_ids_to_names(line_items: list):
@@ -33,7 +29,6 @@ def translate_ids_to_names(line_items: list):
         line_item['transaction_type'] = transaction_type
         account_name = authority_finder.authority_display("account", line_item['account_id'])
         line_item['account_name']= account_name
-    return line_items    
+    return line_items
 
 
- 

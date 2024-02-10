@@ -13,3 +13,7 @@ th, td {
 td.amount {
     text-align: right;
 }
+
+div.choice {
+    padding: 62px 0px 10px 0px;
+}

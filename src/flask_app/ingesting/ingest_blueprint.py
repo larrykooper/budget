@@ -15,3 +15,5 @@ def upload():
         return render_template('ingest/upload.html')
     if request.method == 'POST':
         upload_file.upload_file(request)
+    return render_template('ingest/upload_success.html')
+

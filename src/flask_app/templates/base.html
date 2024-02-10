@@ -1,4 +1,5 @@
 <!doctype html>
+<title>BP: {% block title %}{% endblock %}</title>
 <html>
 <head>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
@@ -6,5 +7,5 @@
 <body>
     {% block content %}
     {% endblock %}
-</body>    
+</body>
 </html>

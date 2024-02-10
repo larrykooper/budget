@@ -1,7 +1,25 @@
-<!doctype html>
-<title>Upload new File</title>
+{% extends 'base.html' %}
+{% block title %}
+Upload File
+{% endblock %}
+
+{% block content %}
 <h1>Upload new File</h1>
 <form method=post enctype=multipart/form-data>
-    <input type=file name=file>
-    <input type=submit value=Upload>
+    <div class="choice">
+        <input type=file name=file>
+    </div>
+    <div class="choice">
+        Account this file is for:
+    <select name="account" id="account">
+        <option disabled selected value>--</option>
+        <option value="Checking">Checking</option>
+        <option value="Amazon-3307">Amazon-3307</option>
+        <option value="Sapphire-2161">Sapphire-2161</option>
+      </select>
+    </div>
+    <div class="choice">
+        <input type=submit value=Upload>
+    </div>
 </form>
+{% endblock %}

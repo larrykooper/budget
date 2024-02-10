@@ -9,23 +9,21 @@ from src.translation.column_map import ColumnMap
 from src.translation.transaction_type_setter import TransactionTypeSetter
 from src.translation.translator import Translator
 
-def ingest_file(filename):
+def ingest_file(filename: str, account: str):
+    from src.flask_app.ingesting.upload_file import UPLOAD_FOLDER
 
     # Intialize the repo
 
     repo = LarryRepository()
     authority_finder = AuthorityFinder()
 
-    #  version 0 - file path is hard coded
-    #  version 1 - User can browse in a dialog box for the file
-
-    """
-    I have to tell the program which account the file being uploaded is for.
-    Version 0 - I will hard-code the account
-    """
-
-    account = "Amazon-3307"
+    # Look up account ID
     account_id = authority_finder.authority_lookup("account", account)
+    """
+    TEMP COMMENT
+    account_id is 1
+    """
+
 
     # App-specific initialization
 
@@ -35,7 +33,9 @@ def ingest_file(filename):
 
     # Reading the file
 
-    filepath = '/Users/larry1mbp/mycode/python/budget/sample_data/Chase3307_small.CSV'
+    filepath = f"{UPLOAD_FOLDER}/{filename}"
+
+    # filepath = '/Users/larry1mbp/mycode/python/budget/sample_data/Chase3307_small.CSV'
 
     with open(filepath, mode='r') as f:
         csv_reader = csv.DictReader(f)
