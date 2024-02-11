@@ -19,7 +19,6 @@ class LarryRepository(AbstractRepository):
             transaction_type_id,
             account_id
         )
-
             VALUES (%(transaction_date)s, %(post_date)s, %(description)s, %(amount)s, %(category_id)s, %(transaction_type_id)s, %(account_id)s);
         """
         params = {
@@ -36,6 +35,8 @@ class LarryRepository(AbstractRepository):
 
 
     def get(self):
+        # TODO select has to be restricted by the time range of the report
+        #  almost always one calendar month
         query = """
         SELECT * FROM line_item
         ORDER BY transaction_date
