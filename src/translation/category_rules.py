@@ -1,6 +1,7 @@
 class CategoryRules:
 
     starts_with_rules_tuples = [
+        ("CUCULI", "Restaurants"),
         ("CVS/PHARMACY", "Pharmacy"),
         ("DUNKIN", "Coffee Shops"),
         ("HERTZ", "Rental Cars"),
