@@ -38,6 +38,7 @@ class LarryRepository(AbstractRepository):
     def get(self):
         query = """
         SELECT * FROM line_item
+        ORDER BY transaction_date
         """
         params = {}
         data = db_pool.get_data(query, params, single_row=False)

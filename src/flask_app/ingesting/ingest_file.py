@@ -4,6 +4,7 @@ from decimal import Decimal
 from src.adapters.larry_repository import LarryRepository
 from src.authorities.authority_finder import AuthorityFinder
 from src.models.line_item import LineItem
+from src.translation.category_rules import CategoryRules
 from src.translation.category_setter import CategorySetter
 from src.translation.column_map import ColumnMap
 from src.translation.transaction_type_setter import TransactionTypeSetter
@@ -19,23 +20,17 @@ def ingest_file(filename: str, account: str):
 
     # Look up account ID
     account_id = authority_finder.authority_lookup("account", account)
-    """
-    TEMP COMMENT
-    account_id is 1
-    """
 
-
-    # App-specific initialization
+    # Module-specific initialization
 
     translator = Translator()
     category_setter = CategorySetter()
     trans_type_setter = TransactionTypeSetter()
+    CategoryRules.initialize_category_rules()
 
-    # Reading the file
+    # Read the file
 
     filepath = f"{UPLOAD_FOLDER}/{filename}"
-
-    # filepath = '/Users/larry1mbp/mycode/python/budget/sample_data/Chase3307_small.CSV'
 
     with open(filepath, mode='r') as f:
         csv_reader = csv.DictReader(f)

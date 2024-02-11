@@ -8,16 +8,16 @@ class CategorySetter:
         authority_finder = AuthorityFinder()
         desc = Description(description)
         input_cat_obj = Category(input_cat)
-        if desc.has_description_autocat(): 
-            cat_to_lookup = desc.autocat() 
-        elif input_cat_obj.has_autotranslation():
-            cat_to_lookup = input_cat_obj.autotranslation() 
-        else:
-            cat_to_lookup = input_cat     
+        # See if there is a rule to determine the
+        #  category given the description
+        #  and if there is, look up the ID of that category
+        category_found_by_rule = desc.category_by_rule()
+        if category_found_by_rule:
+            cat_to_lookup = category_found_by_rule
+        else:   # If we haven't got the cat to lookup yet, it's the input_cat
+            cat_to_lookup = input_cat
         id = authority_finder.authority_lookup("category", cat_to_lookup)
         if id:
-            return id 
-        else: 
+            return id
+        else:
             return Category.id_for_uncategorized()
-
-       
