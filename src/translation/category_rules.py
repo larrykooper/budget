@@ -5,6 +5,7 @@ class CategoryRules:
         ("DUNKIN", "Coffee Shops"),
         ("HERTZ", "Rental Cars"),
         ("MTA", "Public Transportation"),
+        ("NEW TANG'S GARDEN", "Food Delivery"),
         ("SEAMLSSUPTHAI", "Food Delivery"),
         ("SHELL OIL", "Gas & Fuel"),
         ("SLICE", "Food Delivery"),
