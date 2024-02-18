@@ -78,3 +78,13 @@ class LarryRepository(AbstractRepository):
             'line_item_id': id
         }
         db_pool.update(query, params)
+
+    def delete_line_item(self, id):
+        query = """
+        DELETE FROM line_item
+        WHERE id = %(line_item_id)s
+        """
+        params = {
+            'line_item_id': id
+        }
+        db_pool.delete(query, params)

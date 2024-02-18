@@ -81,6 +81,11 @@ def update(sql_raw, params):
     return _execute_query(sql_raw, params, 'update')
 
 
+def delete(sql_raw, params):
+    """ Runs DELETE query """
+    return _execute_query(sql_raw, params, 'delete')
+
+
 def _select_multi(sql_raw, params=None, pool_name='default'):
     """ Runs SELECT query that will return multiple (all) rows.
 
@@ -142,6 +147,10 @@ def _execute_query(sql_raw, params, qry_type, pool_name='default'):
             conn.commit()
             results = True
         elif qry_type == 'update':
+            cur.execute(sql_raw, params)
+            conn.commit()
+            results = True
+        elif qry_type == 'delete':
             cur.execute(sql_raw, params)
             conn.commit()
             results = True

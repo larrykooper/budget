@@ -26,10 +26,13 @@ def spending():
 def update():
     repo = LarryRepository()
     form = request.form
-    if 'comment' in form:
-        repo.update_comment(form['comment'], form['id'])
-    if 'category' in form:
-        repo.update_category(form['category'], form['id'])
+    if form['action'] == 'delete':
+        repo.delete_line_item(form['id'])
+    elif form['action'] == 'edit':
+        if 'comment' in form:
+            repo.update_comment(form['comment'], form['id'])
+        if 'category' in form:
+            repo.update_category(form['category'], form['id'])
     return jsonify("foo")
 
 
