@@ -39,7 +39,7 @@ def pool_stats(pool_name='default'):
     return stats
 
 
-def get_data(sql_raw, params=None, single_row=False, pool_name='default'):
+def get_data(sql_raw, params=None, single_row=False, pool_name='default') -> list[dict]:
     """Main query point for all read queries.
     """
     if single_row:

@@ -34,12 +34,22 @@ class LarryRepository(AbstractRepository):
         return results
 
 
-    def get(self):
+    def get(self) -> list[dict]:
         # TODO select has to be restricted by the time range of the report
         #  almost always one calendar month
         query = """
         SELECT * FROM line_item
         ORDER BY transaction_date
+        """
+        params = {}
+        data = db_pool.get_data(query, params, single_row=False)
+        return data
+
+
+    def get_all_categories(self) -> list[dict]:
+        query = """
+        SELECT id, name FROM category
+        ORDER BY name
         """
         params = {}
         data = db_pool.get_data(query, params, single_row=False)

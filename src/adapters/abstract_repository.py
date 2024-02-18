@@ -7,5 +7,5 @@ class AbstractRepository(abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def get(self) -> LineItem:
+    def get(self) -> list:
         raise NotImplementedError
