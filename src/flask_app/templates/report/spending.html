@@ -5,38 +5,45 @@
 
 {% block content %}
     <h1>{% block title %}{% endblock %}</h1>
-    <table id="spending">
-        <tr>
-            <th>#</th>
-            <th>Transaction<br>Date</th>
-            <th>Post Date</th>
-            <th>Description</th>
-            <th>Amount</th>
-            <th>Category</th>
-            <th>Transaction<br>Type</th>
-            <th>Account Name</th>
-            <th>Check<br>Number</th>
-            <th>Type Detail</th>
-            <th>Comment</th>
-        </tr>
+    <div class="spending-report">
+        <div class="table-responsive">
+            <table id="spending">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Transaction<br>Date</th>
+                        <th>Post Date</th>
+                        <th>Description</th>
+                        <th>Amount</th>
+                        <th>Category</th>
+                        <th>Transaction<br>Type</th>
+                        <th>Account Name</th>
+                        <th>Check<br>Number</th>
+                        <th>Type Detail</th>
+                        <th>Comment</th>
+                    </tr>
+                </thead>
+                <tbody>
 
-    {% for line_item in line_items %}
-        <tr class='line_item'>
-            <td>{{ line_item['id'] }}</td>
-            <td>{{ line_item['transaction_date'] }}</td>
-            <td>{{ line_item['post_date'] }}</td>
-            <td>{{ line_item['description'] }}</td>
-            <td class="amount">{{ line_item['amount'] }}</td>
-            <td>{{ line_item['category_name'] }}</td>
-            <td>{{ line_item['transaction_type'] }}</td>
-            <td>{{ line_item['account_name'] }}</td>
-            <td>{{ line_item['check_number'] }}</td>
-            <td>{{ line_item['type_detail_id'] }}</td>
-            <td>{{ line_item['comment'] }}</td>
-        </tr>
-    {% endfor %}
-
-    </table>
+                {% for line_item in line_items %}
+                    <tr class='line_item'>
+                        <td>{{ line_item['id'] }}</td>
+                        <td>{{ line_item['transaction_date'] }}</td>
+                        <td>{{ line_item['post_date'] }}</td>
+                        <td>{{ line_item['description'] }}</td>
+                        <td class="amount">{{ line_item['amount'] }}</td>
+                        <td>{{ line_item['category_name'] }}</td>
+                        <td>{{ line_item['transaction_type'] }}</td>
+                        <td>{{ line_item['account_name'] }}</td>
+                        <td>{{ line_item['check_number'] }}</td>
+                        <td>{{ line_item['type_detail_id'] }}</td>
+                        <td>{{ line_item['comment'] }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 
 
 <script type="text/javascript">
@@ -44,7 +51,7 @@
         url: '_update',
         eventType: 'dblclick',
         editButton: false,
-        deleteButton: false,
+        deleteButton: true,
         hideIdentifier: true,
         columns: {
             identifier: [0, 'id'],
