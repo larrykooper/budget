@@ -54,3 +54,27 @@ class LarryRepository(AbstractRepository):
         params = {}
         data = db_pool.get_data(query, params, single_row=False)
         return data
+
+    def update_comment(self, new_value, id):
+        query = """
+        UPDATE line_item
+        SET comment = %(new_value)s
+        WHERE id = %(line_item_id)s
+        """
+        params = {
+            'new_value': new_value,
+            'line_item_id': id
+        }
+        db_pool.update(query, params)
+
+    def update_category(self, new_value, id):
+        query = """
+        UPDATE line_item
+        SET category_id = %(new_value)s
+        WHERE id = %(line_item_id)s
+        """
+        params = {
+            'new_value': new_value,
+            'line_item_id': id
+        }
+        db_pool.update(query, params)

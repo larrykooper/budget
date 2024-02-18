@@ -1,5 +1,5 @@
 from flask import (
-    Blueprint, render_template
+    Blueprint, jsonify, render_template, request
 )
 
 from src.adapters.larry_repository import LarryRepository
@@ -16,11 +16,22 @@ def report_home():
 def spending():
     repo = LarryRepository()
      # Query the database for what we need to report
-
     line_items = repo.get()
     line_items_translated = translate_line_items(line_items)
     categories = Category.categories_json()
     return render_template('report/spending.html', line_items=line_items_translated, categories=categories)
+
+# Called via AJAX
+@bp.route('/_update', methods=['POST'])
+def update():
+    repo = LarryRepository()
+    form = request.form
+    if 'comment' in form:
+        repo.update_comment(form['comment'], form['id'])
+    if 'category' in form:
+        repo.update_category(form['category'], form['id'])
+    return jsonify("foo")
+
 
 def translate_line_items(line_items: list[dict]) -> list[dict]:
     authority_finder = AuthorityFinder()
