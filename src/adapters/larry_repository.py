@@ -39,8 +39,6 @@ class LarryRepository(AbstractRepository):
 
 
     def get_by_date_range(self, start_date: datetime.date, end_date: datetime.date) -> list[dict]:
-        # TODO select has to be restricted by the time range of the report
-        #  almost always one calendar month
         query = """
         SELECT * FROM line_item
         WHERE transaction_date BETWEEN %(start_date)s AND %(end_date)s
