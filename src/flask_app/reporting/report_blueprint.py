@@ -1,3 +1,5 @@
+import calendar
+import datetime
 from flask import (
     Blueprint, jsonify, render_template, request
 )
@@ -14,12 +16,19 @@ def report_home():
 
 @bp.route('/spending', methods=['GET'])
 def spending():
-    repo = LarryRepository()
-     # Query the database for what we need to report
-    line_items = repo.get()
-    line_items_translated = translate_line_items(line_items)
-    categories = Category.categories_json()
-    return render_template('report/spending.html', line_items=line_items_translated, categories=categories)
+    qs = request.query_string
+    if qs.decode('ASCII') == "":
+        return render_template('report/month_picker.html')
+    else:
+        year = int(request.args.get('year'))
+        month = int(request.args.get('month'))
+        start_date, end_date = get_start_end(year, month)
+        repo = LarryRepository()
+        # Query the database for what we need to report
+        line_items = repo.get_by_date_range(start_date, end_date)
+        line_items_translated = translate_line_items(line_items)
+        categories = Category.categories_json()
+        return render_template('report/spending.html', line_items=line_items_translated, categories=categories)
 
 # Called via AJAX
 @bp.route('/_update', methods=['POST'])
@@ -57,4 +66,9 @@ def none_to_blank(field):
         return ''
     return field
 
+def get_start_end(year: int, month: int) -> tuple[datetime.date, datetime.date]:
+    days_in_month = calendar.monthrange(year, month)[1]
+    start = datetime.date(year, month, 1)
+    end = datetime.date(year, month, days_in_month)
+    return start, end
 

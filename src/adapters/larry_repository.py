@@ -1,3 +1,4 @@
+import datetime
 import psycopg_pool
 import psycopg
 from decimal import Decimal
@@ -33,15 +34,22 @@ class LarryRepository(AbstractRepository):
         results = db_pool.insert(query, params)
         return results
 
+    def get(self) -> list:
+        raise NotImplementedError
 
-    def get(self) -> list[dict]:
+
+    def get_by_date_range(self, start_date: datetime.date, end_date: datetime.date) -> list[dict]:
         # TODO select has to be restricted by the time range of the report
         #  almost always one calendar month
         query = """
         SELECT * FROM line_item
+        WHERE transaction_date BETWEEN %(start_date)s AND %(end_date)s
         ORDER BY transaction_date
         """
-        params = {}
+        params = {
+            'start_date': start_date,
+            'end_date': end_date
+        }
         data = db_pool.get_data(query, params, single_row=False)
         return data
 

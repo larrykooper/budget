@@ -16,6 +16,16 @@ td.amount {
 
 div.choice {
     padding: 62px 0px 10px 0px;
+    margin-left: 40px;
+    font-size: 19px;
+}
+
+div.reports-menu {
+    margin-left: 40px;
+}
+
+div.month-link {
+    padding-top: 30px;
 }
 
 .table.user-select-none {
