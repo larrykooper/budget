@@ -5,8 +5,9 @@
 
 {% block content %}
     <h1>{% block title %}{% endblock %}</h1>
-    <table>
+    <table id="spending">
         <tr>
+            <th>#</th>
             <th>Transaction<br>Date</th>
             <th>Post Date</th>
             <th>Description</th>
@@ -21,6 +22,7 @@
 
     {% for line_item in line_items %}
         <tr class='line_item'>
+            <td>{{ line_item['id']}}</td>
             <td>{{ line_item['transaction_date'] }}</td>
             <td>{{ line_item['post_date'] }}</td>
             <td>{{ line_item['description'] }}</td>
@@ -35,5 +37,23 @@
     {% endfor %}
 
     </table>
+
+
+<script type="text/javascript">
+    $('#spending').Tabledit({
+        url: 'example.php',
+        eventType: 'dblclick',
+        editButton: false,
+        deleteButton: false,
+        hideIdentifier: true,
+        columns: {
+            identifier: [0, 'id'],
+            editable: [[10, 'comment'], [5, 'category', '{{ categories|safe }}']]
+        }
+    });
+
+  </script>
+
+
 {% endblock %}
 
