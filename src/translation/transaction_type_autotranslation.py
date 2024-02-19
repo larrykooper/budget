@@ -10,13 +10,3 @@ class TransactionTypeAutotranslation:
         "Sale": "debit"
     }
 
-    bank_trans_detail_to_trans_type = {
-        "ACH_CREDIT": "credit",
-        "ACH_DEBIT": "debit",
-        "ATM": "debit",
-        "CHECK_PAID": "debit",
-        "DEBIT_CARD": "debit",
-        "FEE_TRANSACTION": "debit",
-        "LOAN_PMT": "transfer",
-        "MISC_DEBIT": "debit"
-    }
