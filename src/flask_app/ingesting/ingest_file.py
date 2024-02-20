@@ -3,11 +3,10 @@ from decimal import Decimal
 
 from src.adapters.larry_repository import LarryRepository
 from src.authorities.authority_finder import AuthorityFinder
+from src.models.input_field_types.input_field import InputField
 from src.models.line_item import LineItem
 from src.translation.category_rules import CategoryRules
-from src.translation.category_setter import CategorySetter
 from src.translation.column_map import ColumnMap
-from src.translation.transaction_type_setter import TransactionTypeSetter
 from src.translation.translator import Translator
 
 def ingest_file(filename: str, account: str):
@@ -24,8 +23,7 @@ def ingest_file(filename: str, account: str):
     # Module-specific initialization
 
     translator = Translator()
-    category_setter = CategorySetter()
-    trans_type_setter = TransactionTypeSetter()
+
     CategoryRules.initialize_category_rules()
 
     # Read the file
@@ -41,22 +39,16 @@ def ingest_file(filename: str, account: str):
             line_item_dict = {"account_id": account_id}
             # Iterate thru the fields in this line
             for csv_key, value in row.items():
-                db_key = ColumnMap.chase_cc_map[csv_key]
-                match db_key:
-                    case "CATEGORY":
-                        cat = category_setter.get_category(value, row["Description"])
-                        line_item_dict["category_id"] = cat
-                    case "TRANSACTION_TYPE":
-                        trans_type_id = trans_type_setter.get_trans_type(value)
-                        line_item_dict["transaction_type_id"] = trans_type_id
-                    case "AMOUNT":
-                        amount_d = Decimal(value)
-                        line_item_dict['amount'] = -1 * amount_d
-                    case "DROP":
-                        pass
-                    case _:
-                        line_item_dict[db_key] = value
-
+                field_type_str = ColumnMap.chase_cc_map[csv_key]
+                kwargs = {}
+                if field_type_str == "DROP":
+                    continue
+                if field_type_str == "CATEGORY":
+                    kwargs = {'description': row["Description"] }
+                field_type_obj = InputField.instantiate_input_field(field_type_str)
+                what_to_persist = field_type_obj.what_to_persist(value, **kwargs)
+                line_item_field_name = field_type_obj.line_item_field_name()
+                line_item_dict[line_item_field_name] = what_to_persist
             line_item = LineItem(**line_item_dict)
             line_count += 1
             repo.add(line_item)

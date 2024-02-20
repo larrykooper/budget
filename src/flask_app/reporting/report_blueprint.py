@@ -6,7 +6,7 @@ from flask import (
 
 from src.adapters.larry_repository import LarryRepository
 from src.authorities.authority_finder import AuthorityFinder
-from src.models.category import Category
+from src.models.persistence.category import Category
 
 bp = Blueprint('report', __name__, url_prefix='/report')
 

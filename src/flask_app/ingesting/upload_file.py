@@ -1,5 +1,5 @@
 import os
-from flask import flash, request, redirect, url_for
+from flask import flash, request, redirect
 from werkzeug.utils import secure_filename
 
 import src.flask_app.ingesting.ingest_file as ingest_file
