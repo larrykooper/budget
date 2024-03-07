@@ -18,9 +18,12 @@ class LarryRepository(AbstractRepository):
             amount,
             category_id,
             transaction_type_id,
-            account_id
+            account_id,
+            check_number,
+            type_detail_id
         )
-            VALUES (%(transaction_date)s, %(post_date)s, %(description)s, %(amount)s, %(category_id)s, %(transaction_type_id)s, %(account_id)s);
+            VALUES (%(transaction_date)s, %(post_date)s, %(description)s, %(amount)s,
+              %(category_id)s, %(transaction_type_id)s, %(account_id)s, %(check_number)s, %(type_detail_id)s);
         """
         params = {
             'transaction_date': line_item.transaction_date,
@@ -29,7 +32,10 @@ class LarryRepository(AbstractRepository):
             'amount': line_item.amount,
             'category_id': line_item.category_id,
             'transaction_type_id': line_item.transaction_type_id,
-            'account_id': line_item.account_id
+            'account_id': line_item.account_id,
+            'check_number': line_item.check_number,
+            'type_detail_id': line_item.type_detail_id
+
         }
         results = db_pool.insert(query, params)
         return results
