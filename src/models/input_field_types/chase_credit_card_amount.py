@@ -7,7 +7,8 @@ class ChaseCreditCardAmount(InputField):
 
     def what_to_persist(self, value):
         amount_d = Decimal(value)
-        return -1 * amount_d
+        amount = -1 * amount_d
+        return {self.line_item_field_name(): amount}
 
     def line_item_field_name(self):
         return "amount"

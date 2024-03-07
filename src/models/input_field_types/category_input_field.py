@@ -8,7 +8,8 @@ from src.translation.category_rules import CategoryRules
 class CategoryInputField(InputField):
 
     def what_to_persist(self, value, description):
-        return self.get_category_id(value, description)
+        cid = self.get_category_id(value, description)
+        return {self.line_item_field_name(): cid}
 
     def line_item_field_name(self):
         return "category_id"

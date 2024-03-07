@@ -29,14 +29,14 @@
                     <tr class='line_item'>
                         <td>{{ line_item['id'] }}</td>
                         <td>{{ line_item['transaction_date'] }}</td>
-                        <td>{{ line_item['post_date'] }}</td>
+                        <td class="post_date">{{ line_item['post_date'] }}</td>
                         <td>{{ line_item['description'] }}</td>
                         <td class="amount">{{ line_item['amount'] }}</td>
                         <td>{{ line_item['category_name'] }}</td>
                         <td>{{ line_item['transaction_type'] }}</td>
                         <td>{{ line_item['account_name'] }}</td>
                         <td>{{ line_item['check_number'] }}</td>
-                        <td>{{ line_item['type_detail_id'] }}</td>
+                        <td>{{ line_item['type_detail_name'] }}</td>
                         <td>{{ line_item['comment'] }}</td>
                     </tr>
                 {% endfor %}

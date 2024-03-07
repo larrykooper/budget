@@ -4,11 +4,11 @@ class ChaseChecking(Account):
 
     def column_map(self):
         return {
-            "Details": "DETAILS",  # must lowercase it
+            "Details": "DETAILS",  # must lowercase it and then look it up
             "Posting Date": "POST_DATE",
-            "Description": "DESCRIPTION",
+            "Description": "BANK_DESCRIPTION",  # I need to find a category for it
             "Amount": "BANK_AMOUNT",  # must take the absolute value
             "Type": "TYPE_DETAIL",  # authority
             "Balance": "DROP",
-            "Check or Slip #": "check_number"
+            "Check or Slip #": "CHECK_NUMBER"
         }

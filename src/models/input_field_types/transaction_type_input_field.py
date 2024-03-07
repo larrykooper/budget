@@ -4,7 +4,8 @@ from src.models.persistence.transaction_type import TransactionType
 class TransactionTypeInputField:
 
     def what_to_persist(self, value):
-        return self.get_trans_type(value)
+        ttid = self.get_trans_type(value.lower())
+        return {self.line_item_field_name(): ttid}
 
     def line_item_field_name(self):
         return "transaction_type_id"
