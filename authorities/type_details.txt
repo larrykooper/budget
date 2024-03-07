@@ -9,4 +9,5 @@ loan_pmt
 misc_credit
 misc_debit
 wire_incoming
+unknown
 \.
