@@ -1,5 +1,6 @@
 adjustment
 credit
+credit_card_payment
 debit
 transfer
 unknown
