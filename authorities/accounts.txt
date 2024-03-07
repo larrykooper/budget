@@ -1,6 +1,6 @@
 Sapphire-2161
 Amazon-3307
 Checking
-Apple card 
+Apple-Card
 Cash
 \.
