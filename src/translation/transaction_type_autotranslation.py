@@ -1,13 +1,13 @@
 class TransactionTypeAutotranslation:
     # from: to
     trans_type_autotranslation = {
-        "Adjustment": "adjustment",
+        "adjustment": "adjustment",
         "check": "debit",
-        "Fee": "debit",
-        "Payment": "transfer",
-        "Payment/Credit": "transfer",
-        "Purchase": "debit",
-        "Return": "credit",
-        "Sale": "debit"
+        "fee": "debit",
+        "payment": "transfer",
+        "payment/credit": "transfer",
+        "purchase": "debit",
+        "return": "credit",
+        "sale": "debit"
     }
 

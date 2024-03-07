@@ -18,6 +18,10 @@ td.post_date {
     width: 130px;
 }
 
+td.category_name {
+    width: 170px;
+}
+
 div.choice {
     padding: 62px 0px 10px 0px;
     margin-left: 40px;

@@ -59,7 +59,10 @@ def translate_line_items(line_items: list[dict]) -> list[dict]:
         line_item['transaction_type'] = transaction_type
         account_name = authority_finder.authority_display("account", line_item['account_id'])
         line_item['account_name']= account_name
-        type_detail_name = authority_finder.authority_display("type_detail", line_item['type_detail_id'])
+        if line_item['type_detail_id']:
+            type_detail_name = authority_finder.authority_display("type_detail", line_item['type_detail_id'])
+        else:
+            type_detail_name = ""
         line_item['type_detail_name'] = type_detail_name
     return line_items
 
