@@ -34,11 +34,14 @@ def ingest_file(filename: str, account: str):
         line_count = 0
         for row in csv_reader:
             if line_count == 0:
+                line_count += 1
                 continue
             # Add the account_id to the line item
             line_item_dict = {"account_id": account_id}
             # Iterate thru the fields in the line
             for csv_key, value in row.items():
+                if not csv_key:
+                    continue
                 field_type_str = column_map[csv_key]
                 kwargs = {}
                 if field_type_str == "DROP":
@@ -47,8 +50,8 @@ def ingest_file(filename: str, account: str):
                     kwargs = {'description': row["Description"]}
                 field_type_obj = InputField.instantiate_input_field(field_type_str)
                 what_to_persist = field_type_obj.what_to_persist(value, **kwargs)
-                line_item_field_name = field_type_obj.line_item_field_name()
-                line_item_dict[line_item_field_name] = what_to_persist
+                for field_name, persist_value in what_to_persist.items():
+                    line_item_dict[field_name] = persist_value
             line_item = LineItem(**line_item_dict)
             line_count += 1
             repo.add(line_item)
