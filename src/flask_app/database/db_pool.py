@@ -137,7 +137,6 @@ def _execute_query(sql_raw, params, qry_type, pool_name='default'):
     with sel_pool.connection() as conn:
         cur = conn.cursor(row_factory=psycopg.rows.dict_row)
 
-
         if qry_type == 'sel_multi':
             results = cur.execute(sql_raw, params).fetchall()
         elif qry_type == 'sel_single':
