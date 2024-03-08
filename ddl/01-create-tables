@@ -9,7 +9,8 @@ CREATE TABLE line_item(
   account_id INTEGER,
   check_number VARCHAR(5),
   type_detail_id INTEGER,     -- optional
-  comment TEXT
+  comment TEXT,
+  data_hash CHAR(64)
 );
 
 CREATE TABLE account(
