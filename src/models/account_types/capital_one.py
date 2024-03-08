@@ -1,14 +1,15 @@
 from src.models.account_types.account import Account
 
-class Sapphire(Account):
+class CapitalOne(Account):
 
     def column_map(self):
         return {
             "Transaction Date": "TRANSACTION_DATE",
-            "Post Date": "CREDIT_CARD_POST_DATE",
+            "Posted Date": "CREDIT_CARD_POST_DATE",
+            "Card No.": "DROP",
             "Description": "DESCRIPTION",
             "Category": "CATEGORY",
-            "Type": "TRANSACTION_TYPE",
-            "Amount": "CHASE_CREDIT_CARD_AMOUNT",
-            "Memo": "DROP"
+            "Debit": "CAPITAL_ONE_DEBIT",
+            "Credit": "CAPITAL_ONE_CREDIT"
         }
+

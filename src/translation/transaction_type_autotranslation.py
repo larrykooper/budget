@@ -5,7 +5,7 @@ class TransactionTypeAutotranslation:
         "check": "debit",
         "fee": "debit",
         "payment": "credit_card_payment",
-        "payment/credit": "transfer",
+        "payment/credit": "credit_card_payment",
         "purchase": "debit",
         "return": "credit",
         "sale": "debit"

@@ -33,9 +33,6 @@ def ingest_file(filename: str, account: str):
         csv_reader = csv.DictReader(f)
         line_count = 0
         for row in csv_reader:
-            if line_count == 0:
-                line_count += 1
-                continue
             # Add the account_id to the line item
             line_item_dict = {"account_id": account_id}
             # Iterate thru the fields in the line
