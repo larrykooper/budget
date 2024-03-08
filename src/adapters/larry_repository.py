@@ -1,14 +1,15 @@
 import datetime
-import psycopg_pool
-import psycopg
-from decimal import Decimal
+import pytz
+
+
 from src.adapters.abstract_repository import AbstractRepository
-import src.adapters.config as config
 import src.flask_app.database.db_pool as db_pool
 
 class LarryRepository(AbstractRepository):
 
     def add(self, line_item):
+
+        current_time = datetime.datetime.now(pytz.timezone("America/New_York"))
 
         query = """
         INSERT INTO line_item (
@@ -20,10 +21,12 @@ class LarryRepository(AbstractRepository):
             transaction_type_id,
             account_id,
             check_number,
-            type_detail_id
+            type_detail_id,
+            created,
+            updated
         )
             VALUES (%(transaction_date)s, %(post_date)s, %(description)s, %(amount)s,
-              %(category_id)s, %(transaction_type_id)s, %(account_id)s, %(check_number)s, %(type_detail_id)s);
+              %(category_id)s, %(transaction_type_id)s, %(account_id)s, %(check_number)s, %(type_detail_id)s, %(created)s, %(updated)s);
         """
         params = {
             'transaction_date': line_item.transaction_date,
@@ -34,7 +37,9 @@ class LarryRepository(AbstractRepository):
             'transaction_type_id': line_item.transaction_type_id,
             'account_id': line_item.account_id,
             'check_number': line_item.check_number,
-            'type_detail_id': line_item.type_detail_id
+            'type_detail_id': line_item.type_detail_id,
+            'created': current_time,
+            'updated': current_time
 
         }
         results = db_pool.insert(query, params)
@@ -68,26 +73,32 @@ class LarryRepository(AbstractRepository):
         return data
 
     def update_comment(self, new_value, id):
+        current_time = datetime.datetime.now(pytz.timezone("America/New_York"))
         query = """
         UPDATE line_item
-        SET comment = %(new_value)s
+        SET comment = %(new_value)s,
+        updated = %(time)s
         WHERE id = %(line_item_id)s
         """
         params = {
             'new_value': new_value,
-            'line_item_id': id
+            'line_item_id': id,
+            'time': current_time
         }
         db_pool.update(query, params)
 
     def update_category(self, new_value, id):
+        current_time = datetime.datetime.now(pytz.timezone("America/New_York"))
         query = """
         UPDATE line_item
-        SET category_id = %(new_value)s
+        SET category_id = %(new_value)s,
+        updated = %(time)s
         WHERE id = %(line_item_id)s
         """
         params = {
             'new_value': new_value,
-            'line_item_id': id
+            'line_item_id': id,
+            'time': current_time
         }
         db_pool.update(query, params)
 

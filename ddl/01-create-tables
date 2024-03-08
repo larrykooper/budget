@@ -10,7 +10,9 @@ CREATE TABLE line_item(
   check_number VARCHAR(5),
   type_detail_id INTEGER,     -- optional
   comment TEXT,
-  data_hash CHAR(64)
+  data_hash CHAR(64),
+  created TIMESTAMP WITH TIME ZONE,
+  updated TIMESTAMP WITH TIME ZONE
 );
 
 CREATE TABLE account(
