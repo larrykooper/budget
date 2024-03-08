@@ -1,10 +1,44 @@
 body {
     font-family: Arial, sans-serif;
 }
+
+/*  TOP NAV  */
+
+div.topnav {
+    padding-top: 25px;
+}
+
+a.topnav-item {
+    margin-top: 15px;
+    padding-left: 107px;
+    font-size: 19px;
+}
+
+/*  HOMEPAGE  */
+
+h2.home-header {
+    margin-left: 103px;
+}
+
+/*  REPORTS   */
+
+.spending-report table {
+    font-size: 15px;
+}
+
 table, th, td {
     border: 1px solid;
     border-collapse: collapse;
-  }
+}
+
+.table.user-select-none {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
 
 th, td {
     padding: 3px 20px 3px 20px;
@@ -22,6 +56,8 @@ td.category_name {
     width: 170px;
 }
 
+/* OTHER  */
+
 div.choice {
     padding: 62px 0px 10px 0px;
     margin-left: 40px;
@@ -36,15 +72,3 @@ div.month-link {
     padding-top: 30px;
 }
 
-.table.user-select-none {
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-}
-
-.spending-report table {
-    font-size: 15px;
-}

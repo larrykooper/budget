@@ -1,5 +1,5 @@
 <!doctype html>
-<title>BP: {% block title %}{% endblock %}</title>
+<title>Budget Program: {% block title %}{% endblock %}</title>
 <html>
 <head>
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
@@ -9,6 +9,11 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
+    <div class="topnav">
+        <a class="topnav-item" href="/report">Reports</a>
+        <a class="topnav-item" href="/ingest">Upload a bank or credit card file</a>
+    </div>
+    </body>
     {% block content %}
     {% endblock %}
 </body>
