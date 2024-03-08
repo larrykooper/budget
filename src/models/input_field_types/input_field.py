@@ -9,6 +9,7 @@ class InputField:
 
     @staticmethod
     def instantiate_input_field(input_field):
+        from src.models.input_field_types.amount_no_change import AmountNoChange
         from src.models.input_field_types.bank_amount import BankAmount
         from src.models.input_field_types.bank_description import BankDescription
         from src.models.input_field_types.bank_post_date import BankPostDate
@@ -22,6 +23,8 @@ class InputField:
         from src.models.input_field_types.transaction_date import TransactionDate
         from src.models.input_field_types.transaction_type_input_field import TransactionTypeInputField
         from src.models.input_field_types.type_detail_input_field import TypeDetailInputField
+        if input_field == "AMOUNT_NO_CHANGE":
+            return AmountNoChange()
         if input_field == "BANK_AMOUNT":
             return BankAmount()
         if input_field == "BANK_DESCRIPTION":

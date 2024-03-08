@@ -2,6 +2,7 @@ from decimal import Decimal
 
 from src.models.input_field_types.input_field import InputField
 # A ChaseCreditCardAmount is an amount field from a Chase Credit Card bill
+# I need to flip the sign because for me, debits are positive
 
 class ChaseCreditCardAmount(InputField):
 
