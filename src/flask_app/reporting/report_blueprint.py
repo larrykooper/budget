@@ -46,6 +46,10 @@ def update():
 
 
 def translate_line_items(line_items: list[dict]) -> list[dict]:
+    """
+    translate_line_items converts the IDs of dimension tables to their names,
+    so they can be displayed on the front-end
+    """
     authority_finder = AuthorityFinder()
     for line_item in line_items:
         line_item['check_number'] = none_to_blank(line_item['check_number'])
