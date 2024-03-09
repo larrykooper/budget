@@ -13,7 +13,7 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-def upload_file(request):
+def upload_file(request) -> str:
     if request.method == 'POST':
         # check if the post request has the file part
         if 'file' not in request.files:
@@ -30,4 +30,5 @@ def upload_file(request):
             filename = secure_filename(file.filename)
             file.save(os.path.join(UPLOAD_FOLDER, filename))
             # ingest the file
-            ingest_file.ingest_file(filename, account)
+            result = ingest_file.ingest_file(filename, account)
+            return result

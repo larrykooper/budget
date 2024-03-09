@@ -1,14 +1,12 @@
 import datetime
 import pytz
 
-
 from src.adapters.abstract_repository import AbstractRepository
 import src.flask_app.database.db_pool as db_pool
 
 class LarryRepository(AbstractRepository):
 
     def add(self, line_item):
-
         current_time = datetime.datetime.now(pytz.timezone("America/New_York"))
 
         query = """
@@ -22,11 +20,13 @@ class LarryRepository(AbstractRepository):
             account_id,
             check_number,
             type_detail_id,
+            data_hash,
             created,
             updated
         )
             VALUES (%(transaction_date)s, %(post_date)s, %(description)s, %(amount)s,
-              %(category_id)s, %(transaction_type_id)s, %(account_id)s, %(check_number)s, %(type_detail_id)s, %(created)s, %(updated)s);
+              %(category_id)s, %(transaction_type_id)s, %(account_id)s, %(check_number)s,
+              %(type_detail_id)s, %(data_hash)s,  %(created)s, %(updated)s);
         """
         params = {
             'transaction_date': line_item.transaction_date,
@@ -38,6 +38,7 @@ class LarryRepository(AbstractRepository):
             'account_id': line_item.account_id,
             'check_number': line_item.check_number,
             'type_detail_id': line_item.type_detail_id,
+            'data_hash': line_item.data_hash,
             'created': current_time,
             'updated': current_time
 
@@ -47,7 +48,6 @@ class LarryRepository(AbstractRepository):
 
     def get(self) -> list:
         raise NotImplementedError
-
 
     def get_by_date_range(self, start_date: datetime.date, end_date: datetime.date) -> list[dict]:
         query = """
@@ -61,7 +61,6 @@ class LarryRepository(AbstractRepository):
         }
         data = db_pool.get_data(query, params, single_row=False)
         return data
-
 
     def get_all_categories(self) -> list[dict]:
         query = """
@@ -111,3 +110,15 @@ class LarryRepository(AbstractRepository):
             'line_item_id': id
         }
         db_pool.delete(query, params)
+
+    def query_for_hash(self, hash)-> bool:
+        query = """
+        SELECT 1 FROM line_item
+        WHERE EXISTS (SELECT 1 FROM line_item WHERE data_hash = %(hash)s)
+        LIMIT 1
+        """
+        params = {
+            'hash': hash
+        }
+        data = db_pool.get_data(query, params, single_row=True)
+        return data

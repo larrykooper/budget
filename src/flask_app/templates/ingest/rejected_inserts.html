@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+SOME INSERTS WERE REJECTED
+
+    {% for line_item in rejected_inserts %}
+
+        <div>
+            {{ line_item['id'] }}
+            {{ line_item['transaction_date'] }}
+            {{ line_item['post_date'] }}
+            {{ line_item['description'] }}
+            {{ line_item['amount'] }}
+            {{ line_item['category_name'] }}
+            {{ line_item['transaction_type'] }}
+            {{ line_item['account_name'] }}
+            {{ line_item['check_number'] }}
+            {{ line_item['type_detail_name'] }}
+            {{ line_item['comment'] }}
+        </div>
+    {% endfor %}
+
+{% endblock %}

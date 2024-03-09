@@ -1,4 +1,5 @@
 import csv
+import hashlib
 
 from src.adapters.larry_repository import LarryRepository
 from src.authorities.authority_finder import AuthorityFinder
@@ -24,6 +25,7 @@ def ingest_file(filename: str, account: str):
     # Module-specific initialization
 
     CategoryRules.initialize_category_rules()
+    rejected_inserts = []
 
     # Read the file
 
@@ -51,10 +53,29 @@ def ingest_file(filename: str, account: str):
                     line_item_dict[field_name] = persist_value
             line_item = LineItem(**line_item_dict)
             line_count += 1
-            repo.add(line_item)
+            data_hash = hash_the_data(line_item)
+            if hash_exists(repo, data_hash):
+                rejected_inserts.append(line_item)
+            else:
+                line_item.data_hash = data_hash
+                repo.add(line_item)
+    if rejected_inserts:
+        return "INSERTS REJECTED", rejected_inserts
+    else:
+        return "SUCCESS"
 
-    # for each line:
-    # translate some columns into authorities
-    #   Category and Type need to be changed to authorities
-    #   later - autocategorize based on payee
-    # Write 1 row to the line_item table
+def hash_the_data(line_item: LineItem) -> str:
+        transaction_date = line_item.transaction_date
+        amount = line_item.amount
+        description = line_item.description
+        to_hash = f"{transaction_date}|{amount}|{description}"
+        as_bytes = to_hash.encode(encoding='utf-8', errors='strict')
+        return hashlib.sha256(as_bytes).hexdigest()
+
+def hash_exists(repo: LarryRepository, hash: str) -> bool:
+    result = repo.query_for_hash(hash)
+    if result is None:
+        return False
+    else:
+        return True
+
