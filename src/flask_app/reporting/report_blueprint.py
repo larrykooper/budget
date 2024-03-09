@@ -22,13 +22,27 @@ def spending():
     else:
         year = int(request.args.get('year'))
         month = int(request.args.get('month'))
+        if 'sortkey' in request.args:
+            sortkey = request.args.get('sortkey')
+        else:
+            sortkey = "transaction_date"
+        if 'direction' in request.args:
+            sort_direction = request.args.get('direction')
+        else:
+            sort_direction  = "asc"
         start_date, end_date = get_start_end(year, month)
         repo = LarryRepository()
         # Query the database for what we need to report
-        line_items = repo.get_by_date_range(start_date, end_date)
+        line_items = repo.get_by_date_range(start_date, end_date, sortkey, sort_direction)
         line_items_translated = translate_line_items(line_items)
         categories = Category.categories_json()
-        return render_template('report/spending.html', line_items=line_items_translated, categories=categories)
+        return render_template('report/spending.html',
+            line_items=line_items_translated,
+            categories=categories,
+            year=year,
+            month=month,
+            sortkey=sortkey,
+            sort_direction=sort_direction)
 
 # Called via AJAX
 @bp.route('/_update', methods=['POST'])

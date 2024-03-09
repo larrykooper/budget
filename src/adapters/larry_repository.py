@@ -50,7 +50,12 @@ class LarryRepository(AbstractRepository):
     def get(self) -> list:
         raise NotImplementedError
 
-    def get_by_date_range(self, start_date: datetime.date, end_date: datetime.date) -> list[dict]:
+    def get_by_date_range(
+            self,
+            start_date: datetime.date,
+            end_date: datetime.date,
+            sort_column: str,
+            sort_direction: str) -> list[dict]:
         """
         You cannot use the "%s" pattern to pass field names, table names,
         or snippets of SQL (such as ASC) to "execute." You can only use the
@@ -59,8 +64,6 @@ class LarryRepository(AbstractRepository):
         and sql.SQL to pass the sort direction.
         See: https://www.psycopg.org/psycopg3/docs/api/sql.html
         """
-        sort_column = "transaction_date"
-        sort_direction = "ASC"
         qstring = """
         SELECT * FROM line_item
         WHERE transaction_date BETWEEN %(start_date)s AND %(end_date)s

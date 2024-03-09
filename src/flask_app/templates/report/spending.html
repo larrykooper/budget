@@ -1,5 +1,17 @@
 <!-- display one line for each line item  -->
 
+{% macro sortable(year, month, column, title, sort_direction) -%}
+    {# Want to reverse direction if user clicks again #}
+    {% if sort_direction == "asc" %}
+        {% set direction = "desc" %}
+    {% else %}
+        {% set direction = "asc" %}
+    {% endif %}
+    <a href="{{ url_for('.spending', year=year, month=month, sortkey=column, direction=direction)}}">
+        {{ title }}
+    </a>
+{%- endmacro %}
+
 {% extends 'base.html' %}
 
 {% block content %}
@@ -10,7 +22,7 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Transaction<br>Date</th>
+                        <th>{{ sortable(year, month, "transaction_date", "Transaction Date", sort_direction)  }}</th>
                         <th>Post Date</th>
                         <th>Description</th>
                         <th>Amount</th>
