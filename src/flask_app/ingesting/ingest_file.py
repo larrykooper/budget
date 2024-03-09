@@ -25,7 +25,6 @@ def ingest_file(filename: str, account: str):
     # Module-specific initialization
 
     CategoryRules.initialize_category_rules()
-    rejected_inserts = []
 
     # Read the file
 
@@ -54,14 +53,8 @@ def ingest_file(filename: str, account: str):
             line_item = LineItem(**line_item_dict)
             line_count += 1
             data_hash = hash_the_data(line_item)
-            if hash_exists(repo, data_hash):
-                rejected_inserts.append(line_item)
-            else:
-                line_item.data_hash = data_hash
-                repo.add(line_item)
-    if rejected_inserts:
-        return "INSERTS REJECTED", rejected_inserts
-    else:
+            line_item.data_hash = data_hash
+            repo.add(line_item)
         return "SUCCESS"
 
 def hash_the_data(line_item: LineItem) -> str:
@@ -71,11 +64,4 @@ def hash_the_data(line_item: LineItem) -> str:
         to_hash = f"{transaction_date}|{amount}|{description}"
         as_bytes = to_hash.encode(encoding='utf-8', errors='strict')
         return hashlib.sha256(as_bytes).hexdigest()
-
-def hash_exists(repo: LarryRepository, hash: str) -> bool:
-    result = repo.query_for_hash(hash)
-    if result is None:
-        return False
-    else:
-        return True
 

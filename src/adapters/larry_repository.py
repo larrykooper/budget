@@ -8,7 +8,6 @@ class LarryRepository(AbstractRepository):
 
     def add(self, line_item):
         current_time = datetime.datetime.now(pytz.timezone("America/New_York"))
-
         query = """
         INSERT INTO line_item (
             transaction_date,
@@ -111,14 +110,3 @@ class LarryRepository(AbstractRepository):
         }
         db_pool.delete(query, params)
 
-    def query_for_hash(self, hash)-> bool:
-        query = """
-        SELECT 1 FROM line_item
-        WHERE EXISTS (SELECT 1 FROM line_item WHERE data_hash = %(hash)s)
-        LIMIT 1
-        """
-        params = {
-            'hash': hash
-        }
-        data = db_pool.get_data(query, params, single_row=True)
-        return data

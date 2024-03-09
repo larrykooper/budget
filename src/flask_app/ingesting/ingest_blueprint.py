@@ -17,6 +17,5 @@ def upload():
         result = upload_file.upload_file(request)
     if result == "SUCCESS":
         return render_template('ingest/upload_success.html')
-    if result[0] == "INSERTS REJECTED":
-        return render_template('ingest/rejected_inserts.html', rejected_inserts=result[1])
+
 
