@@ -1,6 +1,8 @@
 import datetime
 import pytz
 
+from psycopg import sql
+
 from src.adapters.abstract_repository import AbstractRepository
 import src.flask_app.database.db_pool as db_pool
 
@@ -49,16 +51,27 @@ class LarryRepository(AbstractRepository):
         raise NotImplementedError
 
     def get_by_date_range(self, start_date: datetime.date, end_date: datetime.date) -> list[dict]:
-        query = """
+        """
+        You cannot use the "%s" pattern to pass field names, table names,
+        or snippets of SQL (such as ASC) to "execute." You can only use the
+        "%s" pattern to pass values.
+        So in this case I had to use sql.Identifier to pass the field name,
+        and sql.SQL to pass the sort direction.
+        See: https://www.psycopg.org/psycopg3/docs/api/sql.html
+        """
+        sort_column = "transaction_date"
+        sort_direction = "ASC"
+        qstring = """
         SELECT * FROM line_item
         WHERE transaction_date BETWEEN %(start_date)s AND %(end_date)s
-        ORDER BY transaction_date
+        ORDER BY {} {}
         """
         params = {
             'start_date': start_date,
             'end_date': end_date
         }
-        data = db_pool.get_data(query, params, single_row=False)
+        executable_sql = sql.SQL(qstring).format(sql.Identifier(sort_column), sql.SQL(sort_direction))
+        data = db_pool.get_data(executable_sql, params, single_row=False)
         return data
 
     def get_all_categories(self) -> list[dict]:
