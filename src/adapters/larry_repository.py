@@ -55,7 +55,9 @@ class LarryRepository(AbstractRepository):
             start_date: datetime.date,
             end_date: datetime.date,
             sort_column: str,
-            sort_direction: str) -> list[dict]:
+            sort_direction: str,
+            sort_table: str = None,
+            ) -> list[dict]:
         """
         You cannot use the "%s" pattern to pass field names, table names,
         or snippets of SQL (such as ASC) to "execute." You can only use the
@@ -65,15 +67,17 @@ class LarryRepository(AbstractRepository):
         See: https://www.psycopg.org/psycopg3/docs/api/sql.html
         """
         qstring = """
-        SELECT * FROM line_item
-        WHERE transaction_date BETWEEN %(start_date)s AND %(end_date)s
+        SELECT * FROM line_item li
+        INNER JOIN category cat
+        ON li.category_id = cat.id
+        WHERE li.transaction_date BETWEEN %(start_date)s AND %(end_date)s
         ORDER BY {} {}
         """
         params = {
             'start_date': start_date,
             'end_date': end_date
         }
-        executable_sql = sql.SQL(qstring).format(sql.Identifier(sort_column), sql.SQL(sort_direction))
+        executable_sql = sql.SQL(qstring).format(sql.Identifier(sort_table, sort_column), sql.SQL(sort_direction))
         data = db_pool.get_data(executable_sql, params, single_row=False)
         return data
 

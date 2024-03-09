@@ -22,11 +22,11 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>{{ sortable(year, month, "transaction_date", "Transaction Date", sort_direction)  }}</th>
+                        <th>{{ sortable(year, month, "li.transaction_date", "Transaction Date", sort_direction) }}</th>
                         <th>Post Date</th>
                         <th>Description</th>
                         <th>Amount</th>
-                        <th>Category</th>
+                        <th>{{ sortable(year, month, "cat.name", "Category", sort_direction) }}</th>
                         <th>Transaction<br>Type</th>
                         <th>Account Name</th>
                         <th>Check<br>Number</th>

@@ -25,15 +25,18 @@ def spending():
         if 'sortkey' in request.args:
             sortkey = request.args.get('sortkey')
         else:
-            sortkey = "transaction_date"
+            sortkey = "li.transaction_date"
         if 'direction' in request.args:
             sort_direction = request.args.get('direction')
         else:
             sort_direction  = "asc"
+        sortspec = sortkey.split(".")
+        sort_table = sortspec[0]
+        sort_column = sortspec[1]
         start_date, end_date = get_start_end(year, month)
         repo = LarryRepository()
         # Query the database for what we need to report
-        line_items = repo.get_by_date_range(start_date, end_date, sortkey, sort_direction)
+        line_items = repo.get_by_date_range(start_date, end_date, sort_column, sort_direction, sort_table)
         line_items_translated = translate_line_items(line_items)
         categories = Category.categories_json()
         return render_template('report/spending.html',
