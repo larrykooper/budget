@@ -36,7 +36,7 @@ def spending():
         start_date, end_date = get_start_end(year, month)
         repo = LarryRepository()
         # Query the database for what we need to report
-        line_items = repo.get_by_date_range(start_date, end_date, sort_column, sort_direction, sort_table)
+        line_items = repo.get_for_spending_report(start_date, end_date, sort_column, sort_direction, sort_table)
         line_items_translated = translate_line_items(line_items)
         categories = Category.categories_json()
         return render_template('report/spending.html',

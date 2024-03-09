@@ -50,7 +50,7 @@ class LarryRepository(AbstractRepository):
     def get(self) -> list:
         raise NotImplementedError
 
-    def get_by_date_range(
+    def get_for_spending_report(
             self,
             start_date: datetime.date,
             end_date: datetime.date,
@@ -65,12 +65,17 @@ class LarryRepository(AbstractRepository):
         So in this case I had to use sql.Identifier to pass the field name,
         and sql.SQL to pass the sort direction.
         See: https://www.psycopg.org/psycopg3/docs/api/sql.html
+        ---
+        Credit card payments are not spending, they are transfers.
         """
         qstring = """
         SELECT * FROM line_item li
-        INNER JOIN category cat
+        LEFT JOIN category cat
         ON li.category_id = cat.id
+        LEFT JOIN transaction_type tt
+        ON li.transaction_type_id = tt.id
         WHERE li.transaction_date BETWEEN %(start_date)s AND %(end_date)s
+        AND tt.name <> 'credit_card_payment'
         ORDER BY {} {}
         """
         params = {
