@@ -25,6 +25,7 @@ def ingest_file(filename: str, account: str):
     # Module-specific initialization
 
     CategoryRules.initialize_category_rules()
+    default_trans_id = get_default_trans_id()
 
     # Read the file
 
@@ -50,6 +51,8 @@ def ingest_file(filename: str, account: str):
                 what_to_persist = field_type_obj.what_to_persist(value, **kwargs)
                 for field_name, persist_value in what_to_persist.items():
                     line_item_dict[field_name] = persist_value
+            if not "transaction_type_id" in line_item_dict:
+                line_item_dict["transaction_type_id"] = default_trans_id
             line_item = LineItem(**line_item_dict)
             line_count += 1
             data_hash = hash_the_data(line_item)
@@ -64,4 +67,9 @@ def hash_the_data(line_item: LineItem) -> str:
         to_hash = f"{transaction_date}|{amount}|{description}"
         as_bytes = to_hash.encode(encoding='utf-8', errors='strict')
         return hashlib.sha256(as_bytes).hexdigest()
+
+def get_default_trans_id() -> int:
+    authority_finder = AuthorityFinder()
+    default_type = "debit"
+    return authority_finder.authority_lookup("transaction_type", default_type)
 

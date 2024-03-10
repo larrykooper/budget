@@ -2,7 +2,7 @@ CREATE TABLE line_item(
   id SERIAL,
   transaction_date DATE,
   post_date DATE,
-  description VARCHAR(255),
+  description TEXT,
   amount NUMERIC(8,2),
   category_id INTEGER,
   transaction_type_id INTEGER,

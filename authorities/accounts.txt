@@ -3,5 +3,6 @@ Apple-Card
 Capital-One
 Cash
 Checking
+Discover
 Sapphire-2161
 \.
