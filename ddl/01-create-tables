@@ -11,6 +11,7 @@ CREATE TABLE line_item(
   type_detail_id INTEGER,     -- optional
   comment TEXT,
   data_hash CHAR(64),
+  show_on_spending_report BOOLEAN,
   created TIMESTAMP WITH TIME ZONE,
   updated TIMESTAMP WITH TIME ZONE
 );

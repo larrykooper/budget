@@ -58,6 +58,8 @@ def ingest_file(filename: str, account: str):
             data_hash = hash_the_data(line_item)
             line_item.data_hash = data_hash
             repo.add(line_item)
+        # Done with ingesting the whole file
+        repo.filter_for_spending_report()
         return "SUCCESS"
 
 def hash_the_data(line_item: LineItem) -> str:

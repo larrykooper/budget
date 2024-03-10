@@ -22,12 +22,13 @@ class LarryRepository(AbstractRepository):
             check_number,
             type_detail_id,
             data_hash,
+            show_on_spending_report,
             created,
             updated
         )
             VALUES (%(transaction_date)s, %(post_date)s, %(description)s, %(amount)s,
               %(category_id)s, %(transaction_type_id)s, %(account_id)s, %(check_number)s,
-              %(type_detail_id)s, %(data_hash)s,  %(created)s, %(updated)s);
+              %(type_detail_id)s, %(data_hash)s, %(show_on_spending_report)s,  %(created)s, %(updated)s);
         """
         params = {
             'transaction_date': line_item.transaction_date,
@@ -40,9 +41,9 @@ class LarryRepository(AbstractRepository):
             'check_number': line_item.check_number,
             'type_detail_id': line_item.type_detail_id,
             'data_hash': line_item.data_hash,
+            'show_on_spending_report': line_item.show_on_spending_report,
             'created': current_time,
             'updated': current_time
-
         }
         results = db_pool.insert(query, params)
         return results
@@ -76,6 +77,7 @@ class LarryRepository(AbstractRepository):
         ON li.transaction_type_id = tt.id
         WHERE li.transaction_date BETWEEN %(start_date)s AND %(end_date)s
         AND tt.name <> 'credit_card_payment'
+        AND li.show_on_spending_report
         ORDER BY {} {}
         """
         params = {
@@ -134,4 +136,102 @@ class LarryRepository(AbstractRepository):
             'line_item_id': id
         }
         db_pool.delete(query, params)
+
+    def filter_for_spending_report(self):
+        """
+        Note for future: I can delete some of these rules when there are no more
+        files from Amex, Apple, Capital One, or Discover.
+        I can delete Rule 4, Rule 5, and Rule 6.
+        """
+        # Rule 1: Transaction_type is credit and account is Checking
+        # Reason: Credit items are not spending
+        query = """
+        UPDATE line_item
+        SET show_on_spending_report = 'f'
+        FROM transaction_type, account
+        WHERE line_item.transaction_type_id = transaction_type.id
+        AND line_item.account_id = account.id
+        AND transaction_type.name = 'credit'
+        AND account.name = 'Checking'
+        """
+        params = {}
+        db_pool.update(query, params)
+
+        # Rule 2: Account is Checking and description starts with "Payment to Chase card"
+        # Reason: These items are when I pay a Chase credit card
+        qstring = """
+        UPDATE line_item
+        SET show_on_spending_report = 'f'
+        FROM account
+        WHERE line_item.account_id = account.id
+        AND account.name = 'Checking'
+        AND description LIKE {}
+        """
+        params = {}
+        executable_sql = sql.SQL(qstring).format(sql.Literal('Payment to Chase card%%'))
+        db_pool.update(executable_sql, params)
+
+        # Rule 3: Description starts with REMOTE ONLINE DEPOSIT
+        # Reason: Deposit, not spending
+        qstring = """
+        UPDATE line_item
+        SET show_on_spending_report = 'f'
+        WHERE description LIKE {}
+        """
+        params = {}
+        executable_sql = sql.SQL(qstring).format(sql.Literal('REMOTE ONLINE DEPOSIT%%'))
+        db_pool.update(executable_sql, params)
+
+        # Rule 4: Account is Checking and description starts with AMERICAN EXPRESS ACH PMT
+        # Reason: Because this is me paying an Amex card
+        qstring = """
+        UPDATE line_item
+        SET show_on_spending_report = 'f'
+        FROM account
+        WHERE line_item.account_id = account.id
+        AND account.name = 'Checking'
+        AND description LIKE {}
+        """
+        params = {}
+        executable_sql = sql.SQL(qstring).format(sql.Literal('AMERICAN EXPRESS ACH PMT%%'))
+        db_pool.update(executable_sql, params)
+
+        # Rule 5: Account is Discover and description starts with either INTERNET PAYMENT or CASHBACK BONUS
+        # Reason: This is either a card bonus or me paying off a card
+        qstring = """
+        UPDATE line_item
+        SET show_on_spending_report = 'f'
+        FROM account
+        WHERE line_item.account_id = account.id
+        AND account.name = 'Discover'
+        AND (description LIKE {}
+        OR description LIKE {})
+        """
+        params = {}
+        executable_sql = sql.SQL(qstring).format(sql.Literal('INTERNET PAYMENT%%'),
+                        sql.Literal('CASHBACK BONUS%%'))
+        db_pool.update(executable_sql, params)
+
+        # Rule 6: Account is Checking and description starts with APPLECARD or DISCOVER or CAPITAL ONE
+        # Reason: This is me paying off a credit card
+        qstring = """
+        UPDATE line_item
+        SET show_on_spending_report = 'f'
+        FROM account
+        WHERE line_item.account_id = account.id
+        AND account.name = 'Checking'
+        AND (description LIKE {}
+        OR description LIKE {}
+        OR description LIKE {})
+        """
+        params = {}
+        executable_sql = sql.SQL(qstring).format(sql.Literal('APPLECARD%%'),
+                    sql.Literal('CAPITAL ONE%%'),
+                    sql.Literal('DISCOVER%%'))
+        db_pool.update(executable_sql, params)
+
+
+
+
+
 
