@@ -58,6 +58,10 @@ td.category_name {
 
 /* SPENDING BY CATEGORY REPORT   */
 
+div.spending-cat-report {
+    margin-left: 40px;
+}
+
 table#spendingcat {
     font-size: 15px;
 }

@@ -61,13 +61,15 @@ def spendingcat():
         # There is a querystring
         year = int(request.args.get('year'))
         month = int(request.args.get('month'))
+        month_name = calendar.month_name[month]
         start_date, end_date = get_start_end(year, month)
         repo = LarryRepository()
         categories = repo.get_for_spending_by_cat(start_date, end_date)
         return render_template('report/spendingcat.html',
             categories = categories,
             year=year,
-            month=month
+            month=month,
+            month_name=month_name
         )
 
 # Used for in-place editing -- called via AJAX
