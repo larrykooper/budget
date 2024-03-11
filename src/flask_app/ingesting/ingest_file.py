@@ -6,7 +6,7 @@ from src.authorities.authority_finder import AuthorityFinder
 from src.models.account_types.account import Account
 from src.models.input_field_types.input_field import InputField
 from src.models.line_item import LineItem
-from src.translation.category_rules import CategoryRules
+
 
 
 def ingest_file(filename: str, account: str):
@@ -24,7 +24,6 @@ def ingest_file(filename: str, account: str):
 
     # Module-specific initialization
 
-    CategoryRules.initialize_category_rules()
     default_trans_id = get_default_trans_id()
 
     # Read the file

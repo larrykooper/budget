@@ -1,8 +1,7 @@
+from src.adapters.larry_repository import LarryRepository
 from src.authorities.authority_finder import AuthorityFinder
-from src.models.input_field_types.description_input_field import DescriptionInputField
 from src.models.input_field_types.input_field import InputField
 from src.models.persistence.category import Category
-from src.translation.category_rules import CategoryRules
 
 
 class CategoryInputField(InputField):
@@ -30,21 +29,18 @@ class CategoryInputField(InputField):
         else:
             return Category.id_for_uncategorized()
 
-
     def category_by_rule(self, description: str):
-        returnval = None
-        # Convert description and rule to lowercase
+        repo = LarryRepository()
+        # Convert description to lowercase
         desc_low = description.lower()
-        rule_low = rule['term'].lower()
-        for rule in CategoryRules.starts_with_rules:
-            if desc_low.startswith(rule_low):
-                returnval = rule['category']
-                break
-        if not returnval:
-            for rule in CategoryRules.contains_rules:
-                if rule_low in desc_low:
-                    returnval = rule['category']
-                    break
-        return returnval
+        # get_starts_with_rule uses LIKE 'foo%'
+        starts_with_rule = repo.get_starts_with_rule(desc_low)
+        if starts_with_rule:
+            return starts_with_rule['category']
+        # get_contains_rule uses LIKE '%foo%'
+        # contains_rule = get_contains_rule(desc_low)
+        # if contains_rule:
+        #     return the_cat_of_cr
+        return None
 
 
