@@ -18,7 +18,7 @@ def report_home():
 def spending():
     qs = request.query_string
     if qs.decode('ASCII') == "":
-        return render_template('report/month_picker.html')
+        return render_template('report/month_picker.html', path='spending')
     else:
         year = int(request.args.get('year'))
         month = int(request.args.get('month'))
