@@ -33,13 +33,16 @@ class CategoryInputField(InputField):
 
     def category_by_rule(self, description: str):
         returnval = None
+        # Convert description and rule to lowercase
+        desc_low = description.lower()
+        rule_low = rule['term'].lower()
         for rule in CategoryRules.starts_with_rules:
-            if description.startswith(rule['term']):
+            if desc_low.startswith(rule_low):
                 returnval = rule['category']
                 break
         if not returnval:
             for rule in CategoryRules.contains_rules:
-                if rule['term'] in description:
+                if rule_low in desc_low:
                     returnval = rule['category']
                     break
         return returnval
