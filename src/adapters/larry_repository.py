@@ -252,7 +252,7 @@ class LarryRepository(AbstractRepository):
                     sql.Literal('DISCOVER%%'))
         db_pool.update(executable_sql, params)
 
-    def get_starts_with_rule(self, desc_low: str):
+    def get_starts_with_rule(self, desc_low: str) -> str:
         qstring = """
         SELECT category
         FROM category_rule crule
@@ -268,7 +268,7 @@ class LarryRepository(AbstractRepository):
         return data
 
     """
-    this works:
+    this works, for get_starts_with_rule:
 
         SELECT category
         FROM category_rule
@@ -276,6 +276,22 @@ class LarryRepository(AbstractRepository):
         AND 'starbucks store 15685' LIKE term || '%'
 
     """
+
+    def get_contains_rule(self, desc_low: str) -> str:
+        qstring = """
+        SELECT category
+        FROM category_rule crule
+        INNER JOIN rule_type rt
+        ON crule.rule_type_id = rt.id
+        WHERE rt.name = 'contains'
+        AND %(desc_low)s LIKE '%%' || term || '%%'
+        """
+        params = {
+            'desc_low': desc_low
+        }
+        data = db_pool.get_data(qstring, params, single_row=True)
+        return data
+
 
 """
 this worked to recategorize the existing line items
@@ -288,7 +304,7 @@ WITH new_category AS (
 UPDATE line_item
 SET category_id = new_category.id
 FROM new_category
-WHERE LOWER(description) LIKE '%cognitive and behavioral%'
+WHERE LOWER(description) LIKE '%cognitive and behavioral%'  <-- contains rule
 
 """
 

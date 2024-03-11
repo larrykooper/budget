@@ -38,9 +38,9 @@ class CategoryInputField(InputField):
         if starts_with_rule:
             return starts_with_rule['category']
         # get_contains_rule uses LIKE '%foo%'
-        # contains_rule = get_contains_rule(desc_low)
-        # if contains_rule:
-        #     return the_cat_of_cr
+        contains_rule = repo.get_contains_rule(desc_low)
+        if contains_rule:
+            return contains_rule['category']
         return None
 
 
