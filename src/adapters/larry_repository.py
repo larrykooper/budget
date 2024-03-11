@@ -88,6 +88,28 @@ class LarryRepository(AbstractRepository):
         data = db_pool.get_data(executable_sql, params, single_row=False)
         return data
 
+    def get_for_spending_by_cat(
+        self,
+        start_date: datetime.date,
+        end_date: datetime.date,
+        ) -> list[dict]:
+        query = """
+        SELECT cat.name, SUM(amount)
+        FROM line_item li
+        LEFT JOIN category cat
+        ON li.category_id = cat.id
+        WHERE transaction_date BETWEEN '2023-12-01' AND '2023-12-31'
+        AND show_on_spending_report
+        GROUP BY cat.name
+        ORDER BY cat.name
+        """
+        params = {
+            'start_date': start_date,
+            'end_date': end_date
+        }
+        data = db_pool.get_data(query, params, single_row=False)
+        return data
+
     def get_all_categories(self) -> list[dict]:
         query = """
         SELECT id, name FROM category

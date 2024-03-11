@@ -47,7 +47,8 @@ def spending():
             year=year,
             month=month,
             sortkey=sortkey,
-            sort_direction=sort_direction)
+            sort_direction=sort_direction
+        )
 
 # Spending by category per month
 @bp.route('/spendingcat', methods=['GET'])
@@ -58,7 +59,16 @@ def spendingcat():
         return render_template('report/month_picker.html', path='spendingcat')
     else:
         # There is a querystring
-        return render_template('report/spendingcat.html')
+        year = int(request.args.get('year'))
+        month = int(request.args.get('month'))
+        start_date, end_date = get_start_end(year, month)
+        repo = LarryRepository()
+        categories = repo.get_for_spending_by_cat(start_date, end_date)
+        return render_template('report/spendingcat.html',
+            categories = categories,
+            year=year,
+            month=month
+        )
 
 # Used for in-place editing -- called via AJAX
 @bp.route('/_update', methods=['POST'])

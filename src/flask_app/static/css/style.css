@@ -20,7 +20,7 @@ h2.home-header {
     margin-left: 103px;
 }
 
-/*  REPORTS   */
+/* SPENDING DETAIL REPORT   */
 
 .spending-report table {
     font-size: 15px;
@@ -54,6 +54,12 @@ td.post_date {
 
 td.category_name {
     width: 170px;
+}
+
+/* SPENDING BY CATEGORY REPORT   */
+
+table#spendingcat {
+    font-size: 15px;
 }
 
 /* OTHER  */

@@ -4,5 +4,22 @@
 
     <h1>Spending by Category Report</h1>
     <h2>for SomeMonth 2024</h2>
+    <table id="spendingcat">
+        <thead>
+            <tr>
+                <th>Category</th>
+                <th>Total Spending</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for category in categories %}
+        <tr class="category">
+            <td>{{ category['name'] }}</td>
+            <td class="amount">{{ "{:,.2f}".format(category['sum']) }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
 
 {% endblock content %}
