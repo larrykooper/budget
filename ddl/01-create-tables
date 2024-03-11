@@ -15,7 +15,14 @@ CREATE TABLE line_item(
   created TIMESTAMP WITH TIME ZONE,
   updated TIMESTAMP WITH TIME ZONE
 );
-CREATE INDEX ON line_item (data_hash);
+
+CREATE TABLE category_rule(
+    term VARCHAR(255),
+    category VARCHAR(255),
+    rule_type_id INTEGER
+);
+CREATE INDEX ON category_rule (term);
+CREATE INDEX ON category_rule (rule_type_id);
 
 CREATE TABLE account(
     id SERIAL,
@@ -36,5 +43,10 @@ CREATE TABLE transaction_type(
     id SERIAL,
     name VARCHAR(255)
 );
+
+CREATE TABLE rule_type(
+    id SERIAL,
+    name VARCHAR(255)
+)
 
 COPY account(name) FROM stdin (FORMAT csv);
