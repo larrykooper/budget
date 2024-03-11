@@ -98,7 +98,7 @@ class LarryRepository(AbstractRepository):
         FROM line_item li
         LEFT JOIN category cat
         ON li.category_id = cat.id
-        WHERE transaction_date BETWEEN '2023-12-01' AND '2023-12-31'
+        WHERE transaction_date BETWEEN %(start_date)s AND %(end_date)s
         AND show_on_spending_report
         GROUP BY cat.name
         ORDER BY cat.name
@@ -253,7 +253,20 @@ class LarryRepository(AbstractRepository):
         db_pool.update(executable_sql, params)
 
 
+"""
+this worked to recategorize the existing line items
+via a new rule
 
+WITH new_category AS (
+  SELECT id FROM category
+  WHERE name = 'Doctor'
+)
+UPDATE line_item
+SET category_id = new_category.id
+FROM new_category
+WHERE LOWER(description) LIKE '%cognitive and behavioral%'
+
+"""
 
 
 
