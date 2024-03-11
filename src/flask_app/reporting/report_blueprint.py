@@ -14,9 +14,11 @@ bp = Blueprint('report', __name__, url_prefix='/report')
 def report_home():
     return render_template('report/home.html')
 
+# Spending details by month
 @bp.route('/spending', methods=['GET'])
 def spending():
     qs = request.query_string
+    # If there is no querystring
     if qs.decode('ASCII') == "":
         return render_template('report/month_picker.html', path='spending')
     else:
@@ -47,7 +49,18 @@ def spending():
             sortkey=sortkey,
             sort_direction=sort_direction)
 
-# Called via AJAX
+# Spending by category per month
+@bp.route('/spendingcat', methods=['GET'])
+def spendingcat():
+    qs = request.query_string
+    # If there is no querystring
+    if qs.decode('ASCII') == "":
+        return render_template('report/month_picker.html', path='spendingcat')
+    else:
+        # There is a querystring
+        return render_template('report/spendingcat.html')
+
+# Used for in-place editing -- called via AJAX
 @bp.route('/_update', methods=['POST'])
 def update():
     repo = LarryRepository()
