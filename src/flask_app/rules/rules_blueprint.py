@@ -14,7 +14,8 @@ def rules_home():
         categories = repo.get_all_categories()
         return render_template('rules/home.html', categories=categories)
     if request.method == 'POST':
-        term = request.form['term']
+        # Normalize term to lowercase
+        term = request.form['term'].lower()
         category_id = request.form['category']
         rule_type_id = request.form['rule-type']
         look_back = request.form['look-back']
