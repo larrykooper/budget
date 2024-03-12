@@ -1,5 +1,7 @@
-body {
-    font-family: Arial, sans-serif;
+/*  EVERY PAGE */
+
+div.page-content {
+    margin-left: 40px;
 }
 
 /*  TOP NAV  */
@@ -64,6 +66,69 @@ div.spending-cat-report {
 
 table#spendingcat {
     font-size: 15px;
+}
+
+/*  ADD CATEGORIZATION RULE  */
+
+.add-rule-page h1 {
+    border-bottom: 5px solid salmon;
+    width: 800px;
+}
+
+.add-rule-page legend {
+    padding: 2px;
+}
+
+.add-rule-page .help-text {
+    font-size: 18px;
+}
+
+.add-rule-page .fields-wrapper {
+    display: grid;
+    grid-template-columns: 248px 500px;
+    font-size: 16px;
+    margin-top: 26px;
+}
+
+.add-rule-page .box.first-col {
+    margin-left: 24px;
+}
+
+.add-rule-page .first-row {
+    margin-top: 40px;
+}
+
+.add-rule-page .box.last-row {
+    margin-bottom: 20px;
+}
+
+.add-rule-page input {
+    background-color: #f1f1f1;
+    margin: 10px;
+}
+
+.add-rule-page input.text-input {
+    width: 350px;
+}
+
+fieldset.add-rule {
+    border: 2px solid black;
+    margin-top: 15px;
+    width: 800px;
+}
+
+.add-rule-page label {
+    font-size: 16px;
+    margin-top: 15px;
+}
+
+.add-rule-page .first-col label {
+    color: #0066ff;
+}
+
+.add-rule-page select#category {
+    margin-left: 10px;
+    margin-top: 12px;
 }
 
 /* OTHER  */
