@@ -4,8 +4,8 @@ from flask import (
     Blueprint, jsonify, render_template, request
 )
 
-from src.adapters.larry_repository import LarryRepository
-from src.authorities.authority_finder import AuthorityFinder
+from src.adapters.repositories.authority_repository import AuthorityRepository
+from src.adapters.repositories.line_item_repository import LineItemRepository
 from src.models.persistence.category import Category
 
 bp = Blueprint('report', __name__, url_prefix='/report')
@@ -36,9 +36,9 @@ def spending():
         sort_table = sortspec[0]
         sort_column = sortspec[1]
         start_date, end_date = get_start_end(year, month)
-        repo = LarryRepository()
+        line_item_repo = LineItemRepository()
         # Query the database for what we need to report
-        line_items = repo.get_for_spending_report(start_date, end_date, sort_column, sort_direction, sort_table)
+        line_items = line_item_repo.get_for_spending_report(start_date, end_date, sort_column, sort_direction, sort_table)
         line_items_translated = translate_line_items(line_items)
         categories = Category.categories_json()
         return render_template('report/spending.html',
@@ -63,8 +63,8 @@ def spendingcat():
         month = int(request.args.get('month'))
         month_name = calendar.month_name[month]
         start_date, end_date = get_start_end(year, month)
-        repo = LarryRepository()
-        categories = repo.get_for_spending_by_cat(start_date, end_date)
+        line_item_repo = LineItemRepository()
+        categories = line_item_repo.get_for_spending_by_cat(start_date, end_date)
         return render_template('report/spendingcat.html',
             categories = categories,
             year=year,
@@ -75,15 +75,15 @@ def spendingcat():
 # Used for in-place editing -- called via AJAX
 @bp.route('/_update', methods=['POST'])
 def update():
-    repo = LarryRepository()
+    line_item_repo = LineItemRepository()
     form = request.form
     if form['action'] == 'delete':
-        repo.delete_line_item(form['id'])
+        line_item_repo.delete_line_item(form['id'])
     elif form['action'] == 'edit':
         if 'comment' in form:
-            repo.update_comment(form['comment'], form['id'])
+            line_item_repo.update_comment(form['comment'], form['id'])
         if 'category' in form:
-            repo.update_category(form['category'], form['id'])
+            line_item_repo.update_category(form['category'], form['id'])
     return jsonify("foo")
 
 

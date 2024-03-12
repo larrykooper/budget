@@ -3,12 +3,14 @@ import pytz
 
 from psycopg import sql
 
-from src.adapters.abstract_repository import AbstractRepository
+from src.adapters.repositories.abstract_repository import AbstractRepository
 import src.flask_app.database.db_pool as db_pool
 
-class LarryRepository(AbstractRepository):
+class LineItemRepository(AbstractRepository):
 
-    def add(self, line_item):
+    # INSERT
+
+    def add_line_item(self, line_item):
         current_time = datetime.datetime.now(pytz.timezone("America/New_York"))
         query = """
         INSERT INTO line_item (
@@ -48,8 +50,7 @@ class LarryRepository(AbstractRepository):
         results = db_pool.insert(query, params)
         return results
 
-    def get(self) -> list:
-        raise NotImplementedError
+    # SELECT
 
     def get_for_spending_report(
             self,
@@ -110,14 +111,7 @@ class LarryRepository(AbstractRepository):
         data = db_pool.get_data(query, params, single_row=False)
         return data
 
-    def get_all_categories(self) -> list[dict]:
-        query = """
-        SELECT id, name FROM category
-        ORDER BY name
-        """
-        params = {}
-        data = db_pool.get_data(query, params, single_row=False)
-        return data
+    # UPDATE
 
     def update_comment(self, new_value, id):
         current_time = datetime.datetime.now(pytz.timezone("America/New_York"))
@@ -149,17 +143,7 @@ class LarryRepository(AbstractRepository):
         }
         db_pool.update(query, params)
 
-    def delete_line_item(self, id):
-        query = """
-        DELETE FROM line_item
-        WHERE id = %(line_item_id)s
-        """
-        params = {
-            'line_item_id': id
-        }
-        db_pool.delete(query, params)
-
-    def filter_for_spending_report(self):
+    def update_show_on_spending_report(self):
         """
         Note for future: I can delete some of these rules when there are no more
         files from Amex, Apple, Capital One, or Discover.
@@ -252,78 +236,28 @@ class LarryRepository(AbstractRepository):
                     sql.Literal('DISCOVER%%'))
         db_pool.update(executable_sql, params)
 
-    def get_starts_with_rule(self, desc_low: str) -> str:
-        qstring = """
-        SELECT category
-        FROM category_rule crule
-        INNER JOIN rule_type rt
-        ON crule.rule_type_id = rt.id
-        WHERE rt.name = 'starts_with'
-        AND %(desc_low)s LIKE term || '%%'
-        """
-        params = {
-            'desc_low': desc_low
-        }
-        data = db_pool.get_data(qstring, params, single_row=True)
-        return data
+    """
+    this worked to recategorize the existing line items
+    via a new rule
+
+    WITH new_category AS (
+    SELECT id FROM category
+    WHERE name = 'Doctor'
+    )
+    UPDATE line_item
+    SET category_id = new_category.id
+    FROM new_category
+    WHERE LOWER(description) LIKE '%cognitive and behavioral%'  <-- contains rule
 
     """
-    this works, for get_starts_with_rule:
+    # DELETE
 
-        SELECT category
-        FROM category_rule
-        WHERE rule_type_id = 2
-        AND 'starbucks store 15685' LIKE term || '%'
-
-    """
-
-    def get_contains_rule(self, desc_low: str) -> str:
-        qstring = """
-        SELECT category
-        FROM category_rule crule
-        INNER JOIN rule_type rt
-        ON crule.rule_type_id = rt.id
-        WHERE rt.name = 'contains'
-        AND %(desc_low)s LIKE '%%' || term || '%%'
-        """
-        params = {
-            'desc_low': desc_low
-        }
-        data = db_pool.get_data(qstring, params, single_row=True)
-        return data
-
-    def add_categorization_rule(self, category_rule):
+    def delete_line_item(self, id):
         query = """
-        INSERT INTO category_rule (
-            term,
-            rule_type_id,
-            category_id
-        )
-        VALUES (%(term)s, %(rule_type_id)s, %(category_id)s);
+        DELETE FROM line_item
+        WHERE id = %(line_item_id)s
         """
         params = {
-            'term': category_rule.term,
-            'rule_type_id': category_rule.rule_type_id,
-            'category_id': category_rule.category_id
+            'line_item_id': id
         }
-        results = db_pool.insert(query, params)
-        # Results is "True" if it's OK
-        return results
-
-"""
-this worked to recategorize the existing line items
-via a new rule
-
-WITH new_category AS (
-  SELECT id FROM category
-  WHERE name = 'Doctor'
-)
-UPDATE line_item
-SET category_id = new_category.id
-FROM new_category
-WHERE LOWER(description) LIKE '%cognitive and behavioral%'  <-- contains rule
-
-"""
-
-
-
+        db_pool.delete(query, params)

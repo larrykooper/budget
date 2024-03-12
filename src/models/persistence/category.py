@@ -1,7 +1,7 @@
 import json
 
-from src.adapters.larry_repository import LarryRepository
-from src.authorities.authority_finder import AuthorityFinder
+from src.adapters.repositories.authority_repository import AuthorityRepository
+from src.adapters.repositories.category_repository import CategoryRepository
 
 class Category:
 
@@ -12,8 +12,8 @@ class Category:
 
     @staticmethod
     def id_for_uncategorized():
-        authority_finder = AuthorityFinder()
-        return authority_finder.authority_lookup("category", "Uncategorized")
+        authority_repo = AuthorityRepository()
+        return authority_repo.authority_lookup("category", "Uncategorized")
 
     def memoize(func):
         cache = {}
@@ -31,8 +31,8 @@ class Category:
     @staticmethod
     @memoize
     def categories_json():
-        repo = LarryRepository()
-        cats = repo.get_all_categories()
+        category_repo = CategoryRepository()
+        cats = category_repo.get_all_categories()
         cats_dict = {}
         for cat in cats:
             cats_dict.update({cat['id']: cat['name']})

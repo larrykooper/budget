@@ -1,24 +1,22 @@
 import csv
 import hashlib
 
-from src.adapters.larry_repository import LarryRepository
-from src.authorities.authority_finder import AuthorityFinder
+from src.adapters.repositories.line_item_repository import LineItemRepository
+from src.adapters.repositories.authority_repository import AuthorityRepository
 from src.models.account_types.account import Account
 from src.models.input_field_types.input_field import InputField
 from src.models.line_item import LineItem
-
-
 
 def ingest_file(filename: str, account: str):
     from src.flask_app.ingesting.upload_file import UPLOAD_FOLDER
 
     # Intialize the repo
 
-    repo = LarryRepository()
-    authority_finder = AuthorityFinder()
+    repo = LineItemRepository()
+    authority_repo = AuthorityRepository()
 
     # Look up account ID
-    account_id = authority_finder.authority_lookup("account", account)
+    account_id = authority_repo.authority_lookup("account", account)
     account_obj = Account.instantiate_account(account)
     column_map = account_obj.column_map()
 
@@ -56,9 +54,9 @@ def ingest_file(filename: str, account: str):
             line_count += 1
             data_hash = hash_the_data(line_item)
             line_item.data_hash = data_hash
-            repo.add(line_item)
+            repo.add_line_item(line_item)
         # Done with ingesting the whole file
-        repo.filter_for_spending_report()
+        repo.update_show_on_spending_report()
         return "SUCCESS"
 
 def hash_the_data(line_item: LineItem) -> str:
