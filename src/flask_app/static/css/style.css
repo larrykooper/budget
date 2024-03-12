@@ -72,6 +72,7 @@ table#spendingcat {
 
 .add-rule-page h1 {
     border-bottom: 5px solid salmon;
+    border-top: 5px solid salmon;
     width: 800px;
 }
 
@@ -133,6 +134,10 @@ fieldset.add-rule {
 }
 
 .add-rule-page .save-button {
+    background: linear-gradient(to right, #a1c4fd 0%, #c2e9fb 51%, #a1c4fd 100%);
+    border-radius: 10px;
+    height: 50px;
+    margin-bottom: 32px;
     margin-left: 256px;
     width: 100px;
 }
