@@ -1,4 +1,4 @@
-from src.authorities.authority_finder import AuthorityFinder
+from src.authorities.authority_finder import AuthorityRepository
 
 # A TypeDetail is the more specific transaction type that the bank reports
 class TypeDetail:
@@ -12,5 +12,5 @@ class TypeDetail:
 
     @staticmethod
     def id_for_unknown():
-        authority_finder = AuthorityFinder()
+        authority_finder = AuthorityRepository()
         return authority_finder.authority_lookup("transaction_type", "unknown")
