@@ -1,5 +1,5 @@
-from src.authorities.authority_finder import AuthorityFinder
-from src.models.persistence.transaction_type import TransactionType
+from src.authorities.authority_finder import AuthorityRepository
+from src.models.transaction_type import TransactionType
 
 class TransactionTypeInputField:
 
@@ -12,7 +12,7 @@ class TransactionTypeInputField:
 
 
     def get_trans_type(self, input_type):
-        authority_finder = AuthorityFinder()
+        authority_finder = AuthorityRepository()
         trans_type = TransactionType(input_type)
         if trans_type.has_autotranslation():
             type_to_lookup = trans_type.autotranslation()

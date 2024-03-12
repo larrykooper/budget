@@ -6,7 +6,7 @@ from flask import (
 
 from src.adapters.repositories.authority_repository import AuthorityRepository
 from src.adapters.repositories.line_item_repository import LineItemRepository
-from src.models.persistence.category import Category
+from src.models.category import Category
 
 bp = Blueprint('report', __name__, url_prefix='/report')
 
@@ -92,7 +92,7 @@ def translate_line_items(line_items: list[dict]) -> list[dict]:
     translate_line_items converts the IDs of dimension tables to their names,
     so they can be displayed on the front-end
     """
-    authority_finder = AuthorityFinder()
+    authority_finder = AuthorityRepository()
     for line_item in line_items:
         line_item['check_number'] = none_to_blank(line_item['check_number'])
         line_item['type_detail_id'] = none_to_blank(line_item['type_detail_id'])

@@ -1,5 +1,5 @@
-from src.authorities.authority_finder import AuthorityFinder
-from src.models.persistence.type_detail import TypeDetail
+from src.authorities.authority_finder import AuthorityRepository
+from src.models.type_detail import TypeDetail
 
 class TypeDetailInputField:
 
@@ -14,7 +14,7 @@ class TypeDetailInputField:
         """
         Just lower-case the input
         """
-        authority_finder = AuthorityFinder()
+        authority_finder = AuthorityRepository()
         type_to_lookup = input_type.lower()
         id = authority_finder.authority_lookup("type_detail", type_to_lookup)
         if id:

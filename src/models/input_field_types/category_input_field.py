@@ -1,7 +1,7 @@
 from src.adapters.repositories.authority_repository import AuthorityRepository
 from src.adapters.repositories.category_rule_repository import CategoryRuleRepository
 from src.models.input_field_types.input_field import InputField
-from src.models.persistence.category import Category
+from src.models.category import Category
 
 
 class CategoryInputField(InputField):
