@@ -10,7 +10,7 @@
     <!-- The name is submitted  -->
     <!--  'for' goes with the id -->
 
-    <form method="post"></form>
+    <form method="post">
 
         <fieldset class="add-rule">
             <!--<legend>Add a categorization rule</legend>-->
@@ -46,11 +46,12 @@
                         Rule type:
                     </label>
                 </div>
+                <!-- 2 is the ID for starts_with, 1 is the ID for contains  -->
                 <div>
-                    <input type="radio" id="starts-with" name="rule-type" value="starts-with" checked/>
+                    <input type="radio" id="starts-with" name="rule-type" value="2" checked/>
                     <label for="starts-with">Starts with</label>
 
-                    <input type="radio" id="contains" name="rule-type" value="contains"/>
+                    <input type="radio" id="contains" name="rule-type" value="1"/>
                     <label for="contains">Contains</label>
                 </div>
                 <div class="box first-col last-row">

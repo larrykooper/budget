@@ -4,6 +4,7 @@ from decimal import Decimal
 from typing import Optional
 
 
+# A LineItem is one transaction from a bank file or credit card file.
 class LineItem:
 
     def __init__(
@@ -37,6 +38,4 @@ class LineItem:
         self.created = created
         self.updated = updated
         self.show_on_spending_report =  show_on_spending_report
-
-
 

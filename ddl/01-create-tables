@@ -18,7 +18,7 @@ CREATE TABLE line_item(
 
 CREATE TABLE category_rule(
     term VARCHAR(255),
-    category VARCHAR(255),
+    category_id INTEGER,
     rule_type_id INTEGER
 );
 CREATE INDEX ON category_rule (term);

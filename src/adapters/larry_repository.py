@@ -292,6 +292,23 @@ class LarryRepository(AbstractRepository):
         data = db_pool.get_data(qstring, params, single_row=True)
         return data
 
+    def add_categorization_rule(self, category_rule):
+        query = """
+        INSERT INTO category_rule (
+            term,
+            rule_type_id,
+            category_id
+        )
+        VALUES (%(term)s, %(rule_type_id)s, %(category_id)s);
+        """
+        params = {
+            'term': category_rule.term,
+            'rule_type_id': category_rule.rule_type_id,
+            'category_id': category_rule.category_id
+        }
+        results = db_pool.insert(query, params)
+        # Results is "True" if it's OK
+        return results
 
 """
 this worked to recategorize the existing line items
