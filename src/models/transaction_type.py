@@ -1,4 +1,4 @@
-from src.authorities.authority_finder import AuthorityRepository
+from src.adapters.repositories.authority_repository import AuthorityRepository
 from src.translation.transaction_type_autotranslation import TransactionTypeAutotranslation
 
 class TransactionType:
@@ -17,5 +17,5 @@ class TransactionType:
 
     @staticmethod
     def id_for_unknown():
-        authority_finder = AuthorityRepository()
-        return authority_finder.authority_lookup("transaction_type", "unknown")
+        authority_repo = AuthorityRepository()
+        return authority_repo.authority_lookup("transaction_type", "unknown")

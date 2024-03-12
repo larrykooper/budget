@@ -92,21 +92,21 @@ def translate_line_items(line_items: list[dict]) -> list[dict]:
     translate_line_items converts the IDs of dimension tables to their names,
     so they can be displayed on the front-end
     """
-    authority_finder = AuthorityRepository()
+    authority_repo = AuthorityRepository()
     for line_item in line_items:
         line_item['check_number'] = none_to_blank(line_item['check_number'])
         line_item['type_detail_id'] = none_to_blank(line_item['type_detail_id'])
         line_item['comment'] = none_to_blank(line_item['comment'])
 
         # translate IDs to Names
-        category_name = authority_finder.authority_display("category", line_item['category_id'])
+        category_name = authority_repo.authority_display("category", line_item['category_id'])
         line_item['category_name'] = category_name
-        transaction_type = authority_finder.authority_display("transaction_type", line_item['transaction_type_id'])
+        transaction_type = authority_repo.authority_display("transaction_type", line_item['transaction_type_id'])
         line_item['transaction_type'] = transaction_type
-        account_name = authority_finder.authority_display("account", line_item['account_id'])
+        account_name = authority_repo.authority_display("account", line_item['account_id'])
         line_item['account_name']= account_name
         if line_item['type_detail_id']:
-            type_detail_name = authority_finder.authority_display("type_detail", line_item['type_detail_id'])
+            type_detail_name = authority_repo.authority_display("type_detail", line_item['type_detail_id'])
         else:
             type_detail_name = ""
         line_item['type_detail_name'] = type_detail_name

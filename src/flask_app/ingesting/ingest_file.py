@@ -70,5 +70,5 @@ def hash_the_data(line_item: LineItem) -> str:
 def get_default_trans_id() -> int:
     authority_repo = AuthorityRepository()
     default_type = "debit"
-    return authority_finder.authority_lookup("transaction_type", default_type)
+    return authority_repo.authority_lookup("transaction_type", default_type)
 
