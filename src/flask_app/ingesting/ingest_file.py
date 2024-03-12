@@ -68,7 +68,7 @@ def hash_the_data(line_item: LineItem) -> str:
         return hashlib.sha256(as_bytes).hexdigest()
 
 def get_default_trans_id() -> int:
-    authority_finder = AuthorityFinder()
+    authority_repo = AuthorityRepository()
     default_type = "debit"
     return authority_finder.authority_lookup("transaction_type", default_type)
 
