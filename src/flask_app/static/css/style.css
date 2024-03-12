@@ -127,8 +127,14 @@ fieldset.add-rule {
 }
 
 .add-rule-page select#category {
+    font-size: 12px;
     margin-left: 10px;
     margin-top: 12px;
+}
+
+.add-rule-page .save-button {
+    margin-left: 256px;
+    width: 100px;
 }
 
 /* OTHER  */

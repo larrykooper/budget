@@ -10,5 +10,5 @@ bp = Blueprint('rules', __name__, url_prefix='/rules')
 def rules_home():
     repo = LarryRepository()
     categories = repo.get_all_categories()
-    return render_template('rules/home.html')
+    return render_template('rules/home.html', categories=categories)
 

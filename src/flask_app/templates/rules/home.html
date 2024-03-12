@@ -35,7 +35,10 @@
                 </div>
                 <div class="box">
                     <select name="category" id="category">
-                        <option>I WILL PUT THE CATEGORIES HERE</option>
+                        <option disabled selected value>--</option>
+                        {% for category in categories %}
+                            <option value="{{ category['id'] }}">{{ category['name'] }}</option>
+                        {% endfor %}
                     </select>
                 </div>
                 <div class="box first-col">
@@ -64,6 +67,8 @@
                 </div>
 
             </div> <!-- fields-wrapper -->
+
+            <input type="image" src="{{ url_for('static', filename='images/save.png')}}" class="save-button" name="submit"/>
 
         </fieldset>
     </form>
