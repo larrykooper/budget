@@ -15,7 +15,7 @@ class Category:
         authority_repo = AuthorityRepository()
         return authority_repo.authority_lookup("category", "Uncategorized")
 
-    def memoize(self, func):
+    def memoize(func):
         cache = {}
 
         def wrapper(*args):
