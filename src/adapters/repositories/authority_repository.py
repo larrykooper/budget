@@ -1,3 +1,5 @@
+from psycopg import sql
+
 from src.adapters.repositories.abstract_repository import AbstractRepository
 import src.flask_app.database.db_pool as db_pool
 
@@ -10,12 +12,13 @@ class AuthorityRepository(AbstractRepository):
         """
         Used when ingesting bank data
         """
-        query = f"""
-            SELECT id FROM {table}
+        qstring = """
+            SELECT id FROM {}
             WHERE name = %(name)s
         """
         params = {'name': name}
-        data = db_pool.get_data(query, params, single_row=True)
+        executable_sql = sql.SQL(qstring).format(sql.Identifier(table))
+        data = db_pool.get_data(executable_sql, params, single_row=True)
         if data:
             return data['id']
         else:
@@ -23,10 +26,11 @@ class AuthorityRepository(AbstractRepository):
 
 
     def authority_display(self, table: str, id: int) -> str:
-        query = f"""
-            SELECT name FROM {table}
+        qstring = """
+            SELECT name FROM {}
             WHERE id = %(id)s
         """
         params = {'id': id}
-        data = db_pool.get_data(query, params, single_row=True)
+        executable_sql = sql.SQL(qstring).format(sql.Identifier(table))
+        data = db_pool.get_data(executable_sql, params, single_row=True)
         return data['name']

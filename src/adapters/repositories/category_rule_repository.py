@@ -30,7 +30,7 @@ class CategoryRuleRepository(AbstractRepository):
 
     def get_starts_with_rule(self, desc_low: str) -> str:
         qstring = """
-        SELECT category
+        SELECT category_id
         FROM category_rule crule
         INNER JOIN rule_type rt
         ON crule.rule_type_id = rt.id
@@ -46,7 +46,7 @@ class CategoryRuleRepository(AbstractRepository):
     """
     this works, for get_starts_with_rule:
 
-        SELECT category
+        SELECT category_id
         FROM category_rule
         WHERE rule_type_id = 2
         AND 'starbucks store 15685' LIKE term || '%'
@@ -55,7 +55,7 @@ class CategoryRuleRepository(AbstractRepository):
 
     def get_contains_rule(self, desc_low: str) -> str:
         qstring = """
-        SELECT category
+        SELECT category_id
         FROM category_rule crule
         INNER JOIN rule_type rt
         ON crule.rule_type_id = rt.id
