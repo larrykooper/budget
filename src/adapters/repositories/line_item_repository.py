@@ -124,7 +124,7 @@ class LineItemRepository(AbstractRepository):
         data = db_pool.get_data(query, params, single_row=False)
         return data
 
-    def total_spending_per_month(
+    def total_spending_per_month_for_year(
         self,
         start_of_year: datetime.date,
         end_of_year: datetime.date
@@ -142,6 +142,24 @@ class LineItemRepository(AbstractRepository):
             'end_of_year': end_of_year
         }
         data = db_pool.get_data(query, params, single_row=False)
+        return data
+
+    def total_spending_per_month(
+        self,
+        start_date: datetime.date,
+        end_date: datetime.date,
+    ) -> list[dict]:
+        query = """
+        SELECT SUM(amount)
+        FROM line_item
+        WHERE transaction_date BETWEEN %(start_date)s AND %(end_date)s
+        AND show_on_spending_report
+        """
+        params = {
+            'start_date': start_date,
+            'end_date': end_date
+        }
+        data = db_pool.get_data(query, params, single_row=True)
         return data
 
     # UPDATE

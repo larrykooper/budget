@@ -67,7 +67,7 @@ def budyear():
         line_item_repo = LineItemRepository()
         categories = category_repo.get_for_budyear(start_of_year, end_of_year)
         total_budget = category_repo.get_total_budget()
-        totals = line_item_repo.total_spending_per_month(start_of_year, end_of_year)
+        totals = line_item_repo.total_spending_per_month_for_year(start_of_year, end_of_year)
         return render_template('report/budyear.html',
             categories=categories,
             year=year,
@@ -90,11 +90,13 @@ def spendingcat():
         start_date, end_date = get_start_end(year, month)
         line_item_repo = LineItemRepository()
         categories = line_item_repo.get_for_spending_by_cat(start_date, end_date)
+        total = line_item_repo.total_spending_per_month(start_date, end_date)
         return render_template('report/spendingcat.html',
             categories = categories,
             year=year,
             month=month,
-            month_name=month_name
+            month_name=month_name,
+            total=total
         )
 
 # Used for in-place editing -- called via AJAX

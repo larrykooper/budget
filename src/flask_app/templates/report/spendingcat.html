@@ -20,10 +20,13 @@
                     <td class="amount">{{ "{:,.2f}".format(category['sum']) }}</td>
                 </tr>
                 {% endfor %}
+                <tr>
+                    <td>Total</td>
+                    <td>{{ "{:,.2f}".format(total['sum']) }}</td>
+                </tr>
                 </tbody>
             </table>
         </div>
     </div>
-
 
 {% endblock content %}
