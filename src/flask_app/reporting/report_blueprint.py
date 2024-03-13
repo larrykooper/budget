@@ -5,6 +5,7 @@ from flask import (
 )
 
 from src.adapters.repositories.authority_repository import AuthorityRepository
+from src.adapters.repositories.category_repository import CategoryRepository
 from src.adapters.repositories.line_item_repository import LineItemRepository
 from src.models.category import Category
 
@@ -48,6 +49,23 @@ def spending():
             month=month,
             sortkey=sortkey,
             sort_direction=sort_direction
+        )
+
+# Budget for year
+@bp.route('/budyear', methods=['GET'])
+def budyear():
+    qs = request.query_string
+    # If there is no querystring
+    if qs.decode('ASCII') == "":
+        return render_template('report/year_picker.html')
+    else:
+        year = int(request.args.get('year'))
+        start_of_year, end_of_year = get_year_start_end(year)
+        category_repo = CategoryRepository()
+        categories = category_repo.get_for_budyear(start_of_year, end_of_year)
+        return render_template('report/budyear.html',
+            categories=categories,
+            year=year
         )
 
 # Spending by category per month
@@ -121,5 +139,10 @@ def get_start_end(year: int, month: int) -> tuple[datetime.date, datetime.date]:
     days_in_month = calendar.monthrange(year, month)[1]
     start = datetime.date(year, month, 1)
     end = datetime.date(year, month, days_in_month)
+    return start, end
+
+def get_year_start_end(year: int) -> tuple[datetime.date, datetime.date]:
+    start = datetime.date(year, 1, 1)
+    end = datetime.date(year, 12, 31)
     return start, end
 

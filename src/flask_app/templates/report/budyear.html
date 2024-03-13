@@ -1,0 +1,57 @@
+{% macro fmt_num(number)  -%}
+    {% if number %}
+        {% set display =  "{:,.2f}".format(number) %}
+    {% else %}
+        {% set display = "0" %}
+    {% endif %}
+    {{ display }}
+{%- endmacro %}
+
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Budget Report for {{ year }}</h1>
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th>Category</th>
+                    <th>Budgeted per Month</th>
+                    <th>Spending Jan</th>
+                    <th>Spending Feb</th>
+                    <th>Spending Mar</th>
+                    <th>Spending Apr</th>
+                    <th>Spending May</th>
+                    <th>Spending Jun</th>
+                    <th>Spending Jul</th>
+                    <th>Spending Aug</th>
+                    <th>Spending Sep</th>
+                    <th>Spending Oct</th>
+                    <th>Spending Nov</th>
+                    <th>Spending Dec</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for category in categories %}
+                    <tr>
+                        <td>{{ category['name']}}</td>
+                        <td>{{ fmt_num(category['budget_per_month']) }}</td>
+                        <td>{{ fmt_num(category['spend_jan']) }}</td>
+                        <td>{{ fmt_num(category['spend_feb']) }}</td>
+                        <td>{{ fmt_num(category['spend_mar']) }}</td>
+                        <td>{{ fmt_num(category['spend_apr']) }}</td>
+                        <td>{{ fmt_num(category['spend_may']) }}</td>
+                        <td>{{ fmt_num(category['spend_jun']) }}</td>
+                        <td>{{ fmt_num(category['spend_jul']) }}</td>
+                        <td>{{ fmt_num(category['spend_aug']) }}</td>
+                        <td>{{ fmt_num(category['spend_sep']) }}</td>
+                        <td>{{ fmt_num(category['spend_oct']) }}</td>
+                        <td>{{ fmt_num(category['spend_nov']) }}</td>
+                        <td>{{ fmt_num(category['spend_dec']) }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock content %}

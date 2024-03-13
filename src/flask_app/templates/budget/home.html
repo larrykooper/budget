@@ -11,7 +11,7 @@
             <tbody>
                 {% for category in categories %}
                     <tr>
-                        {% if  category['budget_per_month'] %}
+                        {% if category['budget_per_month'] %}
                             {% set budget_display = "{:,.2f}".format(category['budget_per_month']) %}
                         {% else %}
                             {% set budget_display = "0" %}
