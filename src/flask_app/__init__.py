@@ -1,8 +1,8 @@
 import os
+from logging.config import dictConfig
 
 from flask import Flask
 from flask import render_template
-from logging.config import dictConfig
 
 from src.flask_app.ingesting import ingest_blueprint
 from src.flask_app.reporting import report_blueprint
@@ -57,4 +57,3 @@ def create_app(test_config=None):
     app.register_blueprint(rules_blueprint.bp)
 
     return app
-

@@ -18,6 +18,4 @@ class CapitalOneCredit(InputField):
             trans_type = TransactionTypeInputField()
             ttid = trans_type.get_trans_type(trans)
             return {"amount": amount_d, "transaction_type_id": ttid}
-        else:
-            return {}
-
+        return {}

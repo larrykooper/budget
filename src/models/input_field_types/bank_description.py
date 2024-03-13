@@ -3,7 +3,8 @@ from src.models.input_field_types.input_field import InputField
 
 
 # A Bank Description is the contents of the Description field provided by the bank.
-#  It's treated differently from the credit card description because it does not come in with a category.
+#  It's treated differently from the credit card description because it does not come
+#  in with a category.
 class BankDescription(InputField):
 
     def what_to_persist(self, value) -> dict:

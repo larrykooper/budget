@@ -5,5 +5,3 @@ class DescriptionInputField:
 
     def line_item_field_name(self):
         return "description"
-
-

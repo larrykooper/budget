@@ -38,4 +38,3 @@ class LineItem:
         self.created = created
         self.updated = updated
         self.show_on_spending_report =  show_on_spending_report
-

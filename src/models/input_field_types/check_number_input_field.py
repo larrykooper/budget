@@ -5,5 +5,3 @@ class CheckNumberInputField:
 
     def line_item_field_name(self):
         return "check_number"
-
-

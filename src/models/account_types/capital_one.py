@@ -12,4 +12,3 @@ class CapitalOne(Account):
             "Debit": "CAPITAL_ONE_DEBIT",
             "Credit": "CAPITAL_ONE_CREDIT"
         }
-

@@ -4,5 +4,3 @@ class CheckNumber:
         self, check_number: str
     ):
         self.check_number = check_number
-
-

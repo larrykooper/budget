@@ -11,5 +11,3 @@ class AmountNoChange(InputField):
 
     def line_item_field_name(self):
         return "amount"
-
-

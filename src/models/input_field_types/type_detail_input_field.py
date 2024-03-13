@@ -19,5 +19,4 @@ class TypeDetailInputField:
         id = authority_repo.authority_lookup("type_detail", type_to_lookup)
         if id:
             return id
-        else:
-            return TypeDetail.id_for_unknown()
+        return TypeDetail.id_for_unknown()

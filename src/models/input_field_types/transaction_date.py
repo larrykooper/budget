@@ -7,4 +7,3 @@ class TransactionDate(InputField):
 
     def line_item_field_name(self):
         return "transaction_date"
-

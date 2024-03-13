@@ -5,4 +5,3 @@ class BankPostDate(InputField):
 
     def what_to_persist(self, value) -> dict:
         return {"post_date": value, "transaction_date": value}
-

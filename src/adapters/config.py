@@ -36,4 +36,3 @@ try:
         APP_DEBUG = True
 except KeyError:
     APP_DEBUG = False
-

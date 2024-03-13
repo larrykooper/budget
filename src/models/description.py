@@ -4,4 +4,3 @@ class Description:
         self, desc: str
     ):
         self.desc = desc
-

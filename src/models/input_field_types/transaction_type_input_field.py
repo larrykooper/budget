@@ -18,9 +18,7 @@ class TransactionTypeInputField:
             type_to_lookup = trans_type.autotranslation()
         else:
             type_to_lookup = input_type
-        id = authority_repo.authority_lookup("transaction_type", type_to_lookup)
-        if id:
-            return id
-        else:
-            return TransactionType.id_for_unknown()
-
+        ttid = authority_repo.authority_lookup("transaction_type", type_to_lookup)
+        if ttid:
+            return ttid
+        return TransactionType.id_for_unknown()

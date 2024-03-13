@@ -15,16 +15,15 @@ class Category:
         authority_repo = AuthorityRepository()
         return authority_repo.authority_lookup("category", "Uncategorized")
 
-    def memoize(func):
+    def memoize(self, func):
         cache = {}
 
         def wrapper(*args):
             if args in cache:
                 return cache[args]
-            else:
-                result = func(*args)
-                cache[args] = result
-                return result
+            result = func(*args)
+            cache[args] = result
+            return result
 
         return wrapper
 
@@ -37,6 +36,3 @@ class Category:
         for cat in cats:
             cats_dict.update({cat['id']: cat['name']})
         return json.dumps(cats_dict)
-
-
-

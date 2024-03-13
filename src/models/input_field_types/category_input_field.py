@@ -26,8 +26,7 @@ class CategoryInputField(InputField):
         id = authority_repo.authority_lookup("category", cat_to_lookup)
         if id:
             return id
-        else:
-            return Category.id_for_uncategorized()
+        return Category.id_for_uncategorized()
 
     def category_by_rule(self, description: str):
         category_rule_repo = CategoryRuleRepository()
@@ -42,5 +41,3 @@ class CategoryInputField(InputField):
         if contains_rule:
             return contains_rule['category_id']
         return None
-
-

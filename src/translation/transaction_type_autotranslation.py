@@ -10,4 +10,3 @@ class TransactionTypeAutotranslation:
         "return": "credit",
         "sale": "debit"
     }
-
