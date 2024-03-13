@@ -84,7 +84,7 @@ def update():
             line_item_repo.update_comment(form['comment'], form['id'])
         if 'category' in form:
             line_item_repo.update_category(form['category'], form['id'])
-    return jsonify("foo")
+    return "SUCCESS"
 
 
 def translate_line_items(line_items: list[dict]) -> list[dict]:

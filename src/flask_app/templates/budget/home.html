@@ -2,8 +2,9 @@
 
 {% block content %}
     <div class="table-responsive">
-        <table>
+        <table id="budget">
             <thead>
+                <th>#</th>
                 <th>Category</th>
                 <th>Amount Budgeted Per Month</th>
             </thead>
@@ -15,6 +16,7 @@
                         {% else %}
                             {% set budget_display = "0" %}
                         {% endif %}
+                        <td>{{ category['id'] }}</td>
                         <td>{{ category['name'] }}</td>
                         <td>{{ budget_display }}</td>
                     </tr>
@@ -22,5 +24,20 @@
             </tbody>
         </table>
     </div>
+
+<script type="text/javascript">
+    $('#budget').Tabledit({
+        url: '_updatebudget',
+        eventType: 'dblclick',
+        editButton: false,
+        deleteButton: false,
+        hideIdentifier: true,
+        columns: {
+            identifier: [0, 'id'],
+            editable: [[2, 'budget_per_month']]
+        }
+    });
+
+</script>
 
 {% endblock content %}
