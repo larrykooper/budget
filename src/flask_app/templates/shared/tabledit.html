@@ -1,0 +1,14 @@
+<script type="text/javascript">
+    $('#spending').Tabledit({
+        url: '_update',
+        eventType: 'dblclick',
+        editButton: false,
+        deleteButton: false,
+        hideIdentifier: true,
+        columns: {
+            identifier: [0, 'id'],
+            editable: [[10, 'comment'], [5, 'category', '{{ categories|safe }}']]
+        }
+    });
+
+  </script>
