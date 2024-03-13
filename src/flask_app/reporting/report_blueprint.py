@@ -43,6 +43,7 @@ def spending():
         line_items = line_item_repo.get_for_spending_report(start_date, end_date, sort_column, sort_direction, sort_table)
         line_items_translated = translate_line_items(line_items)
         categories = Category.categories_json()
+        total = line_item_repo.total_spending_per_month(start_date, end_date)
         return render_template('report/spending.html',
             line_items=line_items_translated,
             categories=categories,
@@ -50,7 +51,8 @@ def spending():
             month=month,
             sortkey=sortkey,
             sort_direction=sort_direction,
-            month_name = month_name
+            month_name = month_name,
+            total=total
         )
 
 # Budget for year

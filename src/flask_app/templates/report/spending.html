@@ -51,6 +51,19 @@
                         <td>{{ line_item['comment'] }}</td>
                     </tr>
                 {% endfor %}
+                <tr>
+                    <td></td>
+                    <td>Total</td>
+                    <td></td>
+                    <td></td>
+                    <td>{{ "{:,.2f}".format(total['sum']) }}</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
                 </tbody>
             </table>
         </div>
