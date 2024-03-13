@@ -5,7 +5,7 @@ class CategoryRepository(AbstractRepository):
 
     def get_all_categories(self) -> list[dict]:
         query = """
-        SELECT id, name FROM category
+        SELECT id, name, budget_per_month FROM category
         ORDER BY name
         """
         params = {}

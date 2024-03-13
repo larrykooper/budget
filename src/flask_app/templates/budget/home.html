@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <th>Category</th>
+                <th>Amount Budgeted Per Month</th>
+            </thead>
+            <tbody>
+                {% for category in categories %}
+                    <tr>
+                        {% if  category['budget_per_month'] %}
+                            {% set budget_display = "{:,.2f}".format(category['budget_per_month']) %}
+                        {% else %}
+                            {% set budget_display = "0" %}
+                        {% endif %}
+                        <td>{{ category['name'] }}</td>
+                        <td>{{ budget_display }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock content %}

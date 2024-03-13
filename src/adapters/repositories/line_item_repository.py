@@ -71,7 +71,20 @@ class LineItemRepository(AbstractRepository):
         Credit card payments are not spending, they are transfers.
         """
         qstring = """
-        SELECT * FROM line_item li
+        SELECT
+            li.id,
+            transaction_date,
+            post_date,
+            description,
+            amount,
+            category_id,
+            transaction_type_id,
+            account_id,
+            check_number,
+            type_detail_id,
+            comment,
+            show_on_spending_report
+        FROM line_item li
         LEFT JOIN category cat
         ON li.category_id = cat.id
         LEFT JOIN transaction_type tt

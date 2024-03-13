@@ -31,7 +31,8 @@ CREATE TABLE account(
 
 CREATE TABLE category(
     id SERIAL,
-    name VARCHAR(255)
+    name VARCHAR(255),
+    budget_per_month NUMERIC(8,2)
 );
 
 CREATE TABLE type_detail(

@@ -4,6 +4,7 @@ from logging.config import dictConfig
 from flask import Flask
 from flask import render_template
 
+from src.flask_app.budget import budget_blueprint
 from src.flask_app.ingesting import ingest_blueprint
 from src.flask_app.reporting import report_blueprint
 from src.flask_app.rules import rules_blueprint
@@ -55,5 +56,6 @@ def create_app(test_config=None):
     app.register_blueprint(report_blueprint.bp)
     app.register_blueprint(ingest_blueprint.bp)
     app.register_blueprint(rules_blueprint.bp)
+    app.register_blueprint(budget_blueprint.bp)
 
     return app
