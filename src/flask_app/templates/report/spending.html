@@ -37,13 +37,13 @@
                 <tbody>
 
                 {% for line_item in line_items %}
-                    <tr class='line_item'>
+                    <tr class='line-item'>
                         <td>{{ line_item['id'] }}</td>
                         <td>{{ line_item['transaction_date'] }}</td>
-                        <td class="post_date">{{ line_item['post_date'] }}</td>
+                        <td class="post-date">{{ line_item['post_date'] }}</td>
                         <td>{{ line_item['description'] }}</td>
                         <td class="amount">{{ "{:,.2f}".format(line_item['amount']) }}</td>
-                        <td class="category_name">{{ line_item['category_name'] }}</td>
+                        <td class="category-name">{{ line_item['category_name'] }}</td>
                         <td>{{ line_item['transaction_type'] }}</td>
                         <td>{{ line_item['account_name'] }}</td>
                         <td>{{ line_item['check_number'] }}</td>

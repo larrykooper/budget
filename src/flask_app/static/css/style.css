@@ -50,11 +50,11 @@ td.amount {
     text-align: right;
 }
 
-td.post_date {
+td.post-date {
     width: 130px;
 }
 
-td.category_name {
+td.category-name {
     width: 170px;
 }
 
