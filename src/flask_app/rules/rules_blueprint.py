@@ -30,6 +30,10 @@ def rules_home():
             line_item_repo = LineItemRepository()
             if rule_type_id_num == RuleType.STARTS_WITH.value:
                 line_item_repo.recategorize_existing_line_items_starts_with(category_id, term)
+                flash("Existing line items recategorized.")
+            if rule_type_id_num == RuleType.CONTAINS.value:
+                line_item_repo.recategorize_existing_line_items_contains(category_id, term)
+                flash("Existing line items recategorized.")
         if success:
             flash("New categorization rule saved.")
             return redirect(url_for('homepage'))
