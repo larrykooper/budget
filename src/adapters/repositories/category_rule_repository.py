@@ -3,6 +3,9 @@ import src.flask_app.database.db_pool as db_pool
 
 class CategoryRuleRepository(AbstractRepository):
 
+    def add_line_item(self, line_item):
+        raise NotImplementedError
+
     # INSERT
 
     def add_categorization_rule(self, category_rule):

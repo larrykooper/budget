@@ -3,6 +3,9 @@ import src.flask_app.database.db_pool as db_pool
 
 class AuthorityRepository(AbstractRepository):
 
+    def add_line_item(self, line_item):
+        raise NotImplementedError
+
     def authority_lookup(self, table: str, name: str) -> int:
         """
         Used when ingesting bank data

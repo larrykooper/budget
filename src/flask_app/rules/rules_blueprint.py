@@ -4,7 +4,9 @@ from flask import (
 
 from src.adapters.repositories.category_repository import CategoryRepository
 from src.adapters.repositories.category_rule_repository import CategoryRuleRepository
+from src.adapters.repositories.line_item_repository import LineItemRepository
 from src.models.category_rule import CategoryRule
+from src.models.rule_type import RuleType
 
 bp = Blueprint('rules', __name__, url_prefix='/rules')
 
@@ -23,6 +25,11 @@ def rules_home():
         look_back = request.form['look-back']
         rule = CategoryRule(term, category_id, rule_type_id)
         success = category_rule_repo.add_categorization_rule(rule)
+        rule_type_id_num = int(rule_type_id)
+        if success and (look_back == 'yes'):
+            line_item_repo = LineItemRepository()
+            if rule_type_id_num == RuleType.STARTS_WITH.value:
+                line_item_repo.recategorize_existing_line_items_starts_with(category_id, term)
         if success:
             flash("New categorization rule saved.")
             return redirect(url_for('homepage'))

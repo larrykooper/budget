@@ -236,6 +236,22 @@ class LineItemRepository(AbstractRepository):
                     sql.Literal('DISCOVER%%'))
         db_pool.update(executable_sql, params)
 
+    def recategorize_existing_line_items_starts_with(self, new_category_id, search_term):
+        """
+        Recategorize existing line items based on a starts_with rule
+        """
+        qstring = """
+        UPDATE line_item
+        SET category_id =  %(new_category_id)s
+        WHERE LOWER(description) LIKE {}
+        """
+        params = {
+            'new_category_id': new_category_id
+        }
+        literal_param = f"{search_term}%%"
+        executable_sql = sql.SQL(qstring).format(sql.Literal(literal_param))
+        db_pool.update(executable_sql, params)
+
     """
     this worked to recategorize the existing line items
     via a new rule
