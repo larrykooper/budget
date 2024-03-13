@@ -25,6 +25,7 @@ def spending():
     else:
         year = int(request.args.get('year'))
         month = int(request.args.get('month'))
+        month_name = calendar.month_name[month]
         if 'sortkey' in request.args:
             sortkey = request.args.get('sortkey')
         else:
@@ -48,7 +49,8 @@ def spending():
             year=year,
             month=month,
             sortkey=sortkey,
-            sort_direction=sort_direction
+            sort_direction=sort_direction,
+            month_name = month_name
         )
 
 # Budget for year
