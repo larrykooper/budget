@@ -64,10 +64,15 @@ def budyear():
         year = int(request.args.get('year'))
         start_of_year, end_of_year = get_year_start_end(year)
         category_repo = CategoryRepository()
+        line_item_repo = LineItemRepository()
         categories = category_repo.get_for_budyear(start_of_year, end_of_year)
+        total_budget = category_repo.get_total_budget()
+        totals = line_item_repo.total_spending_per_month(start_of_year, end_of_year)
         return render_template('report/budyear.html',
             categories=categories,
-            year=year
+            year=year,
+            totals=totals,
+            total_budget=total_budget
         )
 
 # Spending by category per month

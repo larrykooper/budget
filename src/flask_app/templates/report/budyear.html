@@ -50,6 +50,13 @@
                         <td>{{ fmt_num(category['spend_dec']) }}</td>
                     </tr>
                 {% endfor %}
+                <tr>
+                    <td>TOTAL</td>
+                    <td>{{ fmt_num(total_budget['sum']) }}</td>
+                    {% for total in totals %}
+                        <td>{{ fmt_num(total ['sum']) }}</td>
+                    {% endfor %}
+                </tr>
             </tbody>
         </table>
     </div>

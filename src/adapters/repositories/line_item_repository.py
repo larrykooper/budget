@@ -124,6 +124,26 @@ class LineItemRepository(AbstractRepository):
         data = db_pool.get_data(query, params, single_row=False)
         return data
 
+    def total_spending_per_month(
+        self,
+        start_of_year: datetime.date,
+        end_of_year: datetime.date
+    ) -> list[dict]:
+        query = """
+        SELECT EXTRACT(MONTH FROM transaction_date) AS mymonth, SUM(amount)
+        FROM line_item
+        WHERE transaction_date BETWEEN '2023-01-01' AND '2023-12-31'
+        AND show_on_spending_report
+        GROUP BY EXTRACT(MONTH FROM transaction_date)
+        ORDER BY EXTRACT(MONTH FROM transaction_date)
+        """
+        params = {
+            'start_of_year': start_of_year,
+            'end_of_year': end_of_year
+        }
+        data = db_pool.get_data(query, params, single_row=False)
+        return data
+
     # UPDATE
 
     def update_comment(self, new_value, id):

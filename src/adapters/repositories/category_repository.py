@@ -61,6 +61,14 @@ class CategoryRepository(AbstractRepository):
         data = db_pool.get_data(query, params, single_row=False)
         return data
 
+    def get_total_budget(self):
+        query = """
+        SELECT sum(budget_per_month) FROM category
+        """
+        params = {}
+        data = db_pool.get_data(query, params, single_row=True)
+        return data
+
    # UPDATE
 
     def update_budget_per_month(self, new_value, id):
