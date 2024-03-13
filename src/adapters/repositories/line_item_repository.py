@@ -132,7 +132,7 @@ class LineItemRepository(AbstractRepository):
         query = """
         SELECT EXTRACT(MONTH FROM transaction_date) AS mymonth, SUM(amount)
         FROM line_item
-        WHERE transaction_date BETWEEN '2023-01-01' AND '2023-12-31'
+        WHERE transaction_date BETWEEN %(start_of_year)s AND %(end_of_year)s
         AND show_on_spending_report
         GROUP BY EXTRACT(MONTH FROM transaction_date)
         ORDER BY EXTRACT(MONTH FROM transaction_date)
