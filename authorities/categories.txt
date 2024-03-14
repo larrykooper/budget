@@ -1,4 +1,4 @@
-Alcohol & Bars
+Bars
 Birding
 Books
 Building Staff
@@ -54,4 +54,5 @@ Uncategorized
 Utilities
 Vacation
 Vision Care
+Wine & Liquor
 \.
