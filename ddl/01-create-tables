@@ -48,6 +48,18 @@ CREATE TABLE transaction_type(
 CREATE TABLE rule_type(
     id SERIAL,
     name VARCHAR(255)
-)
+);
 
-COPY account(name) FROM stdin (FORMAT csv);
+COPY account(name) FROM stdin;
+
+COPY category(name) FROM stdin;
+
+COPY type_detail(name) FROM stdin;
+
+COPY transaction_type(name) FROM stdin;
+
+COPY rule_type(name) FROM stdin;
+
+GRANT SELECT, INSERT, UPDATE, DELETE
+ON ALL TABLES IN SCHEMA public
+TO budget;

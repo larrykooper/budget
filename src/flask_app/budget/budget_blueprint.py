@@ -1,5 +1,5 @@
 from flask import (
-    Blueprint, render_template, request
+    Blueprint, jsonify, render_template, request
 )
 
 from src.adapters.repositories.category_repository import CategoryRepository
@@ -10,7 +10,11 @@ bp = Blueprint('budget', __name__, url_prefix='/budget')
 def budget_home():
     category_repo = CategoryRepository()
     categories = category_repo.get_all_categories()
-    return render_template('budget/home.html', categories=categories)
+    total_budget = category_repo.get_total_budget()
+    return render_template('budget/home.html',
+        categories=categories,
+        total_budget=total_budget
+    )
 
 
 # Used for in-place editing -- called via AJAX
@@ -21,5 +25,6 @@ def update():
     if form['action'] == 'edit':
         if 'budget_per_month' in form:
             category_repo.update_budget_per_month(form['budget_per_month'], form['id'])
-    return "SUCCESS"
+            total_budget = category_repo.get_total_budget()
+    return jsonify(total_budget)
 

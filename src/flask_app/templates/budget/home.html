@@ -21,6 +21,11 @@
                         <td>{{ budget_display }}</td>
                     </tr>
                 {% endfor %}
+                <tr>
+                    <td></td>
+                    <td>Total</td>
+                    <td class="total-budget">{{ "{:,.2f}".format(total_budget['sum']) }}</td>
+                </tr>
             </tbody>
         </table>
     </div>
@@ -35,6 +40,9 @@
         columns: {
             identifier: [0, 'id'],
             editable: [[2, 'budget_per_month']]
+        },
+        onSuccess: function(data, textStatus, jqXHR) {
+            $(".total-budget").text(data.sum);
         }
     });
 
