@@ -13,7 +13,7 @@ class CategoryRepository(AbstractRepository):
 
     def get_all_categories(self) -> list[dict]:
         query = """
-        SELECT id, name, budget_per_month FROM category
+        SELECT id, name, budget_per_month, money_saving_steps FROM category
         ORDER BY name
         """
         params = {}
@@ -82,4 +82,17 @@ class CategoryRepository(AbstractRepository):
             'category_id': id
         }
         db_pool.update(query, params)
+
+    def update_money_saving_steps(self, new_value, id):
+        query = """
+        UPDATE category
+        SET money_saving_steps = %(new_value)s
+        WHERE id = %(category_id)s
+        """
+        params = {
+            'new_value': new_value,
+            'category_id': id
+        }
+        db_pool.update(query, params)
+
 

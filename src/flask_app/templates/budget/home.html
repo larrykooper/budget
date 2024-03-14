@@ -2,30 +2,34 @@
 {% extends 'base.html' %}
 
 {% block content %}
+    <h1>All Categories</h1>
     <div class="table-responsive">
         <table id="budget">
             <thead>
                 <th>#</th>
                 <th>Category</th>
                 <th>Amount Budgeted Per Month</th>
+                <th>Money Saving Steps</th>
             </thead>
             <tbody>
                 {% for category in categories %}
                     <tr>
-                        {% if category['budget_per_month'] %}
-                            {% set budget_display = "{:,.2f}".format(category['budget_per_month']) %}
+                        {% if category['money_saving_steps'] %}
+                            {% set display_steps = category['money_saving_steps'] %}
                         {% else %}
-                            {% set budget_display = "0" %}
+                            {% set display_steps = "" %}
                         {% endif %}
                         <td>{{ category['id'] }}</td>
                         <td>{{ category['name'] }}</td>
-                        <td>{{ budget_display }}</td>
+                        <td>{{ util.fmt_num(category['budget_per_month']) }}</td>
+                        <td>{{ display_steps }}</td>
                     </tr>
                 {% endfor %}
                 <tr>
                     <td></td>
                     <td>Total</td>
                     <td class="total-budget">{{ util.fmt_num(total_budget['sum']) }}</td>
+                    <td></td>
                 </tr>
             </tbody>
         </table>
@@ -40,7 +44,7 @@
         hideIdentifier: true,
         columns: {
             identifier: [0, 'id'],
-            editable: [[2, 'budget_per_month']]
+            editable: [[2, 'budget_per_month'], [3, 'money_saving_steps']]
         },
         onSuccess: function(data, textStatus, jqXHR) {
             $(".total-budget").text(data.sum);

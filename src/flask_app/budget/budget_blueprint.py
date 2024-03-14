@@ -29,5 +29,7 @@ def update():
         if 'budget_per_month' in form:
             category_repo.update_budget_per_month(form['budget_per_month'], form['id'])
             total_budget = category_repo.get_total_budget()
+        if 'money_saving_steps' in form:
+            category_repo.update_money_saving_steps(form['money_saving_steps'], form['id'])
     return jsonify(total_budget)
 
