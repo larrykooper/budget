@@ -28,19 +28,19 @@
                 {% for category in categories %}
                     <tr>
                         <td>{{ category['name']}}</td>
-                        <td>{{ util.fmt_num(category['budget_per_month']) }}</td>
-                        <td>{{ util.fmt_num(category['spend_jan']) }}</td>
-                        <td>{{ util.fmt_num(category['spend_feb']) }}</td>
-                        <td>{{ util.fmt_num(category['spend_mar']) }}</td>
-                        <td>{{ util.fmt_num(category['spend_apr']) }}</td>
-                        <td>{{ util.fmt_num(category['spend_may']) }}</td>
-                        <td>{{ util.fmt_num(category['spend_jun']) }}</td>
-                        <td>{{ util.fmt_num(category['spend_jul']) }}</td>
-                        <td>{{ util.fmt_num(category['spend_aug']) }}</td>
-                        <td>{{ util.fmt_num(category['spend_sep']) }}</td>
-                        <td>{{ util.fmt_num(category['spend_oct']) }}</td>
-                        <td>{{ util.fmt_num(category['spend_nov']) }}</td>
-                        <td>{{ util.fmt_num(category['spend_dec']) }}</td>
+                        <td class="amount">{{ util.fmt_num(category['budget_per_month']) }}</td>
+                        <td class="amount">{{ util.fmt_num(category['spend_jan']) }}</td>
+                        <td class="amount">{{ util.fmt_num(category['spend_feb']) }}</td>
+                        <td class="amount">{{ util.fmt_num(category['spend_mar']) }}</td>
+                        <td class="amount">{{ util.fmt_num(category['spend_apr']) }}</td>
+                        <td class="amount">{{ util.fmt_num(category['spend_may']) }}</td>
+                        <td class="amount">{{ util.fmt_num(category['spend_jun']) }}</td>
+                        <td class="amount">{{ util.fmt_num(category['spend_jul']) }}</td>
+                        <td class="amount">{{ util.fmt_num(category['spend_aug']) }}</td>
+                        <td class="amount">{{ util.fmt_num(category['spend_sep']) }}</td>
+                        <td class="amount">{{ util.fmt_num(category['spend_oct']) }}</td>
+                        <td class="amount">{{ util.fmt_num(category['spend_nov']) }}</td>
+                        <td class="amount">{{ util.fmt_num(category['spend_dec']) }}</td>
                     </tr>
                 {% endfor %}
                 <tr>
