@@ -1,0 +1,8 @@
+{% macro fmt_num(number)  -%}
+    {% if number %}
+        {% set display =  "{:,.2f}".format(number) %}
+    {% else %}
+        {% set display = "0" %}
+    {% endif %}
+    {{ display }}
+{%- endmacro %}

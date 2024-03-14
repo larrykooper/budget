@@ -1,3 +1,4 @@
+{% import 'shared/utils.html' as util %}
 {% extends 'base.html' %}
 
 {% block content %}
@@ -24,7 +25,7 @@
                 <tr>
                     <td></td>
                     <td>Total</td>
-                    <td class="total-budget">{{ "{:,.2f}".format(total_budget['sum']) }}</td>
+                    <td class="total-budget">{{ util.fmt_num(total_budget['sum']) }}</td>
                 </tr>
             </tbody>
         </table>

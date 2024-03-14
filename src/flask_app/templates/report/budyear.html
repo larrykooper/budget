@@ -1,11 +1,4 @@
-{% macro fmt_num(number)  -%}
-    {% if number %}
-        {% set display =  "{:,.2f}".format(number) %}
-    {% else %}
-        {% set display = "0" %}
-    {% endif %}
-    {{ display }}
-{%- endmacro %}
+{% import 'shared/utils.html' as util %}
 
 {% extends 'base.html' %}
 
@@ -35,26 +28,26 @@
                 {% for category in categories %}
                     <tr>
                         <td>{{ category['name']}}</td>
-                        <td>{{ fmt_num(category['budget_per_month']) }}</td>
-                        <td>{{ fmt_num(category['spend_jan']) }}</td>
-                        <td>{{ fmt_num(category['spend_feb']) }}</td>
-                        <td>{{ fmt_num(category['spend_mar']) }}</td>
-                        <td>{{ fmt_num(category['spend_apr']) }}</td>
-                        <td>{{ fmt_num(category['spend_may']) }}</td>
-                        <td>{{ fmt_num(category['spend_jun']) }}</td>
-                        <td>{{ fmt_num(category['spend_jul']) }}</td>
-                        <td>{{ fmt_num(category['spend_aug']) }}</td>
-                        <td>{{ fmt_num(category['spend_sep']) }}</td>
-                        <td>{{ fmt_num(category['spend_oct']) }}</td>
-                        <td>{{ fmt_num(category['spend_nov']) }}</td>
-                        <td>{{ fmt_num(category['spend_dec']) }}</td>
+                        <td>{{ util.fmt_num(category['budget_per_month']) }}</td>
+                        <td>{{ util.fmt_num(category['spend_jan']) }}</td>
+                        <td>{{ util.fmt_num(category['spend_feb']) }}</td>
+                        <td>{{ util.fmt_num(category['spend_mar']) }}</td>
+                        <td>{{ util.fmt_num(category['spend_apr']) }}</td>
+                        <td>{{ util.fmt_num(category['spend_may']) }}</td>
+                        <td>{{ util.fmt_num(category['spend_jun']) }}</td>
+                        <td>{{ util.fmt_num(category['spend_jul']) }}</td>
+                        <td>{{ util.fmt_num(category['spend_aug']) }}</td>
+                        <td>{{ util.fmt_num(category['spend_sep']) }}</td>
+                        <td>{{ util.fmt_num(category['spend_oct']) }}</td>
+                        <td>{{ util.fmt_num(category['spend_nov']) }}</td>
+                        <td>{{ util.fmt_num(category['spend_dec']) }}</td>
                     </tr>
                 {% endfor %}
                 <tr>
                     <td>TOTAL</td>
-                    <td>{{ fmt_num(total_budget['sum']) }}</td>
+                    <td>{{ util.fmt_num(total_budget['sum']) }}</td>
                     {% for total in totals %}
-                        <td>{{ fmt_num(total ['sum']) }}</td>
+                        <td>{{ util.fmt_num(total ['sum']) }}</td>
                     {% endfor %}
                 </tr>
             </tbody>

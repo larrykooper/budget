@@ -11,9 +11,10 @@ def budget_home():
     category_repo = CategoryRepository()
     categories = category_repo.get_all_categories()
     total_budget = category_repo.get_total_budget()
+    #breakpoint()
     return render_template('budget/home.html',
-        categories=categories,
-        total_budget=total_budget
+        total_budget=total_budget,
+        categories=categories
     )
 
 
