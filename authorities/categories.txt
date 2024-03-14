@@ -15,6 +15,7 @@ Entertainment NEC
 Fast Food
 Federal Tax
 Finance Charges
+Fitness & Sporting Goods
 Food Delivery
 Gas & Fuel
 Gifts
@@ -29,6 +30,7 @@ Home Services
 Home Supplies
 Internet
 Investments
+LarryBeth Web Services
 Late Fees
 Laundry
 Mobile Phone
@@ -43,7 +45,6 @@ Public Transportation
 Rental Cars
 Restaurants
 Shopping NEC
-Sporting Goods
 State Tax
 Taxis & Taxi Apps
 Television

@@ -287,6 +287,21 @@ class LineItemRepository(AbstractRepository):
                     sql.Literal('DISCOVER%%'))
         db_pool.update(executable_sql, params)
 
+        # Rule 7: Account is 3307 or 2161 and description starts with "Payment Thank You"
+        # Reason: This is me paying off a credit card
+        qstring = """
+        UPDATE line_item
+        SET show_on_spending_report = 'f'
+        FROM account
+        WHERE line_item.account_id = account.id
+        AND (account.name = 'Amazon-3307' OR account.name = 'Sapphire-2161')
+        AND description LIKE {}
+        """
+        params = {}
+        executable_sql = sql.SQL(qstring).format(sql.Literal('Payment Thank You%%'))
+        db_pool.update(executable_sql, params)
+
+
     def recategorize_existing_line_items_starts_with(self, new_category_id, search_term):
         """
         Recategorize existing line items based on a starts_with rule
