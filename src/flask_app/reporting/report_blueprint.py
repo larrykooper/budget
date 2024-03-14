@@ -33,7 +33,7 @@ def spending():
         if 'direction' in request.args:
             sort_direction = request.args.get('direction')
         else:
-            sort_direction  = "asc"
+            sort_direction  = "desc"
         sortspec = sortkey.split(".")
         sort_table = sortspec[0]
         sort_column = sortspec[1]
