@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="table-responsive">
+    <table>
+        <thead>
+            <th>Term</th>
+            <th>Category</th>
+            <th>Rule Type</th>
+        </thead>
+        <tbody>
+            {% for rule in rules %}
+                <tr>
+                    <td>{{ rule['term'] }}</td>
+                    <td>{{ rule['category'] }}</td>
+                    <td>{{ rule['ruletype'] }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+
+{% endblock content %}

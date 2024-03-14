@@ -12,10 +12,23 @@ bp = Blueprint('rules', __name__, url_prefix='/rules')
 
 @bp.route('/', methods=['GET', 'POST'])
 def rules_home():
+    return render_template('rules/home.html')
+
+@bp.route('/list', methods=['GET'])
+def list():
+    category_rule_repo = CategoryRuleRepository()
+    rules = category_rule_repo.list_rules()
+    return render_template('rules/list.html',
+        rules=rules
+    )
+
+
+@bp.route('/add_rule', methods=['GET', 'POST'])
+def add_rule():
     if request.method == 'GET':
         category_repo = CategoryRepository()
         categories = category_repo.get_all_categories()
-        return render_template('rules/home.html', categories=categories)
+        return render_template('rules/add_rule.html', categories=categories)
     if request.method == 'POST':
         category_rule_repo = CategoryRuleRepository()
         # Normalize term to lowercase

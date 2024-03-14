@@ -1,78 +1,16 @@
 {% extends 'base.html' %}
 {% block content %}
-
-<div class="add-rule-page">
-    <h1>Add a categorization rule</h1>
-    <div class="help-text">Hint: Use "starts with" rules wherever you can, because
-    they are much faster than "contains" rules.
+<div class="reports-menu">
+    <h1>Categorization Rules</h1>
+    <div class="choice">
+        <a href="/rules/list">List Rules</a>
+    </div>
+    <div class="choice">
+        <a href="/rules/add_rule">Add a Rule</a>
     </div>
 
-    <!-- The name is submitted  -->
-    <!--  'for' goes with the id -->
 
-    <form method="post">
-
-        <fieldset class="add-rule">
-            <!--<legend>Add a categorization rule</legend>-->
-
-            <div class="fields-wrapper">
-
-                <div class="box first-col">
-                    <label for="term">
-                        Search term in Description:
-                    </label>
-                </div>
-
-                <div class="box">
-                    <input type="text" id="term" name="term" class="text-input"
-                        placeholder="Search term" ></input>
-                </div>
-
-                <div class="box first-col">
-                    <label for="category">
-                        Categorize as:
-                    </label>
-                </div>
-                <div class="box">
-                    <select name="category" id="category">
-                        <option disabled selected value>--</option>
-                        {% for category in categories %}
-                            <option value="{{ category['id'] }}">{{ category['name'] }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="box first-col">
-                    <label for="rule-type">
-                        Rule type:
-                    </label>
-                </div>
-                <!-- 2 is the ID for starts_with, 1 is the ID for contains  -->
-                <div>
-                    <input type="radio" id="starts-with" name="rule-type" value="2" checked/>
-                    <label for="starts-with">Starts with</label>
-
-                    <input type="radio" id="contains" name="rule-type" value="1"/>
-                    <label for="contains">Contains</label>
-                </div>
-                <div class="box first-col last-row">
-                    <label>
-                        Apply rule to existing data:
-                    </label>
-                </div>
-                <div class="box">
-                    <input type="radio" id="yes" name="look-back" value="yes" checked/>
-                    <label for="yes">Yes</label>
-
-                    <input type="radio" id="no" name="look-back" value="no"/>
-                    <label for="no">No</label>
-                </div>
-
-            </div> <!-- fields-wrapper -->
-
-            <button type="submit" class="save-button">Save</button>
-
-
-        </fieldset>
-    </form>
 </div>
 {% endblock content %}
+
+

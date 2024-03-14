@@ -28,6 +28,21 @@ class CategoryRuleRepository(AbstractRepository):
 
     # SELECT
 
+    def list_rules(self):
+        query = """
+        SELECT term, cat.name AS category, ruletype.name AS ruletype
+        FROM category_rule cr
+        LEFT JOIN category cat
+        ON cr.category_id = cat.id
+        LEFT JOIN rule_type ruletype
+        ON cr.rule_type_id = ruletype.id
+        ORDER BY term
+        """
+        params = {}
+        data = db_pool.get_data(query, params, single_row=False)
+        return data
+
+
     def get_starts_with_rule(self, desc_low: str) -> str:
         qstring = """
         SELECT category_id
