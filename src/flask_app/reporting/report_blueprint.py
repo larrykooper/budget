@@ -42,7 +42,7 @@ def spending():
         # Query the database for what we need to report
         line_items = line_item_repo.get_for_spending_report(start_date, end_date, sort_column, sort_direction, sort_table)
         line_items_translated = translate_line_items(line_items)
-        categories = Category.categories_json()
+        categories = Category.categories_for_select()
         total = line_item_repo.total_spending_per_month(start_date, end_date)
         return render_template('report/spending.html',
             line_items=line_items_translated,

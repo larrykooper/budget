@@ -126,14 +126,15 @@ if (typeof jQuery === 'undefined') {
                                 // Create select element.
                                 var input = '<select class="tabledit-input ' + settings.inputClass + '" name="' + settings.columns.editable[i][1] + '" style="display: none;" disabled>';
 
+                                var items = jQuery.parseJSON(settings.columns.editable[i][2]);
                                 // Create options for select element.
-                                $.each(jQuery.parseJSON(settings.columns.editable[i][2]), function(index, value) {
-                                    if (text === value) {
-                                        input += '<option value="' + index + '" selected>' + value + '</option>';
+                                for (var j = 0; j < items.length; j++) {
+                                    if (text === items[j].value) {
+                                        input += '<option value="' + items[j].index + '" selected>' + items[j].value + '</option>';
                                     } else {
-                                        input += '<option value="' + index + '">' + value + '</option>';
+                                        input += '<option value="' + items[j].index + '">' + items[j].value + '</option>';
                                     }
-                                });
+                                };
 
                                 // Create last piece of select element.
                                 input += '</select>';
@@ -572,7 +573,7 @@ if (typeof jQuery === 'undefined') {
 
         /**
          * Keyup event on table element.
-         * 
+         *
          * @param {object} event
          */
         $table.on('keyup', function(event) {

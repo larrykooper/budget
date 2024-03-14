@@ -15,6 +15,7 @@ class Category:
         authority_repo = AuthorityRepository()
         return authority_repo.authority_lookup("category", "Uncategorized")
 
+
     def memoize(func):
         cache = {}
 
@@ -29,10 +30,21 @@ class Category:
 
     @staticmethod
     @memoize
-    def categories_json():
+    def categories_for_select():
+        """
+        Returns JSON in this form:
+        With values sorted, not indices
+        [{index:"57", value:"Bars"},
+        {index:"2", value:"Birding"},
+        {index:"4", value:"Books"},
+        {index:"3", value:"Building Staff"} ]
+        """
+        #  create a list of dicts
         category_repo = CategoryRepository()
         cats = category_repo.get_all_categories()
-        cats_dict = {}
+        cats_list = []
         for cat in cats:
-            cats_dict.update({cat['id']: cat['name']})
-        return json.dumps(cats_dict)
+            d = {"index": cat['id'], "value": cat['name']}
+            cats_list.append(d)
+        return json.dumps(cats_list)
+
