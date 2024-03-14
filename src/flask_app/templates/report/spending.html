@@ -1,16 +1,5 @@
 <!-- display one line for each line item  -->
-
-{% macro sortable(year, month, column, title, sort_direction) -%}
-    {# Want to reverse direction if user clicks again #}
-    {% if sort_direction == "asc" %}
-        {% set direction = "desc" %}
-    {% else %}
-        {% set direction = "asc" %}
-    {% endif %}
-    <a href="{{ url_for('.spending', year=year, month=month, sortkey=column, direction=direction)}}">
-        {{ title }}
-    </a>
-{%- endmacro %}
+{% import 'shared/utils.html' as util %}
 
 {% extends 'base.html' %}
 
@@ -22,11 +11,11 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>{{ sortable(year, month, "li.transaction_date", "Transaction Date", sort_direction) }}</th>
+                        <th>{{ util.sortable(year, month, "li.transaction_date", "Transaction Date", sort_direction, ".spending") }}</th>
                         <th>Post Date</th>
                         <th>Description</th>
                         <th>Amount</th>
-                        <th>{{ sortable(year, month, "cat.name", "Category", sort_direction) }}</th>
+                        <th>{{ util.sortable(year, month, "cat.name", "Category", sort_direction, ".spending") }}</th>
                         <th>Transaction<br>Type</th>
                         <th>Account Name</th>
                         <th>Check<br>Number</th>

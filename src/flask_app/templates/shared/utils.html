@@ -6,3 +6,16 @@
     {% endif %}
     {{ display }}
 {%- endmacro %}
+
+
+{% macro sortable(year, month, column, title, sort_direction, url) -%}
+    {# Want to reverse direction if user clicks again #}
+    {% if sort_direction == "asc" %}
+        {% set direction = "desc" %}
+    {% else %}
+        {% set direction = "asc" %}
+    {% endif %}
+    <a href="{{ url_for(url, year=year, month=month, sortkey=column, direction=direction)}}">
+        {{ title }}
+    </a>
+{%- endmacro %}

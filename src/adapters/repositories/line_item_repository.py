@@ -106,22 +106,25 @@ class LineItemRepository(AbstractRepository):
         self,
         start_date: datetime.date,
         end_date: datetime.date,
+        sort_column: str,
+        sort_direction: str,
         ) -> list[dict]:
-        query = """
-        SELECT cat.name, SUM(amount)
+        qstring = """
+        SELECT cat.name AS catname, SUM(amount) AS amtsum
         FROM line_item li
         LEFT JOIN category cat
         ON li.category_id = cat.id
         WHERE transaction_date BETWEEN %(start_date)s AND %(end_date)s
         AND show_on_spending_report
-        GROUP BY cat.name
-        ORDER BY cat.name
+        GROUP BY catname
+        ORDER BY {} {}
         """
         params = {
             'start_date': start_date,
             'end_date': end_date
         }
-        data = db_pool.get_data(query, params, single_row=False)
+        executable_sql = sql.SQL(qstring).format(sql.Identifier(sort_column), sql.SQL(sort_direction))
+        data = db_pool.get_data(executable_sql, params, single_row=False)
         return data
 
     def total_spending_per_month_for_year(

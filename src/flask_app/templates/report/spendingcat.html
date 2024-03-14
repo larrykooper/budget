@@ -1,3 +1,4 @@
+{% import 'shared/utils.html' as util %}
 {% extends 'base.html' %}
 
 {% block content %}
@@ -9,15 +10,15 @@
             <table id="spendingcat">
                 <thead>
                     <tr>
-                        <th>Category</th>
-                        <th>Total Spending</th>
+                        <th>{{ util.sortable(year, month, "catname", "Category", sort_direction, ".spendingcat") }}</th>
+                        <th>{{ util.sortable(year, month, "amtsum", "Total Spending", sort_direction, ".spendingcat")}}</th>
                     </tr>
                 </thead>
                 <tbody>
                 {% for category in categories %}
                 <tr class="category">
-                    <td>{{ category['name'] }}</td>
-                    <td class="amount">{{ "{:,.2f}".format(category['sum']) }}</td>
+                    <td>{{ category['catname'] }}</td>
+                    <td class="amount">{{ "{:,.2f}".format(category['amtsum']) }}</td>
                 </tr>
                 {% endfor %}
                 <tr>

@@ -89,14 +89,24 @@ def spendingcat():
         year = int(request.args.get('year'))
         month = int(request.args.get('month'))
         month_name = calendar.month_name[month]
+        if 'sortkey' in request.args:
+            sortkey = request.args.get('sortkey')
+        else:
+            sortkey = "catname"
+        if 'direction' in request.args:
+            sort_direction = request.args.get('direction')
+        else:
+            sort_direction  = "asc"
         start_date, end_date = get_start_end(year, month)
         line_item_repo = LineItemRepository()
-        categories = line_item_repo.get_for_spending_by_cat(start_date, end_date)
+        categories = line_item_repo.get_for_spending_by_cat(start_date, end_date, sortkey, sort_direction)
         total = line_item_repo.total_spending_per_month(start_date, end_date)
         return render_template('report/spendingcat.html',
             categories = categories,
             year=year,
             month=month,
+            sortkey=sortkey,
+            sort_direction = sort_direction,
             month_name=month_name,
             total=total
         )
