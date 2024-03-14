@@ -28,7 +28,7 @@
                 {% for category in categories %}
                     <tr>
                         <td>{{ category['name']}}</td>
-                        <td class="amount">{{ util.fmt_num(category['budget_per_month']) }}</td>
+                        <td class="amount budgeted">{{ util.fmt_num(category['budget_per_month']) }}</td>
                         <td class="amount">{{ util.fmt_num(category['spend_jan']) }}</td>
                         <td class="amount">{{ util.fmt_num(category['spend_feb']) }}</td>
                         <td class="amount">{{ util.fmt_num(category['spend_mar']) }}</td>

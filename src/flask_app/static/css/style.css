@@ -50,6 +50,10 @@ td.amount {
     text-align: right;
 }
 
+td.budgeted {
+    background-color: cyan;
+}
+
 td.post-date {
     width: 130px;
 }
