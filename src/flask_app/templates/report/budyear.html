@@ -54,4 +54,23 @@
         </table>
     </div>
 
+<script type="text/javascript">
+// Color any cells where spending is over budget
+$( document ).ready(function() {
+    $( "tbody" ).children().each(function (index) {
+        var budget_str = $(this).children('.budgeted').text();
+        var bnocomma = budget_str.replace(/\,/g,'');
+        var budget = parseFloat(bnocomma);
+        $(this).children('.amount').not('.budgeted').each(function (index) {
+            var spent_str = $(this).text();
+            var spnocomma = spent_str.replace(/\,/g,'');
+            var spent = parseFloat(spnocomma);
+            if (spent>budget) {
+                $(this).addClass("over-budget");
+            }
+        })
+    });
+});
+</script>
+
 {% endblock content %}

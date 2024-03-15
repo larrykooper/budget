@@ -72,6 +72,12 @@ table#spendingcat {
     font-size: 15px;
 }
 
+/* BUDGET FOR YEAR   */
+
+td.over-budget {
+    background-color: pink;
+}
+
 /*  ADD CATEGORIZATION RULE  */
 
 .add-rule-page h1 {
