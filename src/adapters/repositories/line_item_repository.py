@@ -68,7 +68,6 @@ class LineItemRepository(AbstractRepository):
         and sql.SQL to pass the sort direction.
         See: https://www.psycopg.org/psycopg3/docs/api/sql.html
         ---
-        Credit card payments are not spending, they are transfers.
         """
         qstring = """
         SELECT
@@ -90,7 +89,6 @@ class LineItemRepository(AbstractRepository):
         LEFT JOIN transaction_type tt
         ON li.transaction_type_id = tt.id
         WHERE li.transaction_date BETWEEN %(start_date)s AND %(end_date)s
-        AND tt.name <> 'credit_card_payment'
         AND li.show_on_spending_report
         ORDER BY {} {}
         """
@@ -304,6 +302,17 @@ class LineItemRepository(AbstractRepository):
         executable_sql = sql.SQL(qstring).format(sql.Literal('Payment Thank You%%'))
         db_pool.update(executable_sql, params)
 
+        # Rule 8: Transaction type name is 'credit_card_payment'
+        # Reason: Credit card payments are not spending, they are transfers.
+        query = """
+        UPDATE line_item
+        SET show_on_spending_report = 'f'
+        FROM transaction_type
+        WHERE line_item.transaction_type_id = transaction_type.id
+        AND transaction_type.name = 'credit_card_payment'
+        """
+        params = {}
+        db_pool.update(query, params)
 
     def recategorize_existing_line_items_starts_with(self, new_category_id, search_term):
         """

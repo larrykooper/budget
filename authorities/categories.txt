@@ -33,6 +33,7 @@ Investments
 LarryBeth Web Services
 Late Fees
 Laundry
+Medical Supplies
 Mobile Phone
 Mortgage & Rent
 Movies
@@ -40,7 +41,9 @@ Museums
 Music
 Newspapers & Magazines
 Office Supplies
+Personal Care
 Pharmacy
+Professional Education
 Public Transportation
 Rental Cars
 Restaurants
@@ -49,6 +52,7 @@ State Tax
 Taxis & Taxi Apps
 Television
 Theater
+Transfer
 Tuition
 Uncategorized
 Utilities
