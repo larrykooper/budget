@@ -49,6 +49,7 @@ Rental Cars
 Restaurants
 Shopping NEC
 State Tax
+Subscriptions NEC
 Tax Preparation
 Taxis & Taxi Apps
 Television
