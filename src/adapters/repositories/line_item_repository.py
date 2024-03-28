@@ -76,9 +76,9 @@ class LineItemRepository(AbstractRepository):
             post_date,
             description,
             amount,
-            category_id,
+            cat.name AS cat_name,
             transaction_type_id,
-            account_id,
+            acc.name AS account_name,
             check_number,
             type_detail_id,
             comment,
@@ -88,6 +88,8 @@ class LineItemRepository(AbstractRepository):
         ON li.category_id = cat.id
         LEFT JOIN transaction_type tt
         ON li.transaction_type_id = tt.id
+        LEFT JOIN account acc
+        ON acc.id = li.account_id
         WHERE li.transaction_date BETWEEN %(start_date)s AND %(end_date)s
         AND li.show_on_spending_report
         ORDER BY {} {}

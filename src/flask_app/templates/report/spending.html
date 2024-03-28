@@ -17,7 +17,7 @@
                         <th>Amount</th>
                         <th>{{ util.sortable(year, month, "cat.name", "Category", sort_direction, ".spending") }}</th>
                         <th>Transaction<br>Type</th>
-                        <th>Account Name</th>
+                        <th>{{ util.sortable(year, month, "acc.name", "Account Name", sort_direction, ".spending") }}</th>
                         <th>Check<br>Number</th>
                         <th>Type Detail</th>
                         <th>Comment</th>
@@ -32,7 +32,7 @@
                         <td class="post-date">{{ line_item['post_date'] }}</td>
                         <td>{{ line_item['description'] }}</td>
                         <td class="amount">{{ "{:,.2f}".format(line_item['amount']) }}</td>
-                        <td class="category-name">{{ line_item['category_name'] }}</td>
+                        <td class="category-name">{{ line_item['cat_name'] }}</td>
                         <td>{{ line_item['transaction_type'] }}</td>
                         <td>{{ line_item['account_name'] }}</td>
                         <td>{{ line_item['check_number'] }}</td>
