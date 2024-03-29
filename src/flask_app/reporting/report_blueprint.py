@@ -70,11 +70,13 @@ def budyear():
         categories = category_repo.get_for_budyear(start_of_year, end_of_year)
         total_budget = category_repo.get_total_budget()
         totals = line_item_repo.total_spending_per_month_for_year(start_of_year, end_of_year)
+        denominator = get_budyear_denominator(year)
         return render_template('report/budyear.html',
             categories=categories,
             year=year,
             totals=totals,
-            total_budget=total_budget
+            total_budget=total_budget,
+            denominator=denominator
         )
 
 # Spending by category per month
@@ -163,3 +165,15 @@ def get_year_start_end(year: int) -> tuple[datetime.date, datetime.date]:
     end = datetime.date(year, 12, 31)
     return start, end
 
+def get_budyear_denominator(year: int) -> int:
+    """
+    If the year is a prior year return 12
+    If the year is current year, return the number of the current month
+    """
+    today = datetime.date.today()
+    current_month = today.month
+    current_year = today.year
+    if year < current_year:
+        return 12
+    else:
+        return current_month

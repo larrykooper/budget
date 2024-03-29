@@ -24,6 +24,7 @@
                     <th>Spending Oct</th>
                     <th>Spending Nov</th>
                     <th>Spending Dec</th>
+                    <th>Average Spending<br>per month</th>
                 </tr>
             </thead>
             <tbody>
@@ -43,6 +44,7 @@
                         <td class="amount">{{ util.fmt_num(category['spend_oct']) }}</td>
                         <td class="amount">{{ util.fmt_num(category['spend_nov']) }}</td>
                         <td class="amount">{{ util.fmt_num(category['spend_dec']) }}</td>
+                        <td class="amount">{{ util.fmt_num(category['tot_spend_year']/denominator) }}  </td>
                     </tr>
                 {% endfor %}
                 <tr>

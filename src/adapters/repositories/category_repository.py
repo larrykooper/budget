@@ -35,22 +35,31 @@ class CategoryRepository(AbstractRepository):
             FROM line_item
             WHERE transaction_date BETWEEN %(start_of_year)s AND %(end_of_year)s
             AND show_on_spending_report
+        ), cat_year_totals AS (
+            SELECT category_id, SUM(amount) AS tot_spend_year
+            FROM line_item
+            WHERE transaction_date BETWEEN %(start_of_year)s AND %(end_of_year)s
+            AND show_on_spending_report
+            GROUP BY category_id
         )
         SELECT name,
         budget_per_month,
-        (SELECT sum FROM spending_by_cat WHERE category_id = category.id AND mymonth=1) AS spend_jan,
-        (SELECT sum FROM spending_by_cat WHERE category_id = category.id AND mymonth=2) AS spend_feb,
-        (SELECT sum FROM spending_by_cat WHERE category_id = category.id AND mymonth=3) AS spend_mar,
-        (SELECT sum FROM spending_by_cat WHERE category_id = category.id AND mymonth=4) AS spend_apr,
-        (SELECT sum FROM spending_by_cat WHERE category_id = category.id AND mymonth=5) AS spend_may,
-        (SELECT sum FROM spending_by_cat WHERE category_id = category.id AND mymonth=6) AS spend_jun,
-        (SELECT sum FROM spending_by_cat WHERE category_id = category.id AND mymonth=7) AS spend_jul,
-        (SELECT sum FROM spending_by_cat WHERE category_id = category.id AND mymonth=8) AS spend_aug,
-        (SELECT sum FROM spending_by_cat WHERE category_id = category.id AND mymonth=9) AS spend_sep,
-        (SELECT sum FROM spending_by_cat WHERE category_id = category.id AND mymonth=10) AS spend_oct,
-        (SELECT sum FROM spending_by_cat WHERE category_id = category.id AND mymonth=11) AS spend_nov,
-        (SELECT sum FROM spending_by_cat WHERE category_id = category.id AND mymonth=12) AS spend_dec
-        FROM category
+        (SELECT sum FROM spending_by_cat WHERE category_id = cat.id AND mymonth=1) AS spend_jan,
+        (SELECT sum FROM spending_by_cat WHERE category_id = cat.id AND mymonth=2) AS spend_feb,
+        (SELECT sum FROM spending_by_cat WHERE category_id = cat.id AND mymonth=3) AS spend_mar,
+        (SELECT sum FROM spending_by_cat WHERE category_id = cat.id AND mymonth=4) AS spend_apr,
+        (SELECT sum FROM spending_by_cat WHERE category_id = cat.id AND mymonth=5) AS spend_may,
+        (SELECT sum FROM spending_by_cat WHERE category_id = cat.id AND mymonth=6) AS spend_jun,
+        (SELECT sum FROM spending_by_cat WHERE category_id = cat.id AND mymonth=7) AS spend_jul,
+        (SELECT sum FROM spending_by_cat WHERE category_id = cat.id AND mymonth=8) AS spend_aug,
+        (SELECT sum FROM spending_by_cat WHERE category_id = cat.id AND mymonth=9) AS spend_sep,
+        (SELECT sum FROM spending_by_cat WHERE category_id = cat.id AND mymonth=10) AS spend_oct,
+        (SELECT sum FROM spending_by_cat WHERE category_id = cat.id AND mymonth=11) AS spend_nov,
+        (SELECT sum FROM spending_by_cat WHERE category_id = cat.id AND mymonth=12) AS spend_dec,
+        tot_spend_year
+        FROM category cat
+        INNER JOIN cat_year_totals cyt
+        ON cat.id = cyt.category_id
         ORDER BY name
         """
         params = {
