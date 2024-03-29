@@ -35,7 +35,6 @@ class CategoryRepository(AbstractRepository):
             FROM line_item
             WHERE transaction_date BETWEEN %(start_of_year)s AND %(end_of_year)s
             AND show_on_spending_report
-            ORDER BY category_id, mymonth
         )
         SELECT name,
         budget_per_month,
