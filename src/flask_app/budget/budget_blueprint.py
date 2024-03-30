@@ -27,7 +27,9 @@ def update():
     form = request.form
     if form['action'] == 'edit':
         if 'budget_per_month' in form:
-            category_repo.update_budget_per_month(form['budget_per_month'], form['id'])
+            wanted_budget = form['budget_per_month'].strip()
+            budget_no_commas = wanted_budget.replace(",", "")
+            category_repo.update_budget_per_month(budget_no_commas, form['id'])
             total_budget = category_repo.get_total_budget()
         if 'money_saving_steps' in form:
             category_repo.update_money_saving_steps(form['money_saving_steps'], form['id'])
