@@ -12,18 +12,18 @@
                 <tr>
                     <th>Category</th>
                     <th>Budgeted per Month</th>
-                    <th>Spending Jan</th>
-                    <th>Spending Feb</th>
-                    <th>Spending Mar</th>
-                    <th>Spending Apr</th>
-                    <th>Spending May</th>
-                    <th>Spending Jun</th>
-                    <th>Spending Jul</th>
-                    <th>Spending Aug</th>
-                    <th>Spending Sep</th>
-                    <th>Spending Oct</th>
-                    <th>Spending Nov</th>
-                    <th>Spending Dec</th>
+                    <th><a href="{{ url_for('.spending', year=year, month=1, sortkey='cat.name', direction='asc') }}">Spending Jan</a></th>
+                    <th><a href="{{ url_for('.spending', year=year, month=2, sortkey='cat.name', direction='asc') }}">Spending Feb</a></th>
+                    <th><a href="{{ url_for('.spending', year=year, month=3, sortkey='cat.name', direction='asc') }}">Spending Mar</a></th>
+                    <th><a href="{{ url_for('.spending', year=year, month=4, sortkey='cat.name', direction='asc') }}">Spending Apr</a></th>
+                    <th><a href="{{ url_for('.spending', year=year, month=5, sortkey='cat.name', direction='asc') }}">Spending May</a></th>
+                    <th><a href="{{ url_for('.spending', year=year, month=6, sortkey='cat.name', direction='asc') }}">Spending Jun</a></th>
+                    <th><a href="{{ url_for('.spending', year=year, month=7, sortkey='cat.name', direction='asc') }}">Spending Jul</a></th>
+                    <th><a href="{{ url_for('.spending', year=year, month=8, sortkey='cat.name', direction='asc') }}">Spending Aug</a></th>
+                    <th><a href="{{ url_for('.spending', year=year, month=9, sortkey='cat.name', direction='asc') }}">Spending Sep</a></th>
+                    <th><a href="{{ url_for('.spending', year=year, month=10, sortkey='cat.name', direction='asc') }}">Spending Oct</a></th>
+                    <th><a href="{{ url_for('.spending', year=year, month=11, sortkey='cat.name', direction='asc') }}">Spending Nov</a></th>
+                    <th><a href="{{ url_for('.spending', year=year, month=12, sortkey='cat.name', direction='asc') }}">Spending Dec</a></th>
                     <th>Average Spending<br>per month</th>
                 </tr>
             </thead>
