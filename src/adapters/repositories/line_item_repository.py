@@ -217,6 +217,28 @@ class LineItemRepository(AbstractRepository):
         params = {}
         db_pool.update(query, params)
 
+        # Exception 1A to Rule 1
+        # Transaction_type is credit and account is Checking
+        # And description contains both VENMO and CASHOUT
+        #  Set show_on_spending_report to TRUE
+        # Reason: Venmo cashouts offset spending
+        # Also, we must make the amount negative
+        qstring = """
+        UPDATE line_item
+        SET show_on_spending_report = 't',
+        amount = -1 * amount
+        FROM transaction_type, account
+        WHERE line_item.transaction_type_id = transaction_type.id
+        AND line_item.account_id = account.id
+        AND transaction_type.name = 'credit'
+        AND account.name = 'Checking'
+        AND description LIKE {}
+        AND description LIKE {}
+        """
+        params = {}
+        executable_sql = sql.SQL(qstring).format(sql.Literal('%%VENMO%%'), sql.Literal('%%CASHOUT%%'))
+        db_pool.update(executable_sql, params)
+
         # Rule 2: Account is Checking and description starts with "Payment to Chase card"
         # Reason: These items are when I pay a Chase credit card
         qstring = """

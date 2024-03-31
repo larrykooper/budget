@@ -56,6 +56,7 @@ def ingest_file(filename: str, account: str):
             line_item.data_hash = data_hash
             repo.add_line_item(line_item)
         # Done with ingesting the whole file
+        # Set items NOT to show on spending report if necessary
         repo.update_show_on_spending_report()
         return "SUCCESS"
 
