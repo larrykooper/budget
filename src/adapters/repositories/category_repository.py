@@ -68,7 +68,7 @@ class CategoryRepository(AbstractRepository):
         (SELECT sum FROM spending_by_cat WHERE category_id = cat.id AND mymonth=12) AS spend_dec,
         tot_spend_year
         FROM category cat
-        INNER JOIN cat_year_totals cyt
+        LEFT JOIN cat_year_totals cyt
         ON cat.id = cyt.category_id
         ORDER BY {} {} NULLS LAST
         """

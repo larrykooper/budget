@@ -44,7 +44,11 @@
                         <td class="amount">{{ util.fmt_num(category['spend_oct']) }}</td>
                         <td class="amount">{{ util.fmt_num(category['spend_nov']) }}</td>
                         <td class="amount">{{ util.fmt_num(category['spend_dec']) }}</td>
-                        <td class="amount">{{ util.fmt_num(category['tot_spend_year']/denominator) }}  </td>
+                        {% set my_total = category['tot_spend_year'] %}
+                        {% if my_total is none  %}
+                            {% set my_total = 0 %}
+                        {% endif %}
+                        <td class="amount">{{ util.fmt_num(my_total/denominator) }}</td>
                     </tr>
                 {% endfor %}
                 <tr>
