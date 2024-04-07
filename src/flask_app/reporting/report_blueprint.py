@@ -205,11 +205,6 @@ def zero_pad(totals: list, denominator: int) -> list:
     Add zeros for all future months so the display puts things in the right columns
     Denominator should be equal to length of list
     """
-    if denominator == 12:
-        return totals
-    else:
-        for i in range(denominator, 12):
-            totals.append({'sum': Decimal(0.00)})
-        return totals
-
-
+    for i in range(denominator, 12):
+        totals.append({'sum': Decimal(0.00)})
+    return totals
