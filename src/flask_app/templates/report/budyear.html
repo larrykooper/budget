@@ -53,6 +53,7 @@
                     {% for total in totals %}
                         <td>{{ util.fmt_num(total ['sum']) }}</td>
                     {% endfor %}
+                    <td>{{ util.fmt_num(av_per_month) }}  </td>
                 </tr>
             </tbody>
         </table>

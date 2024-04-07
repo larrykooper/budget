@@ -1,5 +1,6 @@
 import calendar
 import datetime
+from decimal import Decimal
 from flask import (
     Blueprint, jsonify, render_template, request
 )
@@ -71,12 +72,14 @@ def budyear():
         total_budget = category_repo.get_total_budget()
         totals = line_item_repo.total_spending_per_month_for_year(start_of_year, end_of_year)
         denominator = get_budyear_denominator(year)
+        avg_spend_per_month = get_avg_spend_per_month(totals)
         return render_template('report/budyear.html',
             categories=categories,
             year=year,
             totals=totals,
             total_budget=total_budget,
-            denominator=denominator
+            denominator=denominator,
+            av_per_month = avg_spend_per_month
         )
 
 # Spending by category per month
@@ -177,3 +180,9 @@ def get_budyear_denominator(year: int) -> int:
         return 12
     else:
         return current_month
+
+def get_avg_spend_per_month(totals: list) -> Decimal:
+    sum = 0
+    for total in totals:
+        sum += total['sum']
+    return sum/12
