@@ -31,6 +31,7 @@ class CategoryRepository(AbstractRepository):
             self,
             start_of_year: datetime.date,
             end_of_year: datetime.date,
+            end_of_spend_period: datetime.date,
             sort_column: str,
             sort_direction: str,
         ) -> list[dict]:
@@ -47,7 +48,7 @@ class CategoryRepository(AbstractRepository):
         ), cat_year_totals AS (
             SELECT category_id, SUM(amount) AS tot_spend_year
             FROM line_item
-            WHERE transaction_date BETWEEN %(start_of_year)s AND %(end_of_year)s
+            WHERE transaction_date BETWEEN %(start_of_year)s AND %(end_of_spend_period)s
             AND show_on_spending_report
             GROUP BY category_id
         )
@@ -73,7 +74,8 @@ class CategoryRepository(AbstractRepository):
         """
         params = {
             'start_of_year': start_of_year,
-            'end_of_year': end_of_year
+            'end_of_year': end_of_year,
+            'end_of_spend_period': end_of_spend_period
         }
         executable_sql = sql.SQL(qstring).format(sql.Identifier(sort_column), sql.SQL(sort_direction))
         data = db_pool.get_data(executable_sql, params, single_row=False)

@@ -66,6 +66,8 @@ def budyear():
     else:
         year = int(request.args.get('year'))
         start_of_year, end_of_year = get_year_start_end(year)
+        denominator = get_budyear_denominator(year)
+        end_of_spend_period = get_end_of_spend_period(denominator, year)
         category_repo = CategoryRepository()
         line_item_repo = LineItemRepository()
         if 'sortkey' in request.args:
@@ -77,11 +79,15 @@ def budyear():
         else:
             sort_direction  = "asc"
         sort_column = sortkey
-        categories = category_repo.get_for_budyear(start_of_year, end_of_year, sort_column, sort_direction)
+        categories = category_repo.get_for_budyear(
+            start_of_year,
+            end_of_year,
+            end_of_spend_period,
+            sort_column,
+            sort_direction)
         # total_budget is the sum of budgeted over all categories
         total_budget = category_repo.get_total_budget()
         totals = line_item_repo.total_spending_per_month_for_year(start_of_year, end_of_year)
-        denominator = len(totals)
         avg_spend_per_month = get_avg_spend_per_month(totals, denominator)
         totals_zero_padded = zero_pad(totals, denominator)
         return render_template('report/budyear.html',
@@ -195,3 +201,27 @@ def zero_pad(totals: list, denominator: int) -> list:
     for i in range(denominator, 12):
         totals.append({'sum': Decimal(0.00)})
     return totals
+
+
+def get_budyear_denominator(year: int) -> int:
+    """
+    If the year is a prior year return 12
+    If the year is current year, return the number of the current month
+    """
+    today = datetime.date.today()
+    current_month = today.month
+    current_year = today.year
+    if year < current_year:
+        return 12
+    else:
+        deno = current_month - 1
+        return 1 if deno == 0 else deno
+
+
+def get_end_of_spend_period(denominator: int, year_requested: int) -> datetime.date:
+    """
+    For the average spending to be meaningful, we
+    want the numerator of it to end at the end of last month
+    """
+    days_in_month = calendar.monthrange(year_requested, denominator)[1]
+    return datetime.date(year_requested, denominator, days_in_month)
