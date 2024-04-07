@@ -189,7 +189,7 @@ def get_year_start_end(year: int) -> tuple[datetime.date, datetime.date]:
 
 def get_avg_spend_per_month(totals: list, denominator: int) -> Decimal:
     sum = 0
-    for total in totals:
+    for total in totals[:denominator]:
         sum += total['sum']
     return sum/denominator
 
@@ -198,7 +198,7 @@ def zero_pad(totals: list, denominator: int) -> list:
     Add zeros for all future months so the display puts things in the right columns
     Denominator should be equal to length of list
     """
-    for i in range(denominator, 12):
+    for i in range(denominator+1, 12):
         totals.append({'sum': Decimal(0.00)})
     return totals
 
