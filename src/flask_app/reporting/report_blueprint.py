@@ -206,7 +206,9 @@ def zero_pad(totals: list, denominator: int) -> list:
 def get_budyear_denominator(year: int) -> int:
     """
     If the year is a prior year return 12
-    If the year is current year, return the number of the current month
+    If the year is current year, return the number of the current month minus 1
+    We exclude the current month from the average because its spending number is not
+    comparable to other months
     """
     today = datetime.date.today()
     current_month = today.month
