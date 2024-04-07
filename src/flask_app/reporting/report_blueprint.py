@@ -82,11 +82,12 @@ def budyear():
         total_budget = category_repo.get_total_budget()
         totals = line_item_repo.total_spending_per_month_for_year(start_of_year, end_of_year)
         denominator = get_budyear_denominator(year)
-        avg_spend_per_month = get_avg_spend_per_month(totals)
+        avg_spend_per_month = get_avg_spend_per_month(totals, denominator)
+        totals_zero_padded = zero_pad(totals, denominator)
         return render_template('report/budyear.html',
             categories=categories,
             year=year,
-            totals=totals,
+            totals=totals_zero_padded,
             total_budget=total_budget,
             denominator=denominator,
             av_per_month = avg_spend_per_month,
@@ -193,8 +194,22 @@ def get_budyear_denominator(year: int) -> int:
     else:
         return current_month
 
-def get_avg_spend_per_month(totals: list) -> Decimal:
+def get_avg_spend_per_month(totals: list, denominator: int) -> Decimal:
     sum = 0
     for total in totals:
         sum += total['sum']
-    return sum/12
+    return sum/denominator
+
+def zero_pad(totals: list, denominator: int) -> list:
+    """
+    Add zeros for all future months so the display puts things in the right columns
+    Denominator should be equal to length of list
+    """
+    if denominator == 12:
+        return totals
+    else:
+        for i in range(denominator, 12):
+            totals.append({'sum': Decimal(0.00)})
+        return totals
+
+
