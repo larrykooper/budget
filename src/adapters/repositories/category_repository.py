@@ -13,13 +13,18 @@ class CategoryRepository(AbstractRepository):
 
     # SELECT
 
-    def get_all_categories(self) -> list[dict]:
-        query = """
+    def get_all_categories(
+            self,
+            sort_column: str,
+            sort_direction: str,
+        ) -> list[dict]:
+        qstring = """
         SELECT id, name, budget_per_month, money_saving_steps FROM category
-        ORDER BY name
+        ORDER BY {} {} NULLS LAST
         """
         params = {}
-        data = db_pool.get_data(query, params, single_row=False)
+        executable_sql = sql.SQL(qstring).format(sql.Identifier(sort_column), sql.SQL(sort_direction))
+        data = db_pool.get_data(executable_sql, params, single_row=False)
         return data
 
     def get_for_budyear(

@@ -7,16 +7,29 @@ from src.adapters.repositories.category_repository import CategoryRepository
 bp = Blueprint('budget', __name__, url_prefix='/budget')
 
 @bp.route('/', methods=['GET'])
-def budget_home():
+@bp.route('/home', methods=['GET'])
+def home():
     """
-    Lists all the categories
+    Lists all the categories, the amounts budgeted, and the money-saving steps
     """
     category_repo = CategoryRepository()
-    categories = category_repo.get_all_categories()
+    if 'sortkey' in request.args:
+            sortkey = request.args.get('sortkey')
+    else:
+        sortkey = "name"
+    if 'direction' in request.args:
+        sort_direction = request.args.get('direction')
+    else:
+        sort_direction  = "asc"
+    sort_column = sortkey
+    categories = category_repo.get_all_categories(sort_column, sort_direction)
+    # total_budget is the sum over all categories of budget
     total_budget = category_repo.get_total_budget()
     return render_template('budget/home.html',
         total_budget=total_budget,
-        categories=categories
+        categories=categories,
+        sortkey=sortkey,
+        sort_direction=sort_direction,
     )
 
 

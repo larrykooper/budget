@@ -9,8 +9,8 @@
         <table id="budget">
             <thead>
                 <th>#</th>
-                <th>Category</th>
-                <th>Amount Budgeted Per Month</th>
+                <th>{{ util.sortable(0, 0, "name", "Category", sort_direction, ".home") }}</th>
+                <th>{{ util.sortable(0, 0, "budget_per_month", "Amount Budgeted Per Month", sort_direction, ".home") }}</th>
                 <th>Money Saving Steps</th>
             </thead>
             <tbody>
