@@ -1,5 +1,7 @@
 import datetime
 
+from psycopg import sql
+
 from src.adapters.repositories.abstract_repository import AbstractRepository
 import src.flask_app.database.db_pool as db_pool
 
@@ -23,12 +25,14 @@ class CategoryRepository(AbstractRepository):
     def get_for_budyear(
             self,
             start_of_year: datetime.date,
-            end_of_year: datetime.date
+            end_of_year: datetime.date,
+            sort_column: str,
+            sort_direction: str,
         ) -> list[dict]:
         """
         Get data for the budget by year report
         """
-        query = """
+        qstring = """
         WITH spending_by_cat AS (
             SELECT DISTINCT category_id, EXTRACT(MONTH FROM transaction_date) AS mymonth,
             SUM(amount) OVER (PARTITION BY EXTRACT(MONTH FROM transaction_date), category_id)
@@ -60,13 +64,14 @@ class CategoryRepository(AbstractRepository):
         FROM category cat
         INNER JOIN cat_year_totals cyt
         ON cat.id = cyt.category_id
-        ORDER BY name
+        ORDER BY {} {} NULLS LAST
         """
         params = {
             'start_of_year': start_of_year,
             'end_of_year': end_of_year
         }
-        data = db_pool.get_data(query, params, single_row=False)
+        executable_sql = sql.SQL(qstring).format(sql.Identifier(sort_column), sql.SQL(sort_direction))
+        data = db_pool.get_data(executable_sql, params, single_row=False)
         return data
 
     def get_total_budget(self):

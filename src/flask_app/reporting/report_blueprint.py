@@ -68,7 +68,17 @@ def budyear():
         start_of_year, end_of_year = get_year_start_end(year)
         category_repo = CategoryRepository()
         line_item_repo = LineItemRepository()
-        categories = category_repo.get_for_budyear(start_of_year, end_of_year)
+        if 'sortkey' in request.args:
+            sortkey = request.args.get('sortkey')
+        else:
+            sortkey = "name"
+        if 'direction' in request.args:
+            sort_direction = request.args.get('direction')
+        else:
+            sort_direction  = "asc"
+        sort_column = sortkey
+        categories = category_repo.get_for_budyear(start_of_year, end_of_year, sort_column, sort_direction)
+        # total_budget is the sum of budgeted over all categories
         total_budget = category_repo.get_total_budget()
         totals = line_item_repo.total_spending_per_month_for_year(start_of_year, end_of_year)
         denominator = get_budyear_denominator(year)
@@ -79,7 +89,9 @@ def budyear():
             totals=totals,
             total_budget=total_budget,
             denominator=denominator,
-            av_per_month = avg_spend_per_month
+            av_per_month = avg_spend_per_month,
+            sortkey=sortkey,
+            sort_direction=sort_direction,
         )
 
 # Spending by category per month

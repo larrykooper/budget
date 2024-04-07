@@ -10,8 +10,8 @@
         <table>
             <thead>
                 <tr>
-                    <th>Category</th>
-                    <th>Budgeted per Month</th>
+                    <th>{{ util.sortable(year, 0, "name", "Category", sort_direction, ".budyear") }}</th>
+                    <th>{{ util.sortable(year, 0, "budget_per_month", "Budgeted per Month", sort_direction, ".budyear") }}</th>
                     <th><a href="{{ url_for('.spending', year=year, month=1, sortkey='cat.name', direction='asc') }}">Spending Jan</a></th>
                     <th><a href="{{ url_for('.spending', year=year, month=2, sortkey='cat.name', direction='asc') }}">Spending Feb</a></th>
                     <th><a href="{{ url_for('.spending', year=year, month=3, sortkey='cat.name', direction='asc') }}">Spending Mar</a></th>
