@@ -41,7 +41,7 @@ class Category:
         """
         #  create a list of dicts
         category_repo = CategoryRepository()
-        cats = category_repo.get_all_categories()
+        cats = category_repo.get_all_categories(sort_column="name", sort_direction="asc")
         cats_list = []
         for cat in cats:
             d = {"index": cat['id'], "value": cat['name']}
