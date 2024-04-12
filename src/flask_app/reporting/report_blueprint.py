@@ -85,6 +85,13 @@ def budyear():
             end_of_spend_period,
             sort_column,
             sort_direction)
+        # Do business logic per category
+        for category in categories:
+            if category['budget_per_year'] is None:
+                category['budget_per_year'] = 0
+            if category['tot_spend_year'] is None:
+                category['tot_spend_year'] = 0
+            category['left_per_year'] = category['budget_per_year'] - category['tot_spend_year']
         # total_budget is the sum of budgeted over all categories
         total_budget = category_repo.get_total_budget()
         totals = line_item_repo.total_spending_per_month_for_year(start_of_year, end_of_year)

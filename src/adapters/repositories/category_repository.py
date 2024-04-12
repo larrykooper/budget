@@ -57,7 +57,6 @@ class CategoryRepository(AbstractRepository):
             SELECT id, 12 * budget_per_month AS budget_per_year
             FROM category
         )
-
         SELECT name,
         budget_per_month,
         (SELECT sum FROM spending_by_cat WHERE category_id = cat.id AND mymonth=1) AS spend_jan,
@@ -73,13 +72,12 @@ class CategoryRepository(AbstractRepository):
         (SELECT sum FROM spending_by_cat WHERE category_id = cat.id AND mymonth=11) AS spend_nov,
         (SELECT sum FROM spending_by_cat WHERE category_id = cat.id AND mymonth=12) AS spend_dec,
         tot_spend_year,
-        budget_per_year,
-        budget_per_year - tot_spend_year AS left_per_year
+        budget_per_year
         FROM category cat
+        INNER JOIN cat_info ci
+        ON cat.id = ci.id
         LEFT JOIN cat_year_totals cyt
         ON cat.id = cyt.category_id
-        LEFT JOIN cat_info ci
-        ON cat.id = ci.id
         ORDER BY {} {} NULLS LAST
         """
         params = {
