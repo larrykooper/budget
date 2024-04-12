@@ -25,6 +25,8 @@
                     <th><a href="{{ url_for('.spending', year=year, month=11, sortkey='cat.name', direction='asc') }}">Spending Nov</a></th>
                     <th><a href="{{ url_for('.spending', year=year, month=12, sortkey='cat.name', direction='asc') }}">Spending Dec</a></th>
                     <th>Average Spending<br>per month</th>
+                    <th>Budgeted per Year</th>
+                    <th>Left for Year</th>
                 </tr>
             </thead>
             <tbody>
@@ -49,6 +51,8 @@
                             {% set my_total = 0 %}
                         {% endif %}
                         <td class="amount">{{ util.fmt_num(my_total/denominator) }}</td>
+                        <td class="amount no-overspend">{{ util.fmt_num(category['budget_per_year']) }}</td>
+                        <td class="amount no-overspend neg-pink">{{ util.fmt_num(category['left_per_year']) }}</td>
                     </tr>
                 {% endfor %}
                 <tr>
@@ -70,11 +74,17 @@ $( document ).ready(function() {
         var budget_str = $(this).children('.budgeted').text();
         var bnocomma = budget_str.replace(/\,/g,'');
         var budget = parseFloat(bnocomma);
-        $(this).children('.amount').not('.budgeted').each(function (index) {
+        $(this).children('.amount').not('.budgeted, .no-overspend').each(function (index) {
             var spent_str = $(this).text();
             var spnocomma = spent_str.replace(/\,/g,'');
             var spent = parseFloat(spnocomma);
             if (spent>budget) {
+                $(this).addClass("over-budget");
+            }
+        })
+        $(this).children('.neg-pink').each(function (index){
+            var left_str = $(this).text().trim()
+            if (left_str[0] == '-') {
                 $(this).addClass("over-budget");
             }
         })

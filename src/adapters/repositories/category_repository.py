@@ -46,12 +46,18 @@ class CategoryRepository(AbstractRepository):
             WHERE transaction_date BETWEEN %(start_of_year)s AND %(end_of_year)s
             AND show_on_spending_report
         ), cat_year_totals AS (
-            SELECT category_id, SUM(amount) AS tot_spend_year
+            SELECT
+                category_id,
+                SUM(amount) AS tot_spend_year
             FROM line_item
             WHERE transaction_date BETWEEN %(start_of_year)s AND %(end_of_spend_period)s
             AND show_on_spending_report
             GROUP BY category_id
+        ), cat_info AS (
+            SELECT id, 12 * budget_per_month AS budget_per_year
+            FROM category
         )
+
         SELECT name,
         budget_per_month,
         (SELECT sum FROM spending_by_cat WHERE category_id = cat.id AND mymonth=1) AS spend_jan,
@@ -66,10 +72,14 @@ class CategoryRepository(AbstractRepository):
         (SELECT sum FROM spending_by_cat WHERE category_id = cat.id AND mymonth=10) AS spend_oct,
         (SELECT sum FROM spending_by_cat WHERE category_id = cat.id AND mymonth=11) AS spend_nov,
         (SELECT sum FROM spending_by_cat WHERE category_id = cat.id AND mymonth=12) AS spend_dec,
-        tot_spend_year
+        tot_spend_year,
+        budget_per_year,
+        budget_per_year - tot_spend_year AS left_per_year
         FROM category cat
         LEFT JOIN cat_year_totals cyt
         ON cat.id = cyt.category_id
+        LEFT JOIN cat_info ci
+        ON cat.id = ci.id
         ORDER BY {} {} NULLS LAST
         """
         params = {
