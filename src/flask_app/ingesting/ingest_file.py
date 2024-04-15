@@ -1,8 +1,8 @@
 import csv
 import hashlib
 
-from src.adapters.repositories.line_item_repository import LineItemRepository
 from src.adapters.repositories.authority_repository import AuthorityRepository
+from src.adapters.repositories.line_item.line_item_write import LineItemWrite
 from src.models.account_types.account import Account
 from src.models.input_field_types.input_field import InputField
 from src.models.line_item import LineItem
@@ -12,7 +12,7 @@ def ingest_file(filename: str, account: str):
 
     # Intialize the repo
 
-    repo = LineItemRepository()
+    line_item_write = LineItemWrite()
     authority_repo = AuthorityRepository()
 
     # Look up account ID
@@ -54,10 +54,10 @@ def ingest_file(filename: str, account: str):
             line_count += 1
             data_hash = hash_the_data(line_item)
             line_item.data_hash = data_hash
-            repo.add_line_item(line_item)
+            line_item_write.add_line_item(line_item)
         # Done with ingesting the whole file
         # Set items NOT to show on spending report if necessary
-        repo.update_show_on_spending_report()
+        line_item_write.update_show_on_spending_report()
         return "SUCCESS"
 
 def hash_the_data(line_item: LineItem) -> str:

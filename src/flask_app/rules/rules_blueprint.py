@@ -4,7 +4,7 @@ from flask import (
 
 from src.adapters.repositories.category_repository import CategoryRepository
 from src.adapters.repositories.category_rule_repository import CategoryRuleRepository
-from src.adapters.repositories.line_item_repository import LineItemRepository
+from src.adapters.repositories.line_item.line_item_write import LineItemWrite
 from src.models.category_rule import CategoryRule
 from src.models.rule_type import RuleType
 
@@ -40,12 +40,12 @@ def add_rule():
         success = category_rule_repo.add_categorization_rule(rule)
         rule_type_id_num = int(rule_type_id)
         if success and (look_back == 'yes'):
-            line_item_repo = LineItemRepository()
+            line_item_write = LineItemWrite()
             if rule_type_id_num == RuleType.STARTS_WITH.value:
-                line_item_repo.recategorize_existing_line_items_starts_with(category_id, term)
+                line_item_write.recategorize_existing_line_items_starts_with(category_id, term)
                 flash("Existing line items recategorized.")
             if rule_type_id_num == RuleType.CONTAINS.value:
-                line_item_repo.recategorize_existing_line_items_contains(category_id, term)
+                line_item_write.recategorize_existing_line_items_contains(category_id, term)
                 flash("Existing line items recategorized.")
         if success:
             flash("New categorization rule saved.")
