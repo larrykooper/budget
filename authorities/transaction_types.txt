@@ -2,6 +2,7 @@ adjustment
 credit
 credit_card_payment
 debit
+dslip
 transfer
 unknown
 \.

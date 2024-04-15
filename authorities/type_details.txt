@@ -2,6 +2,7 @@ acct_xfer
 ach_credit
 ach_debit
 atm
+check_deposit
 check_paid
 debit_card
 fee_transaction
