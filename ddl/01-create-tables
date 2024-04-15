@@ -12,6 +12,8 @@ CREATE TABLE line_item(
   comment TEXT,
   data_hash CHAR(64),
   show_on_spending_report BOOLEAN,
+  is_medical_reimbursement BOOLEAN DEFAULT 'f',
+  is_synthetic BOOLEAN DEFAULT 'f',
   created TIMESTAMP WITH TIME ZONE,
   updated TIMESTAMP WITH TIME ZONE
 );
