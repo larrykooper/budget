@@ -2,14 +2,9 @@ import datetime
 
 from psycopg import sql
 
-from src.adapters.repositories.abstract_repository import AbstractRepository
 import src.flask_app.database.db_pool as db_pool
 
-class CategoryRepository(AbstractRepository):
-    # INSERT
-
-    def add_line_item(self, line_item):
-        raise NotImplementedError
+class CategoryRepository():
 
     # SELECT
 

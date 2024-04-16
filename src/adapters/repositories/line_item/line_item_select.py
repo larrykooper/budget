@@ -2,12 +2,32 @@ import datetime
 
 from psycopg import sql
 
-from src.adapters.repositories.abstract_repository import AbstractRepository
 import src.flask_app.database.db_pool as db_pool
 
-class LineItemSelect(AbstractRepository):
+class LineItemSelect():
 
     # SELECT
+
+    def get_for_synth_trans(
+        self,
+        id
+    ) -> dict:
+        """
+        Read one line tiem
+        """
+        qstring = """
+        SELECT
+        id,
+        transaction_date,
+        amount
+        FROM line_item
+        WHERE id = {}
+        """
+        params = {}
+        executable_sql = sql.SQL(qstring).format(sql.Literal(id))
+        data = db_pool.get_data(executable_sql, params, single_row=True)
+        return data
+
 
     def get_for_spending_report(
             self,

@@ -3,14 +3,13 @@ import pytz
 
 from psycopg import sql
 
-from src.adapters.repositories.abstract_repository import AbstractRepository
 import src.flask_app.database.db_pool as db_pool
 
-class LineItemWrite(AbstractRepository):
+class LineItemWrite():
 
     # INSERT
 
-    def add_line_item(self, line_item):
+    def add_line_item(self, line_item) -> int:
         current_time = datetime.datetime.now(pytz.timezone("America/New_York"))
         query = """
         INSERT INTO line_item (
@@ -25,12 +24,28 @@ class LineItemWrite(AbstractRepository):
             type_detail_id,
             data_hash,
             show_on_spending_report,
+            is_medical_reimbursement,
+            is_synthetic,
             created,
             updated
         )
-            VALUES (%(transaction_date)s, %(post_date)s, %(description)s, %(amount)s,
-              %(category_id)s, %(transaction_type_id)s, %(account_id)s, %(check_number)s,
-              %(type_detail_id)s, %(data_hash)s, %(show_on_spending_report)s,  %(created)s, %(updated)s);
+        VALUES (
+            %(transaction_date)s,
+            %(post_date)s,
+            %(description)s,
+            %(amount)s,
+            %(category_id)s,
+            %(transaction_type_id)s,
+            %(account_id)s,
+            %(check_number)s,
+            %(type_detail_id)s,
+            %(data_hash)s,
+            %(show_on_spending_report)s,
+            %(is_medical_reimbursement)s,
+            %(is_synthetic)s,
+            %(created)s,
+            %(updated)s
+        ) RETURNING id;
         """
         params = {
             'transaction_date': line_item.transaction_date,
@@ -44,14 +59,13 @@ class LineItemWrite(AbstractRepository):
             'type_detail_id': line_item.type_detail_id,
             'data_hash': line_item.data_hash,
             'show_on_spending_report': line_item.show_on_spending_report,
+            'is_medical_reimbursement': line_item.is_medical_reimbursement,
+            'is_synthetic': line_item.is_synthetic,
             'created': current_time,
             'updated': current_time
         }
-        results = db_pool.insert(query, params)
-        return results
-
-    def create_synthetic_transactions(deposits_to_update: list):
-        lkhere
+        new_key = db_pool.insert_with_returned_id(query, params)
+        return new_key
 
 
     # UPDATE
@@ -268,8 +282,12 @@ class LineItemWrite(AbstractRepository):
         query = """
         UPDATE line_item
         SET is_medical_reimbursement = 't'
+        WHERE id = ANY(%(id_list)s)
         """
-
+        params = {
+            'id_list': deposits_to_update
+        }
+        db_pool.update(query, params)
 
 
     """
