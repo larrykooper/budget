@@ -71,9 +71,16 @@ def _select_one(sql_raw, params):
 def insert(sql_raw, params):
     """ Runs Insert query, returns result.
 
-    Returned result is typically the newly created PRIMARY KEY value from the database.
+    Returned result is True if successful.
     """
     return _execute_query(sql_raw, params, 'insert')
+
+def insert_with_returned_id(sql_raw, params):
+    """ Runs Insert query, returns result.
+
+    Returned result is the newly created PRIMARY KEY value from the database.
+    """
+    return _execute_query(sql_raw, params, 'insert_with_returned_id')
 
 
 def update(sql_raw, params):
@@ -145,6 +152,11 @@ def _execute_query(sql_raw, params, qry_type, pool_name='default'):
             cur.execute(sql_raw, params)
             conn.commit()
             results = True
+        elif qry_type == 'insert_with_returned_id':
+            cur.execute(sql_raw, params)
+            new_id = cur.fetchone()['id']
+            conn.commit()
+            results = new_id
         elif qry_type == 'update':
             cur.execute(sql_raw, params)
             conn.commit()
