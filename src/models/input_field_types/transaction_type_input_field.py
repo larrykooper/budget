@@ -4,6 +4,7 @@ from src.models.transaction_type import TransactionType
 class TransactionTypeInputField:
 
     def what_to_persist(self, value):
+        # I lowercase the value so it will match the authority table
         ttid = self.get_trans_type(value.lower())
         return {self.line_item_field_name(): ttid}
 

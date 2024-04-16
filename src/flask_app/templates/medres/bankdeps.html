@@ -1,0 +1,44 @@
+{% import 'shared/utils.html' as util %}
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="bankdeps">
+    <form method="post">
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Transaction Date</th>
+                        <th>Description</th>
+                        <th>Amount</th>
+                        <th>Medical<br>Reimbursement?</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for bank_deposit in bank_deposits %}
+                        <tr>
+                            <td>{{ bank_deposit['transaction_date'] }}</td>
+                            <td>{{ bank_deposit['description'] }}</td>
+                            <td class="amount">{{ util.fmt_num(bank_deposit['amount']) }}</td>
+                            <td><input
+                                type="checkbox"
+                                name="item{{ bank_deposit['id']}}"
+                                {% if bank_deposit['is_medical_reimbursement'] %}
+                                checked
+                                {% endif %}
+                                /></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <button class="submit" type="submit">Submit</button>
+    </form>
+</section>
+
+{% endblock content %}
+
+
+
+
+
