@@ -73,6 +73,7 @@ class CategoryRepository():
         ON cat.id = ci.id
         LEFT JOIN cat_year_totals cyt
         ON cat.id = cyt.category_id
+        WHERE show_on_year_budget
         ORDER BY {} {} NULLS LAST
         """
         params = {
