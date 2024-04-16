@@ -93,6 +93,18 @@ class CategoryRepository():
         data = db_pool.get_data(query, params, single_row=True)
         return data
 
+    def get_ids_for_tax_cats(self):
+        """
+        Return the IDs for the two tax categories
+        """
+        query = """
+        SELECT id FROM category
+        WHERE name IN ('Federal Tax', 'State Tax')
+        """
+        params = {}
+        data = db_pool.get_data(query, params, single_row=False)
+        return data
+
    # UPDATE
 
     def update_budget_per_month(self, new_value, id):

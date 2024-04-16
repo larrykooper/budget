@@ -5,6 +5,8 @@ from psycopg import sql
 
 import src.flask_app.database.db_pool as db_pool
 
+from src.adapters.repositories.category_repository import CategoryRepository
+
 class LineItemWrite():
 
     # INSERT
@@ -86,6 +88,7 @@ class LineItemWrite():
         db_pool.update(query, params)
 
     def update_category(self, new_value, id):
+        category_repo = CategoryRepository()
         current_time = datetime.datetime.now(pytz.timezone("America/New_York"))
         query = """
         UPDATE line_item
@@ -99,6 +102,27 @@ class LineItemWrite():
             'time': current_time
         }
         db_pool.update(query, params)
+        # If user has changed item to a tax category, update show_on_spending_report to False
+        tax_cats_dicts = category_repo.get_ids_for_tax_cats()
+        # tax_cats_dicts looks like [{'id': 16}, {'id': 47}]
+        tax_cats = [x['id'] for x in tax_cats_dicts]
+        if int(new_value) in tax_cats:
+            self.set_sosp_to_false(id)
+
+    def set_sosp_to_false(self, line_item_id):
+        current_time = datetime.datetime.now(pytz.timezone("America/New_York"))
+        query = """
+            UPDATE line_item
+            SET show_on_spending_report = 'f',
+            updated = %(time)s
+            WHERE id = %(line_item_id)s
+            """
+        params = {
+            'line_item_id': line_item_id,
+            'time': current_time
+        }
+        db_pool.update(query, params)
+
 
     def update_show_on_spending_report(self):
         """

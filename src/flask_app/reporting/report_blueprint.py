@@ -145,6 +145,7 @@ def spendingcat():
         )
 
 # Used for in-place editing -- called via AJAX
+#  form['category'] is the category ID number
 @bp.route('/_update', methods=['POST'])
 def update():
     line_item_write = LineItemWrite()
