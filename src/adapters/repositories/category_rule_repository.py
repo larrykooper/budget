@@ -1,10 +1,6 @@
-from src.adapters.repositories.abstract_repository import AbstractRepository
 import src.flask_app.database.db_pool as db_pool
 
-class CategoryRuleRepository(AbstractRepository):
-
-    def add_line_item(self, line_item):
-        raise NotImplementedError
+class CategoryRuleRepository():
 
     # INSERT
 

@@ -3,14 +3,13 @@ import pytz
 
 from psycopg import sql
 
-from src.adapters.repositories.abstract_repository import AbstractRepository
 import src.flask_app.database.db_pool as db_pool
 
-class LineItemRepository(AbstractRepository):
+class LineItemWrite():
 
     # INSERT
 
-    def add_line_item(self, line_item):
+    def add_line_item(self, line_item) -> int:
         current_time = datetime.datetime.now(pytz.timezone("America/New_York"))
         query = """
         INSERT INTO line_item (
@@ -25,12 +24,28 @@ class LineItemRepository(AbstractRepository):
             type_detail_id,
             data_hash,
             show_on_spending_report,
+            is_medical_reimbursement,
+            is_synthetic,
             created,
             updated
         )
-            VALUES (%(transaction_date)s, %(post_date)s, %(description)s, %(amount)s,
-              %(category_id)s, %(transaction_type_id)s, %(account_id)s, %(check_number)s,
-              %(type_detail_id)s, %(data_hash)s, %(show_on_spending_report)s,  %(created)s, %(updated)s);
+        VALUES (
+            %(transaction_date)s,
+            %(post_date)s,
+            %(description)s,
+            %(amount)s,
+            %(category_id)s,
+            %(transaction_type_id)s,
+            %(account_id)s,
+            %(check_number)s,
+            %(type_detail_id)s,
+            %(data_hash)s,
+            %(show_on_spending_report)s,
+            %(is_medical_reimbursement)s,
+            %(is_synthetic)s,
+            %(created)s,
+            %(updated)s
+        ) RETURNING id;
         """
         params = {
             'transaction_date': line_item.transaction_date,
@@ -44,126 +59,14 @@ class LineItemRepository(AbstractRepository):
             'type_detail_id': line_item.type_detail_id,
             'data_hash': line_item.data_hash,
             'show_on_spending_report': line_item.show_on_spending_report,
+            'is_medical_reimbursement': line_item.is_medical_reimbursement,
+            'is_synthetic': line_item.is_synthetic,
             'created': current_time,
             'updated': current_time
         }
-        results = db_pool.insert(query, params)
-        return results
+        new_key = db_pool.insert_with_returned_id(query, params)
+        return new_key
 
-    # SELECT
-
-    def get_for_spending_report(
-            self,
-            start_date: datetime.date,
-            end_date: datetime.date,
-            sort_column: str,
-            sort_direction: str,
-            sort_table: str = None,
-            ) -> list[dict]:
-        """
-        You cannot use the "%s" pattern to pass field names, table names,
-        or snippets of SQL (such as ASC) to "execute." You can only use the
-        "%s" pattern to pass values.
-        So in this case I had to use sql.Identifier to pass the field name,
-        and sql.SQL to pass the sort direction.
-        See: https://www.psycopg.org/psycopg3/docs/api/sql.html
-        ---
-        """
-        qstring = """
-        SELECT
-            li.id,
-            transaction_date,
-            post_date,
-            description,
-            amount,
-            cat.name AS cat_name,
-            transaction_type_id,
-            acc.name AS account_name,
-            check_number,
-            type_detail_id,
-            comment,
-            show_on_spending_report
-        FROM line_item li
-        LEFT JOIN category cat
-        ON li.category_id = cat.id
-        LEFT JOIN transaction_type tt
-        ON li.transaction_type_id = tt.id
-        LEFT JOIN account acc
-        ON acc.id = li.account_id
-        WHERE li.transaction_date BETWEEN %(start_date)s AND %(end_date)s
-        AND li.show_on_spending_report
-        ORDER BY {} {}
-        """
-        params = {
-            'start_date': start_date,
-            'end_date': end_date
-        }
-        executable_sql = sql.SQL(qstring).format(sql.Identifier(sort_table, sort_column), sql.SQL(sort_direction))
-        data = db_pool.get_data(executable_sql, params, single_row=False)
-        return data
-
-    def get_for_spending_by_cat(
-        self,
-        start_date: datetime.date,
-        end_date: datetime.date,
-        sort_column: str,
-        sort_direction: str,
-        ) -> list[dict]:
-        qstring = """
-        SELECT cat.name AS catname, SUM(amount) AS amtsum
-        FROM line_item li
-        LEFT JOIN category cat
-        ON li.category_id = cat.id
-        WHERE transaction_date BETWEEN %(start_date)s AND %(end_date)s
-        AND show_on_spending_report
-        GROUP BY catname
-        ORDER BY {} {}
-        """
-        params = {
-            'start_date': start_date,
-            'end_date': end_date
-        }
-        executable_sql = sql.SQL(qstring).format(sql.Identifier(sort_column), sql.SQL(sort_direction))
-        data = db_pool.get_data(executable_sql, params, single_row=False)
-        return data
-
-    def total_spending_per_month_for_year(
-        self,
-        start_of_year: datetime.date,
-        end_of_year: datetime.date
-    ) -> list[dict]:
-        query = """
-        SELECT EXTRACT(MONTH FROM transaction_date) AS mymonth, SUM(amount)
-        FROM line_item
-        WHERE transaction_date BETWEEN %(start_of_year)s AND %(end_of_year)s
-        AND show_on_spending_report
-        GROUP BY EXTRACT(MONTH FROM transaction_date)
-        ORDER BY EXTRACT(MONTH FROM transaction_date)
-        """
-        params = {
-            'start_of_year': start_of_year,
-            'end_of_year': end_of_year
-        }
-        data = db_pool.get_data(query, params, single_row=False)
-        return data
-
-    def total_spending_per_month(
-        self,
-        start_date: datetime.date,
-        end_date: datetime.date,
-    ) -> list[dict]:
-        query = """
-        SELECT SUM(amount)
-        FROM line_item
-        WHERE transaction_date BETWEEN %(start_date)s AND %(end_date)s
-        AND show_on_spending_report
-        """
-        params = {
-            'start_date': start_date,
-            'end_date': end_date
-        }
-        data = db_pool.get_data(query, params, single_row=True)
-        return data
 
     # UPDATE
 
@@ -253,16 +156,21 @@ class LineItemRepository(AbstractRepository):
         executable_sql = sql.SQL(qstring).format(sql.Literal('Payment to Chase card%%'))
         db_pool.update(executable_sql, params)
 
-        # Rule 3: Description starts with REMOTE ONLINE DEPOSIT
-        # Reason: Deposit, not spending
-        qstring = """
+        # Rule 3: Account is Checking, transaction_type is 'dslip', and type_detail is 'check_deposit'
+        # Reason: This is a deposit, not spending
+        query = """
         UPDATE line_item
         SET show_on_spending_report = 'f'
-        WHERE description LIKE {}
+        FROM transaction_type, account, type_detail
+        WHERE line_item.transaction_type_id = transaction_type.id
+        AND line_item.account_id = account.id
+        AND line_item.type_detail_id = type_detail.id
+        AND transaction_type.name = 'dslip'
+        AND type_detail.name = 'check_deposit'
+        AND account.name = 'Checking'
         """
         params = {}
-        executable_sql = sql.SQL(qstring).format(sql.Literal('REMOTE ONLINE DEPOSIT%%'))
-        db_pool.update(executable_sql, params)
+        db_pool.update(query, params)
 
         # Rule 4: Account is Checking and description starts with AMERICAN EXPRESS ACH PMT
         # Reason: Because this is me paying an Amex card
@@ -369,6 +277,17 @@ class LineItemRepository(AbstractRepository):
         literal_param = f"%%{search_term}%%"
         executable_sql = sql.SQL(qstring).format(sql.Literal(literal_param))
         db_pool.update(executable_sql, params)
+
+    def update_is_medical_reimbursement(self, deposits_to_update: list):
+        query = """
+        UPDATE line_item
+        SET is_medical_reimbursement = 't'
+        WHERE id = ANY(%(id_list)s)
+        """
+        params = {
+            'id_list': deposits_to_update
+        }
+        db_pool.update(query, params)
 
 
     """

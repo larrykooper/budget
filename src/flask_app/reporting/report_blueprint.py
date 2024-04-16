@@ -7,7 +7,9 @@ from flask import (
 
 from src.adapters.repositories.authority_repository import AuthorityRepository
 from src.adapters.repositories.category_repository import CategoryRepository
-from src.adapters.repositories.line_item_repository import LineItemRepository
+from src.adapters.repositories.line_item.line_item_select import LineItemSelect
+from src.adapters.repositories.line_item.line_item_write import LineItemWrite
+from src.flask_app.utils.utils import Utils
 from src.models.category import Category
 
 bp = Blueprint('report', __name__, url_prefix='/report')
@@ -39,12 +41,12 @@ def spending():
         sort_table = sortspec[0]
         sort_column = sortspec[1]
         start_date, end_date = get_start_end(year, month)
-        line_item_repo = LineItemRepository()
+        line_item_select = LineItemSelect()
         # Query the database for what we need to report
-        line_items = line_item_repo.get_for_spending_report(start_date, end_date, sort_column, sort_direction, sort_table)
+        line_items = line_item_select.get_for_spending_report(start_date, end_date, sort_column, sort_direction, sort_table)
         line_items_translated = translate_line_items(line_items)
         categories = Category.categories_for_select()
-        total = line_item_repo.total_spending_per_month(start_date, end_date)
+        total = line_item_select.total_spending_per_month(start_date, end_date)
         return render_template('report/spending.html',
             line_items=line_items_translated,
             categories=categories,
@@ -65,11 +67,11 @@ def budyear():
         return render_template('report/year_picker.html')
     else:
         year = int(request.args.get('year'))
-        start_of_year, end_of_year = get_year_start_end(year)
+        start_of_year, end_of_year = Utils.get_year_start_end(year)
         denominator = get_budyear_denominator(year)
         end_of_spend_period = get_end_of_spend_period(denominator, year)
         category_repo = CategoryRepository()
-        line_item_repo = LineItemRepository()
+        line_item_select = LineItemSelect()
         if 'sortkey' in request.args:
             sortkey = request.args.get('sortkey')
         else:
@@ -94,7 +96,7 @@ def budyear():
             category['left_per_year'] = category['budget_per_year'] - category['tot_spend_year']
         # total_budget is the sum of budgeted over all categories
         total_budget = category_repo.get_total_budget()
-        totals = line_item_repo.total_spending_per_month_for_year(start_of_year, end_of_year)
+        totals = line_item_select.total_spending_per_month_for_year(start_of_year, end_of_year)
         avg_spend_per_month = get_avg_spend_per_month(totals, denominator)
         totals_zero_padded = zero_pad(totals, denominator)
         return render_template('report/budyear.html',
@@ -129,9 +131,9 @@ def spendingcat():
         else:
             sort_direction  = "asc"
         start_date, end_date = get_start_end(year, month)
-        line_item_repo = LineItemRepository()
-        categories = line_item_repo.get_for_spending_by_cat(start_date, end_date, sortkey, sort_direction)
-        total = line_item_repo.total_spending_per_month(start_date, end_date)
+        line_item_select = LineItemSelect()
+        categories = line_item_select.get_for_spending_by_cat(start_date, end_date, sortkey, sort_direction)
+        total = line_item_select.total_spending_per_month(start_date, end_date)
         return render_template('report/spendingcat.html',
             categories = categories,
             year=year,
@@ -145,15 +147,15 @@ def spendingcat():
 # Used for in-place editing -- called via AJAX
 @bp.route('/_update', methods=['POST'])
 def update():
-    line_item_repo = LineItemRepository()
+    line_item_write = LineItemWrite()
     form = request.form
     if form['action'] == 'delete':
-        line_item_repo.delete_line_item(form['id'])
+        line_item_write.delete_line_item(form['id'])
     elif form['action'] == 'edit':
         if 'comment' in form:
-            line_item_repo.update_comment(form['comment'], form['id'])
+            line_item_write.update_comment(form['comment'], form['id'])
         if 'category' in form:
-            line_item_repo.update_category(form['category'], form['id'])
+            line_item_write.update_category(form['category'], form['id'])
     return "SUCCESS"
 
 
@@ -187,11 +189,6 @@ def get_start_end(year: int, month: int) -> tuple[datetime.date, datetime.date]:
     days_in_month = calendar.monthrange(year, month)[1]
     start = datetime.date(year, month, 1)
     end = datetime.date(year, month, days_in_month)
-    return start, end
-
-def get_year_start_end(year: int) -> tuple[datetime.date, datetime.date]:
-    start = datetime.date(year, 1, 1)
-    end = datetime.date(year, 12, 31)
     return start, end
 
 def get_avg_spend_per_month(totals: list, denominator: int) -> Decimal:

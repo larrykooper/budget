@@ -12,6 +12,8 @@ CREATE TABLE line_item(
   comment TEXT,
   data_hash CHAR(64),
   show_on_spending_report BOOLEAN,
+  is_medical_reimbursement BOOLEAN DEFAULT 'f',
+  is_synthetic BOOLEAN DEFAULT 'f',
   created TIMESTAMP WITH TIME ZONE,
   updated TIMESTAMP WITH TIME ZONE
 );
@@ -49,6 +51,11 @@ CREATE TABLE transaction_type(
 CREATE TABLE rule_type(
     id SERIAL,
     name VARCHAR(255)
+);
+
+CREATE TABLE synthetic_line_item(
+    line_item_id INTEGER,
+    deposit_based_on INTEGER
 );
 
 COPY account(name) FROM stdin;

@@ -20,9 +20,12 @@ class LineItem:
         type_detail_id: Optional[int] = None,
         comment: str = None,
         data_hash: str = None,
+        show_on_spending_report: bool = True,
+        is_medical_reimbursement: bool = False,
+        is_synthetic: bool = False,
         created: datetime.datetime = None,
         updated: datetime.datetime = None,
-        show_on_spending_report: bool = True,
+
     ):
         self.transaction_date = transaction_date
         self.post_date = post_date
@@ -35,6 +38,9 @@ class LineItem:
         self.type_detail_id = type_detail_id
         self.comment = comment
         self.data_hash = data_hash
+        self.show_on_spending_report =  show_on_spending_report
+        self.is_medical_reimbursement = is_medical_reimbursement
+        self.is_synthetic = is_synthetic
         self.created = created
         self.updated = updated
-        self.show_on_spending_report =  show_on_spending_report
+

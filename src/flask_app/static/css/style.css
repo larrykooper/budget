@@ -156,6 +156,14 @@ fieldset.add-rule {
     width: 100px;
 }
 
+/* IDENTIFY MEDICAL REIMBURSEMENTS    */
+
+.bankdeps .submit {
+    margin-top: 50px;
+    margin-left: 475px;
+    background-color: red;
+}
+
 /* OTHER  */
 
 div.choice {
