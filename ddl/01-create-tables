@@ -53,6 +53,11 @@ CREATE TABLE rule_type(
     name VARCHAR(255)
 );
 
+CREATE TABLE synthetic_line_item(
+    line_item_id INTEGER,
+    deposit_based_on INTEGER
+);
+
 COPY account(name) FROM stdin;
 
 COPY category(name) FROM stdin;
