@@ -27,6 +27,7 @@
                     <th>Average Spending<br>per month</th>
                     <th>Budgeted per Year</th>
                     <th>Left for Year</th>
+                    <th>{{ util.sortable(year, 0, "name", "Category", sort_direction, ".budyear") }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -49,6 +50,7 @@
                         <td class="amount">{{ util.fmt_num(category['tot_spend_year']/denominator) }}</td>
                         <td class="amount no-overspend">{{ util.fmt_num(category['budget_per_year']) }}</td>
                         <td class="amount no-overspend neg-pink">{{ util.fmt_num(category['left_per_year']) }}</td>
+                        <td>{{ category['name']}}</td>
                     </tr>
                 {% endfor %}
                 <tr>
