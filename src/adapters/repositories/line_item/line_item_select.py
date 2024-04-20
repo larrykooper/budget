@@ -58,8 +58,7 @@ class LineItemSelect():
             acc.name AS account_name,
             check_number,
             type_detail_id,
-            comment,
-            show_on_spending_report
+            comment
         FROM line_item li
         LEFT JOIN category cat
         ON li.category_id = cat.id
@@ -142,6 +141,28 @@ class LineItemSelect():
         data = db_pool.get_data(query, params, single_row=True)
         return data
 
+    def total_spending_cat_per_year(
+        self,
+        category_id: int,
+        start_of_year: datetime.date,
+        end_of_year: datetime.date
+    ) -> list[dict]:
+        query = """
+        SELECT SUM(amount)
+        FROM line_item
+        WHERE transaction_date BETWEEN %(start_of_year)s AND %(end_of_year)s
+        AND category_id = %(category_id)s
+        AND show_on_spending_report
+        """
+        params = {
+            'start_of_year': start_of_year,
+            'end_of_year': end_of_year,
+            'category_id': category_id
+        }
+        data = db_pool.get_data(query, params, single_row=True)
+        return data
+
+
     def get_bank_deposits(
         self,
         start_of_year: datetime.date,
@@ -165,6 +186,47 @@ class LineItemSelect():
         params = {
             'start_of_year': start_of_year,
             'end_of_year': end_of_year
+        }
+        data = db_pool.get_data(query, params, single_row=False)
+        return data
+
+    def get_spending_cat_year(
+        self,
+        category_id: int,
+        start_of_year: datetime.date,
+        end_of_year: datetime.date
+    ) -> list[dict]:
+        query = """
+        SELECT
+            li.id,
+            transaction_date,
+            post_date,
+            description,
+            amount,
+            cat.name AS cat_name,
+            tt.name AS transaction_type,
+            acc.name AS account_name,
+            check_number,
+            td.name AS type_detail_name,
+            comment
+        FROM line_item li
+        LEFT JOIN category cat
+        ON li.category_id = cat.id
+        LEFT JOIN transaction_type tt
+        ON li.transaction_type_id = tt.id
+        LEFT JOIN type_detail td
+        ON li.type_detail_id = td.id
+        LEFT JOIN account acc
+        ON acc.id = li.account_id
+        WHERE li.transaction_date BETWEEN %(start_of_year)s AND %(end_of_year)s
+        AND li.category_id = %(category_id)s
+        AND li.show_on_spending_report
+        ORDER BY transaction_date
+        """
+        params = {
+            'start_of_year': start_of_year,
+            'end_of_year': end_of_year,
+            'category_id': category_id
         }
         data = db_pool.get_data(query, params, single_row=False)
         return data

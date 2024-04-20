@@ -73,7 +73,8 @@ class CategoryRepository():
         (SELECT sum FROM spending_by_cat WHERE category_id = cat.id AND mymonth=11) AS spend_nov,
         (SELECT sum FROM spending_by_cat WHERE category_id = cat.id AND mymonth=12) AS spend_dec,
         tot_spend_year,
-        budget_per_year
+        budget_per_year,
+        cat.id AS category_id
         FROM category cat
         INNER JOIN cat_info ci
         ON cat.id = ci.id

@@ -144,6 +144,21 @@ def spendingcat():
             total=total
         )
 
+# spending for a given category for the entire year
+@bp.route('/spending_cat_year', methods=['GET'])
+def spending_cat_year():
+    line_item_select = LineItemSelect()
+    year = int(request.args.get('year'))
+    category = request.args.get('category')
+    start_of_year, end_of_year = Utils.get_year_start_end(year)
+    line_items = line_item_select.get_spending_cat_year(category, start_of_year, end_of_year)
+    total = line_item_select.total_spending_cat_per_year(category, start_of_year, end_of_year)
+    return render_template('report/spending_cat_year.html',
+        line_items=line_items,
+        total=total
+    )
+
+
 # Used for in-place editing -- called via AJAX
 #  form['category'] is the category ID number
 @bp.route('/_update', methods=['POST'])
