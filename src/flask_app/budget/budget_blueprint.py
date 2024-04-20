@@ -38,6 +38,7 @@ def home():
 def update():
     category_repo = CategoryRepository()
     form = request.form
+    total_budget = category_repo.get_total_budget()
     if form['action'] == 'edit':
         if 'budget_per_month' in form:
             wanted_budget = form['budget_per_month'].strip()
@@ -46,5 +47,6 @@ def update():
             total_budget = category_repo.get_total_budget()
         if 'money_saving_steps' in form:
             category_repo.update_money_saving_steps(form['money_saving_steps'], form['id'])
-    return jsonify(total_budget)
-
+        if 'scope' in form:
+            category_repo.update_scope(form['scope'], form['id'])
+        return jsonify(total_budget)

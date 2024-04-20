@@ -11,20 +11,17 @@
                 <th>#</th>
                 <th>{{ util.sortable(0, 0, "name", "Category", sort_direction, ".home") }}</th>
                 <th>{{ util.sortable(0, 0, "budget_per_month", "Amount Budgeted Per Month", sort_direction, ".home") }}</th>
+                <th>Scope</th>
                 <th>Money Saving Steps</th>
             </thead>
             <tbody>
                 {% for category in categories %}
                     <tr>
-                        {% if category['money_saving_steps'] %}
-                            {% set display_steps = category['money_saving_steps'] %}
-                        {% else %}
-                            {% set display_steps = "" %}
-                        {% endif %}
                         <td>{{ category['id'] }}</td>
                         <td>{{ category['name'] }}</td>
                         <td>{{ util.fmt_num(category['budget_per_month']) }}</td>
-                        <td>{{ display_steps }}</td>
+                        <td>{{ category['scope'] }}</td>
+                        <td>{{ category['money_saving_steps'] }}</td>
                     </tr>
                 {% endfor %}
                 <tr>
@@ -46,7 +43,7 @@
         hideIdentifier: true,
         columns: {
             identifier: [0, 'id'],
-            editable: [[2, 'budget_per_month'], [3, 'money_saving_steps']]
+            editable: [[2, 'budget_per_month'], [3, 'scope'], [4, 'money_saving_steps']]
         },
         onSuccess: function(data, textStatus, jqXHR) {
             $(".total-budget").text(data.sum);

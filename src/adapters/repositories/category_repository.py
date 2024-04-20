@@ -14,7 +14,13 @@ class CategoryRepository():
             sort_direction: str,
         ) -> list[dict]:
         qstring = """
-        SELECT id, name, budget_per_month, money_saving_steps FROM category
+        SELECT
+            id,
+            name,
+            budget_per_month,
+            COALESCE(money_saving_steps, '') AS money_saving_steps,
+            COALESCE (scope, '') AS scope
+        FROM category
         ORDER BY {} {} NULLS LAST
         """
         params = {}
@@ -131,4 +137,14 @@ class CategoryRepository():
         }
         db_pool.update(query, params)
 
-
+    def update_scope(self, new_value, id):
+        query = """
+        UPDATE category
+        SET scope = %(new_value)s
+        WHERE id = %(category_id)s
+        """
+        params = {
+            'new_value': new_value,
+            'category_id': id
+        }
+        db_pool.update(query, params)

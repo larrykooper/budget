@@ -36,7 +36,8 @@ CREATE TABLE category(
     name VARCHAR(255),
     budget_per_month NUMERIC(8,2),
     money_saving_steps TEXT,
-    show_on_year_budget BOOLEAN DEFAULT 't'
+    show_on_year_budget BOOLEAN DEFAULT 't',
+    scope TEXT
 );
 
 CREATE TABLE type_detail(
