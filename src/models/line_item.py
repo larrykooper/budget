@@ -19,7 +19,6 @@ class LineItem:
         check_number: Optional[str] = None,
         type_detail_id: Optional[int] = None,
         comment: str = None,
-        data_hash: str = None,
         show_on_spending_report: bool = True,
         is_medical_reimbursement: bool = False,
         is_synthetic: bool = False,
@@ -37,7 +36,6 @@ class LineItem:
         self.check_number = check_number
         self.type_detail_id = type_detail_id
         self.comment = comment
-        self.data_hash = data_hash
         self.show_on_spending_report =  show_on_spending_report
         self.is_medical_reimbursement = is_medical_reimbursement
         self.is_synthetic = is_synthetic

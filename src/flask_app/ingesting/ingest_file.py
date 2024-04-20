@@ -52,21 +52,11 @@ def ingest_file(filename: str, account: str):
                 line_item_dict["transaction_type_id"] = default_trans_id
             line_item = LineItem(**line_item_dict)
             line_count += 1
-            data_hash = hash_the_data(line_item)
-            line_item.data_hash = data_hash
             line_item_write.add_line_item(line_item)
         # Done with ingesting the whole file
         # Set items NOT to show on spending report if necessary
         line_item_write.update_show_on_spending_report()
         return "SUCCESS"
-
-def hash_the_data(line_item: LineItem) -> str:
-        transaction_date = line_item.transaction_date
-        amount = line_item.amount
-        description = line_item.description
-        to_hash = f"{transaction_date}|{amount}|{description}"
-        as_bytes = to_hash.encode(encoding='utf-8', errors='strict')
-        return hashlib.sha256(as_bytes).hexdigest()
 
 def get_default_trans_id() -> int:
     authority_repo = AuthorityRepository()

@@ -69,7 +69,6 @@ def create_synthetic_transactions(deposits_to_update: list):
     check_number: None
     type_detail: None
     comment: None
-    data_hash: Calculate it
     show_on_spending_report: true
     is_medical_reimbursement: false (that's only for deposits)
     is_synthetic: true
