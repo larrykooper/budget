@@ -34,7 +34,6 @@ Late Fees
 Laundry
 Mailing Costs
 Medical Supplies
-Miscellaneous
 Mobile Phone
 Mortgage & Rent
 Movies
@@ -43,7 +42,8 @@ Music
 Newspapers & Magazines
 Office Supplies
 Personal Care
-Pharmacy
+Pharmacy (excl. prescriptions)
+Prescriptions
 Professional Education
 Public Transportation
 Rental Cars
