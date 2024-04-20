@@ -155,7 +155,8 @@ def spending_cat_year():
     total = line_item_select.total_spending_cat_per_year(category, start_of_year, end_of_year)
     return render_template('report/spending_cat_year.html',
         line_items=line_items,
-        total=total
+        total=total,
+        year=year
     )
 
 
