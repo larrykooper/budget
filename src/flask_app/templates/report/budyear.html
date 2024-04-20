@@ -47,7 +47,7 @@
                         <td class="amount">{{ util.fmt_num(category['spend_oct']) }}</td>
                         <td class="amount">{{ util.fmt_num(category['spend_nov']) }}</td>
                         <td class="amount">{{ util.fmt_num(category['spend_dec']) }}</td>
-                        <td class="amount">{{ util.fmt_num(category['tot_spend_year']/denominator) }}</td>
+                        <td class="amount">{{ util.fmt_num(category['av_spend_per_month']) }}</td>
                         <td class="amount no-overspend">{{ util.fmt_num(category['budget_per_year']) }}</td>
                         <td class="amount no-overspend neg-pink">{{ util.fmt_num(category['left_per_year']) }}</td>
                         <td>{{ category['name']}}</td>

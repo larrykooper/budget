@@ -94,6 +94,7 @@ def budyear():
             if category['tot_spend_year'] is None:
                 category['tot_spend_year'] = 0
             category['left_per_year'] = category['budget_per_year'] - category['tot_spend_year']
+            category['av_spend_per_month'] = category['tot_spend_year'] / denominator
         # total_budget is the sum of budgeted over all categories
         total_budget = category_repo.get_total_budget()
         totals = line_item_select.total_spending_per_month_for_year(start_of_year, end_of_year)
@@ -104,7 +105,6 @@ def budyear():
             year=year,
             totals=totals_zero_padded,
             total_budget=total_budget,
-            denominator=denominator,
             av_per_month = avg_spend_per_month,
             sortkey=sortkey,
             sort_direction=sort_direction,
