@@ -13,7 +13,7 @@ class LineItemSelect():
         id
     ) -> dict:
         """
-        Read one line tiem
+        Read one line item
         """
         qstring = """
         SELECT
