@@ -1,3 +1,4 @@
+Appliances
 Bars
 Birding
 Books
@@ -17,7 +18,6 @@ Federal Tax
 Finance Charges
 Fitness & Sporting Goods
 Food Delivery
-Gas & Fuel
 Gifts
 Groceries
 Hair Care
