@@ -47,6 +47,7 @@ def spending():
         line_items_translated = translate_line_items(line_items)
         categories = Category.categories_for_select()
         total = line_item_select.total_spending_per_month(start_date, end_date)
+        lm_year, lm_month, nm_year, nm_month = get_months_nav(month, year)
         return render_template('report/spending.html',
             line_items=line_items_translated,
             categories=categories,
@@ -55,7 +56,11 @@ def spending():
             sortkey=sortkey,
             sort_direction=sort_direction,
             month_name = month_name,
-            total=total
+            total=total,
+            lm_year=lm_year,
+            lm_month=lm_month,
+            nm_year=nm_year,
+            nm_month=nm_month
         )
 
 # Budget for year
@@ -251,3 +256,25 @@ def get_end_of_spend_period(denominator: int, year_requested: int) -> datetime.d
     """
     days_in_month = calendar.monthrange(year_requested, denominator)[1]
     return datetime.date(year_requested, denominator, days_in_month)
+
+
+def get_months_nav(month: int, year: int) -> tuple[int, int, int, int]:
+    """
+    Return last month and next month
+    """
+    if month == 1:
+        lm_month = 12
+        lm_year = year - 1
+        nm_month = 2
+        nm_year = year
+    elif month == 12:
+        lm_month = 11
+        lm_year = year
+        nm_month = 1
+        nm_year = year + 1
+    else:
+        lm_month = month - 1
+        lm_year = year
+        nm_month = month + 1
+        nm_year = year
+    return lm_year, lm_month, nm_year, nm_month

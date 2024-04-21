@@ -5,6 +5,10 @@
 
 {% block content %}
     <h1>Spending Detail Report for {{ month_name }} {{ year }}</h1>
+    <div class="month-nav">
+        <span class="last-month"><a href="{{ url_for('.spending', year=lm_year, month=lm_month, sortkey='cat.name', direction='asc') }}">Last month</a></span>
+        <span class="next-month"><a href="{{ url_for('.spending', year=nm_year, month=nm_month, sortkey='cat.name', direction='asc') }}">Next month</a></span>
+    </div>
     <div class="spending-report">
         <div class="table-responsive">
             <table id="spending">

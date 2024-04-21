@@ -66,6 +66,14 @@ tr:nth-child(even) {
     background-color: #f2f2f2;
  }
 
+div.month-nav {
+    margin-bottom: 24px;
+}
+
+.next-month {
+    float: right;
+}
+
 /* SPENDING BY CATEGORY REPORT   */
 
 div.spending-cat-report {
