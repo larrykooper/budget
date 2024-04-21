@@ -97,6 +97,7 @@ def budyear():
             category['av_spend_per_month'] = category['tot_spend_year'] / denominator
         # total_budget is the sum of budgeted over all categories
         total_budget = category_repo.get_total_budget()
+        budget_per_year = 12 * total_budget['sum']
         totals = line_item_select.total_spending_per_month_for_year(start_of_year, end_of_year)
         avg_spend_per_month = get_avg_spend_per_month(totals, denominator)
         totals_zero_padded = zero_pad(totals, denominator)
@@ -105,9 +106,10 @@ def budyear():
             year=year,
             totals=totals_zero_padded,
             total_budget=total_budget,
-            av_per_month = avg_spend_per_month,
+            av_per_month=avg_spend_per_month,
             sortkey=sortkey,
             sort_direction=sort_direction,
+            budget_per_year=budget_per_year
         )
 
 # Spending by category per month

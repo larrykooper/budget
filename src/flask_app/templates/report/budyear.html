@@ -59,7 +59,8 @@
                     {% for total in totals %}
                         <td class="amount">{{ util.fmt_num(total ['sum']) }}</td>
                     {% endfor %}
-                    <td class="amount">{{ util.fmt_num(av_per_month) }}  </td>
+                    <td class="amount">{{ util.fmt_num(av_per_month) }}</td>
+                    <td class="amount no-overspend">{{ util.fmt_num(budget_per_year) }}</td>
                 </tr>
             </tbody>
         </table>
