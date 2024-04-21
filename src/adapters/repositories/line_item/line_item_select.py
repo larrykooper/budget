@@ -45,8 +45,13 @@ class LineItemSelect():
         and sql.SQL to pass the sort direction.
         See: https://www.psycopg.org/psycopg3/docs/api/sql.html
         ---
+        Only category will have a secondary sort key.
         """
-        qstring = """
+        if sort_table == 'cat':
+            order_string = "ORDER BY {} {} {} {}"
+        else:
+            order_string = "ORDER BY {} {}"
+        qstring = f"""
         SELECT
             li.id,
             transaction_date,
@@ -68,13 +73,21 @@ class LineItemSelect():
         ON acc.id = li.account_id
         WHERE li.transaction_date BETWEEN %(start_date)s AND %(end_date)s
         AND li.show_on_spending_report
-        ORDER BY {} {}
+        {order_string}
         """
         params = {
             'start_date': start_date,
             'end_date': end_date
         }
-        executable_sql = sql.SQL(qstring).format(sql.Identifier(sort_table, sort_column), sql.SQL(sort_direction))
+        if sort_table == 'cat':
+            executable_sql = sql.SQL(qstring).format(
+                sql.Identifier(sort_table, sort_column),
+                sql.SQL(sort_direction),
+                sql.SQL(", li.transaction_date"),
+                sql.SQL("ASC")
+            )
+        else:
+            executable_sql = sql.SQL(qstring).format(sql.Identifier(sort_table, sort_column), sql.SQL(sort_direction))
         data = db_pool.get_data(executable_sql, params, single_row=False)
         return data
 
