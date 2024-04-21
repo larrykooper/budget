@@ -24,9 +24,9 @@
                     <th><a href="{{ url_for('.spending', year=year, month=10, sortkey='cat.name', direction='asc') }}">Spending Oct</a></th>
                     <th><a href="{{ url_for('.spending', year=year, month=11, sortkey='cat.name', direction='asc') }}">Spending Nov</a></th>
                     <th><a href="{{ url_for('.spending', year=year, month=12, sortkey='cat.name', direction='asc') }}">Spending Dec</a></th>
-                    <th>Average Spending<br>per month</th>
                     <th>Budgeted per Year</th>
                     <th>Left for Year</th>
+                    <th>Average Spending<br>per month</th>
                     <th>{{ util.sortable(year, 0, "name", "Category", sort_direction, ".budyear") }}</th>
                 </tr>
             </thead>
@@ -47,9 +47,9 @@
                         <td class="amount">{{ util.fmt_num(category['spend_oct']) }}</td>
                         <td class="amount">{{ util.fmt_num(category['spend_nov']) }}</td>
                         <td class="amount">{{ util.fmt_num(category['spend_dec']) }}</td>
-                        <td class="amount">{{ util.fmt_num(category['av_spend_per_month']) }}</td>
                         <td class="amount no-overspend">{{ util.fmt_num(category['budget_per_year']) }}</td>
                         <td class="amount no-overspend neg-pink">{{ util.fmt_num(category['left_per_year']) }}</td>
+                        <td class="amount">{{ util.fmt_num(category['av_spend_per_month']) }}</td>
                         <td>{{ category['name']}}</td>
                     </tr>
                 {% endfor %}
@@ -59,9 +59,9 @@
                     {% for total in totals %}
                         <td class="amount">{{ util.fmt_num(total ['sum']) }}</td>
                     {% endfor %}
-                    <td class="amount">{{ util.fmt_num(av_per_month) }}</td>
                     <td class="amount no-overspend">{{ util.fmt_num(budget_per_year) }}</td>
                     <td class="amount no-overspend neg-pink">{{ util.fmt_num(left_for_year) }}</td>
+                    <td class="amount">{{ util.fmt_num(av_per_month) }}</td>
                 </tr>
             </tbody>
         </table>
