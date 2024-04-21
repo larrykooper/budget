@@ -61,6 +61,7 @@
                     {% endfor %}
                     <td class="amount">{{ util.fmt_num(av_per_month) }}</td>
                     <td class="amount no-overspend">{{ util.fmt_num(budget_per_year) }}</td>
+                    <td class="amount no-overspend neg-pink">{{ util.fmt_num(left_for_year) }}</td>
                 </tr>
             </tbody>
         </table>

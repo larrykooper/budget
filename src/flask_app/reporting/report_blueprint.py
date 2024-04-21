@@ -99,7 +99,7 @@ def budyear():
         total_budget = category_repo.get_total_budget()
         budget_per_year = 12 * total_budget['sum']
         totals = line_item_select.total_spending_per_month_for_year(start_of_year, end_of_year)
-        avg_spend_per_month = get_avg_spend_per_month(totals, denominator)
+        avg_spend_per_month, left_for_year = get_total_line_data(totals, denominator, budget_per_year)
         totals_zero_padded = zero_pad(totals, denominator)
         return render_template('report/budyear.html',
             categories=categories,
@@ -109,7 +109,8 @@ def budyear():
             av_per_month=avg_spend_per_month,
             sortkey=sortkey,
             sort_direction=sort_direction,
-            budget_per_year=budget_per_year
+            budget_per_year=budget_per_year,
+            left_for_year=left_for_year
         )
 
 # Spending by category per month
@@ -161,7 +162,6 @@ def spending_cat_year():
         year=year
     )
 
-
 # Used for in-place editing -- called via AJAX
 #  form['category'] is the category ID number
 @bp.route('/_update', methods=['POST'])
@@ -176,7 +176,6 @@ def update():
         if 'category' in form:
             line_item_write.update_category(form['category'], form['id'])
     return "SUCCESS"
-
 
 def translate_line_items(line_items: list[dict]) -> list[dict]:
     """
@@ -210,11 +209,13 @@ def get_start_end(year: int, month: int) -> tuple[datetime.date, datetime.date]:
     end = datetime.date(year, month, days_in_month)
     return start, end
 
-def get_avg_spend_per_month(totals: list, denominator: int) -> Decimal:
+def get_total_line_data(totals: list, denominator: int, budget_per_year: Decimal) -> tuple[Decimal, Decimal]:
     sum = 0
     for total in totals[:denominator]:
         sum += total['sum']
-    return sum/denominator
+    avg_spend_per_month = sum/denominator
+    left_for_year = budget_per_year - sum
+    return avg_spend_per_month, left_for_year
 
 def zero_pad(totals: list, denominator: int) -> list:
     """
