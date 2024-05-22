@@ -47,6 +47,8 @@ def spending():
         line_items_translated = translate_line_items(line_items)
         categories = Category.categories_for_select()
         total = line_item_select.total_spending_per_month(start_date, end_date)
+        if total['sum'] is None:
+            total['sum'] = 0
         lm_year, lm_month, nm_year, nm_month = get_months_nav(month, year)
         return render_template('report/spending.html',
             line_items=line_items_translated,

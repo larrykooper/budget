@@ -40,6 +40,7 @@ Movies
 Museums
 Music
 Newspapers & Magazines
+NYCPythonistas
 Office Supplies
 Personal Care
 Pharmacy (excl. prescriptions)
