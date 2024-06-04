@@ -171,10 +171,10 @@ class LineItemWrite():
         FROM account
         WHERE line_item.account_id = account.id
         AND account.name = 'Checking'
-        AND description LIKE {}
+        AND UPPER(description) LIKE {}
         """
         params = {}
-        executable_sql = sql.SQL(qstring).format(sql.Literal('Payment to Chase card%%'))
+        executable_sql = sql.SQL(qstring).format(sql.Literal('PAYMENT TO CHASE CARD%%'))
         db_pool.update(executable_sql, params)
 
         # Rule 3: Account is Checking, transaction_type is 'dslip', and type_detail is 'check_deposit'
