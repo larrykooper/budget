@@ -38,6 +38,7 @@ class CategoryRepository():
         ) -> list[dict]:
         """
         Get data for the budget by year report
+        This query returns data for each category, NOT for the totals at the bottom
         """
         qstring = """
         WITH spending_by_cat AS (
