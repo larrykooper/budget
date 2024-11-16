@@ -27,7 +27,9 @@ def list():
 def add_rule():
     if request.method == 'GET':
         category_repo = CategoryRepository()
-        categories = category_repo.get_all_categories()
+        sort_column = "name"
+        sort_direction = "asc"
+        categories = category_repo.get_all_categories(sort_column, sort_direction)
         return render_template('rules/add_rule.html', categories=categories)
     if request.method == 'POST':
         category_rule_repo = CategoryRuleRepository()
