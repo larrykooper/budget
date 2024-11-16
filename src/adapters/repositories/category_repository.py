@@ -51,7 +51,7 @@ class CategoryRepository():
                 category_id,
                 SUM(amount) AS tot_spend_year
             FROM line_item
-            WHERE transaction_date BETWEEN %(start_of_year)s AND %(end_of_spend_period)s
+            WHERE transaction_date BETWEEN %(start_of_year)s AND %(end_of_year)s
             AND show_on_spending_report
             GROUP BY category_id
         ), cat_info AS (

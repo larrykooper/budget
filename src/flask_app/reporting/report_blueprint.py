@@ -229,7 +229,7 @@ def zero_pad(totals: list, denominator: int) -> list:
     Add zeros for all future months so the display puts things in the right columns
     Denominator should be equal to length of list
     """
-    for i in range(denominator+1, 13):
+    for i in range(denominator+1, 12):
         totals.append({'mymonth': i,'sum': Decimal(0.00)})
     return totals
 
@@ -237,9 +237,8 @@ def zero_pad(totals: list, denominator: int) -> list:
 def get_budyear_denominator(year: int) -> int:
     """
     If the year is a prior year return 12
-    If the year is current year, return the number of the current month minus 1
-    We exclude the current month from the average because its spending number is not
-    comparable to other months
+    If the year is current year, return the number of the current month
+    We include the current month in the average
     """
     today = datetime.date.today()
     current_month = today.month
@@ -247,7 +246,7 @@ def get_budyear_denominator(year: int) -> int:
     if year < current_year:
         return 12
     else:
-        deno = current_month - 1
+        deno = current_month
         return 1 if deno == 0 else deno
 
 
