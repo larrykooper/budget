@@ -74,6 +74,11 @@ div.month-nav {
     float: right;
 }
 
+button > img.split {
+    width: 24px;
+    height: 24px;
+}
+
 /* SPENDING BY CATEGORY REPORT   */
 
 div.spending-cat-report {
