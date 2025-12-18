@@ -27,6 +27,7 @@
                         <th>Check<br>Number</th>
                         <th>Type Detail</th>
                         <th>Comment</th>
+                        <th>Split</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -44,6 +45,11 @@
                         <td>{{ line_item['check_number'] }}</td>
                         <td>{{ line_item['type_detail_name'] }}</td>
                         <td>{{ line_item['comment'] }}</td>
+                        <td>
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#split_modal{{ line_item['id']}}" >
+                                <img class="split" src="{{ url_for('static', filename='images/split.png') }}", alt="split" />
+                            </button>
+                        </td>
                     </tr>
                 {% endfor %}
                 <tr>
@@ -63,6 +69,31 @@
             </table>
         </div>
     </div>
+
+    {% for line_item in line_items %}
+        <!-- Modal for splitting a transaction   -->
+        <!-- want to use Ajax for the "apply"   -->
+        <!-- Close the modal for the submit   -->
+        <div class="modal" id="split_modal{{ line_item['id']}}" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalLabel">Split a Transaction</h5>
+                        <button class="close">>&times</button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Original line item:</p>
+                    </div> <!-- modal-body -->
+                    <div class="modal-footer">
+                        <button type="submit">Apply</button>
+                        <button type="reset">Cancel</button>
+                        <button type="button">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
 
 <script type="text/javascript">
     $('#spending').Tabledit({
