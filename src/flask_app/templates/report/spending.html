@@ -88,17 +88,15 @@
                             <span class="old_amount"><span class="old_trans_label">Amount:</span> {{ line_item['amount']  }}</span>
                         <form>
                             <p class="trans_label new_trans_label">New transaction:</p>
-                            <div class="modal_input">
-                                <label for="new_trans_date">Date</label>
-                                <input type="date" id="new_trans_date" name="new_trans_date"/>
-                            </div>
                             <div class="input_container">
                                 <div>
+                                    <label for="new_trans_date">Date</label>
                                     <label for="new_trans_desc">Description</label>
                                     <label for="new_trans_amount">Amount</label>
                                     <label for="new_category">Category</label>
                                 </div>
                                 <div>
+                                    <input type="date" id="new_trans_date" name="new_trans_date"/>
                                     <input type="text" id="new_trans_desc" name="new_trans_desc" class="new_trans_desc"/>
                                     <input type="number" id="new_trans_amount" name="new_trans_amount"/>
                                     <input type="select" id="new_category" name="new_category"/>
