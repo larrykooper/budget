@@ -87,20 +87,20 @@
                         Description {{ line_item['description'] }}
                         Amount {{ line_item['amount']  }}
                         <form>
-                            <p class="trans_label">New transaction:</p>
-                            <div>
+                            <p class="trans_label new_trans_label">New transaction:</p>
+                            <div class="modal_input">
                                 <label for="new_trans_date">Date</label>
                                 <input type="date" id="new_trans_date" name="new_trans_date"/>
                             </div>
-                            <div>
+                            <div class="modal_input">
                                 <label for="new_trans_desc">Description</label>
                                 <input type="text" id="new_trans_desc" name="new_trans_desc" class="new_trans_desc"/>
                             </div>
-                            <div>
+                            <div class="modal_input">
                                 <label for="new_trans_amount">Amount</label>
                                 <input type="number" id="new_trans_amount" name="new_trans_amount"/>
                             </div>
-                            <div>
+                            <div class="modal_input">
                                 <label for="new_category">Category</label>
                                 <input type="select" id="new_category" name="new_category"/>
                             </div>

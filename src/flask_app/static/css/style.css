@@ -89,6 +89,18 @@ button > img.split {
     font-weight: bold;
 }
 
+.new_trans_label {
+    margin-top: 17px;
+}
+
+.modal_input {
+    margin-bottom: 15px;
+}
+
+.split_modal .modal-footer > button {
+    margin-left: 61px;
+}
+
 /* SPENDING BY CATEGORY REPORT   */
 
 div.spending-cat-report {
