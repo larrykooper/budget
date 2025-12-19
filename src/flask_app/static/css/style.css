@@ -109,6 +109,20 @@ button > img.split {
     color: blue
 }
 
+.split_modal .input_container {
+    display: grid;
+    grid-template-columns: 98px 1fr; /* Creates two equal-width columns */
+    gap: 20px; /* Adds space between columns */
+}
+
+.split_modal .input_container input {
+    margin-bottom: 20px;
+}
+
+.split_modal .input_container label {
+    margin-bottom: 20px;
+}
+
 /* SPENDING BY CATEGORY REPORT   */
 
 div.spending-cat-report {
