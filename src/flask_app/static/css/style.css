@@ -105,6 +105,10 @@ button > img.split {
     margin-left: 34px;
 }
 
+.split_modal .old_trans_label {
+    color: blue
+}
+
 /* SPENDING BY CATEGORY REPORT   */
 
 div.spending-cat-report {

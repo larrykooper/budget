@@ -84,8 +84,8 @@
                     </div>
                     <div class="modal-body">
                         <p class="trans_label">Original transaction:</p>
-                            <span>Description: {{ line_item['description'] }}</span>
-                            <span class="old_amount">Amount: {{ line_item['amount']  }}</span>
+                            <span class="old_trans_label">Description:</span> {{ line_item['description'] }}
+                            <span class="old_amount"><span class="old_trans_label">Amount:</span> {{ line_item['amount']  }}</span>
                         <form>
                             <p class="trans_label new_trans_label">New transaction:</p>
                             <div class="modal_input">
