@@ -101,6 +101,10 @@ button > img.split {
     margin-left: 61px;
 }
 
+.split_modal .old_amount {
+    margin-left: 34px;
+}
+
 /* SPENDING BY CATEGORY REPORT   */
 
 div.spending-cat-report {
