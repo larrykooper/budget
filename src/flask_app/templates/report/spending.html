@@ -76,25 +76,25 @@
         <!-- Close the modal for the submit   -->
 
         <div class="modal" id="split_modal{{ line_item['id']}}" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-dialog modal-dialog-centered split_modal" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="modalLabel">Split a Transaction</h5>
                         <button class="close">&times</button>
                     </div>
                     <div class="modal-body">
-                        <p>Original line item:</p>
+                        <p class="trans_label">Original transaction:</p>
                         Description {{ line_item['description'] }}
                         Amount {{ line_item['amount']  }}
                         <form>
-                            <p>New line item:</p>
+                            <p class="trans_label">New transaction:</p>
                             <div>
                                 <label for="new_trans_date">Date</label>
                                 <input type="date" id="new_trans_date" name="new_trans_date"/>
                             </div>
                             <div>
                                 <label for="new_trans_desc">Description</label>
-                                <input type="text" id="new_trans_desc" name="new_trans_desc"/>
+                                <input type="text" id="new_trans_desc" name="new_trans_desc" class="new_trans_desc"/>
                             </div>
                             <div>
                                 <label for="new_trans_amount">Amount</label>

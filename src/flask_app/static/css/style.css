@@ -81,6 +81,13 @@ button > img.split {
 
 /* MODAL FOR SPLITTING A TRANSACTION */
 
+.new_trans_desc {
+    width: 315px;
+}
+
+.trans_label {
+    font-weight: bold;
+}
 
 /* SPENDING BY CATEGORY REPORT   */
 
