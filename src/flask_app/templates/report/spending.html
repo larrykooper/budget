@@ -145,13 +145,13 @@
     // This is what we do after the user clicks the split button
     // For efficiency, we only want to populate this one select (not all of them)
     function handleSplitButtonClick(event) {
-        var the_image = event.target;
-        var the_button = the_image.parentElement;
-        var line_item_id = the_button.getAttribute('data-line-item-id');
-        var id_string = `new_category${line_item_id}`
-        var selectElement = document.getElementById(id_string);
+        const the_image = event.target;
+        const the_button = the_image.parentElement;
+        const line_item_id = the_button.getAttribute('data-line-item-id');
+        const category_select_id = `new_category${line_item_id}`
+        const selectElement = document.getElementById(category_select_id);
         // populate the select
-        var categoriesJson = '{{categories}}';
+        const categoriesJson = '{{categories}}';
         const decoded = decodeHTMLEntities(categoriesJson)
         const categoriesArray = JSON.parse(decoded);
         categoriesArray.forEach(optionObject => {
