@@ -85,6 +85,10 @@ button > img.split {
     width: 315px;
 }
 
+.new_trans_date {
+    width: 110px;
+}
+
 .trans_label {
     font-weight: bold;
 }
