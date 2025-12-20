@@ -46,7 +46,7 @@
                         <td>{{ line_item['type_detail_name'] }}</td>
                         <td>{{ line_item['comment'] }}</td>
                         <td>
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#split_modal{{ line_item['id']}}" >
+                            <button type="button" class="btn btn-primary split_button" data-bs-toggle="modal" data-bs-target="#split_modal{{ line_item['id']}}" data-line-item-id="{{ line_item['id']}}">
                                 <img class="split" src="{{ url_for('static', filename='images/split.png') }}", alt="split" />
                             </button>
                         </td>
@@ -74,12 +74,13 @@
         <!-- Modal for splitting a transaction   -->
         <!-- want to use Ajax for the "apply"   -->
         <!-- Close the modal for the submit   -->
+        <!-- The modal's parent is div class "page-content"   -->
 
         <div class="modal" id="split_modal{{ line_item['id']}}" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered split_modal" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title me-auto" id="modalLabel">Split a Transaction</h5>
+                        <h5 class="modal-title me-auto" id="modalLabel{{ line_item['id']}}">Split a Transaction</h5>
                         <button class="close" data-bs-dismiss="modal">&times</button>
                     </div>
                     <div class="modal-body">
@@ -90,16 +91,17 @@
                             <p class="trans_label new_trans_label">New transaction:</p>
                             <div class="input_container">
                                 <div>
-                                    <label for="new_trans_date">Date</label>
-                                    <label for="new_trans_desc">Description</label>
-                                    <label for="new_trans_amount">Amount</label>
-                                    <label for="new_category">Category</label>
+                                    <label for="new_trans_date{{ line_item['id']}}">Date</label>
+                                    <label for="new_trans_desc{{ line_item['id']}}">Description</label>
+                                    <label for="new_trans_amount{{ line_item['id']}}">Amount</label>
+                                    <label for="new_category{{ line_item['id']}}">Category</label>
                                 </div>
                                 <div>
-                                    <input type="date" id="new_trans_date" name="new_trans_date"/>
-                                    <input type="text" id="new_trans_desc" name="new_trans_desc" class="new_trans_desc"/>
-                                    <input type="number" id="new_trans_amount" name="new_trans_amount"/>
-                                    <input type="select" id="new_category" name="new_category"/>
+                                    <input type="date" id="new_trans_date{{ line_item['id']}}" name="new_trans_date"/>
+                                    <input type="text" id="new_trans_desc{{ line_item['id']}}" name="new_trans_desc" class="new_trans_desc"/>
+                                    <input type="number" id="new_trans_amount{{ line_item['id']}}" name="new_trans_amount"/>
+                                    <select id="new_category{{ line_item['id']}}" name="new_category">
+                                    </select>
                                 </div>
                             </div>
                         </form>
@@ -114,7 +116,6 @@
         </div>
     {% endfor %}
 
-
 <script type="text/javascript">
     $('#spending').Tabledit({
         url: '_update',
@@ -127,6 +128,39 @@
             editable: [[10, 'comment'], [5, 'category', '{{ categories|safe }}']]
         }
     });
+
+   // Add event listeners to the split buttons
+    const split_buttons = document.getElementsByClassName('split_button');
+    for (split_button of split_buttons) {
+        split_button.addEventListener('click', handleSplitButtonClick);
+    }
+
+    // I need this to translate HTML entities in the JSON
+    function decodeHTMLEntities(encodedString) {
+        const textarea = document.createElement('textarea');
+        textarea.innerHTML = encodedString;
+        return textarea.value;
+    }
+
+    // This is what we do after the user clicks the split button
+    // For efficiency, we only want to populate this one select (not all of them)
+    function handleSplitButtonClick(event) {
+        var the_image = event.target;
+        var the_button = the_image.parentElement;
+        var line_item_id = the_button.getAttribute('data-line-item-id');
+        var id_string = `new_category${line_item_id}`
+        var selectElement = document.getElementById(id_string);
+        // populate the select
+        var categoriesJson = '{{categories}}';
+        const decoded = decodeHTMLEntities(categoriesJson)
+        const categoriesArray = JSON.parse(decoded);
+        categoriesArray.forEach(optionObject => {
+            const option = document.createElement("option");
+            option.textContent = optionObject.value;
+            option.value = optionObject.index;
+        selectElement.appendChild(option);
+        })
+    }
 
 </script>
 
