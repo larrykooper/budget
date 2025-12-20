@@ -86,7 +86,7 @@
                     <div class="modal-body">
                         <p class="trans_label">Original transaction:</p>
                             <span class="old_trans_label">Description:</span> {{ line_item['description'] }}
-                            <span class="old_amount"><span class="old_trans_label">Amount:</span> {{ line_item['amount']  }}</span>
+                            <span class="old_amount"><span class="old_trans_label">Amount:</span><span id="old_trans_amount{{ line_item['id']}}">{{ line_item['amount']  }}</span></span>
                         <form>
                             <p class="trans_label new_trans_label">New transaction:</p>
                             <div class="input_container">
@@ -107,9 +107,9 @@
                         </form>
                     </div> <!-- modal-body -->
                     <div class="modal-footer">
-                        <button type="submit">Apply split</button>
+                        <button type="button" id="apply_split{{ line_item['id']}}">Apply split</button>
                         <button type="reset">Cancel</button>
-                        <button type="button">Save changes</button>
+                        <button type="submit">Save changes</button>
                     </div>
                 </div>
             </div>
@@ -142,12 +142,21 @@
         return textarea.value;
     }
 
+    function addApplyButtonListener(line_item_id) {
+        const apply_button = document.getElementById(`apply_split${line_item_id}`);
+        apply_button.addEventListener('click', (event) => {
+            handleApplyClick(event, line_item_id);
+        });
+    }
+
     // This is what we do after the user clicks the split button
     // For efficiency, we only want to populate this one select (not all of them)
     function handleSplitButtonClick(event) {
         const the_image = event.target;
         const the_button = the_image.parentElement;
         const line_item_id = the_button.getAttribute('data-line-item-id');
+        addApplyButtonListener(line_item_id);
+        // default date to today
         const dateInput = document.getElementById(`new_trans_date${line_item_id}`)
         const today = new Date();
         dateInput.valueAsDate = today;
@@ -163,6 +172,16 @@
             option.value = optionObject.index;
         selectElement.appendChild(option);
         })
+    }
+
+    function handleApplyClick(event, line_item_id) {
+        const oldAmountElement = document.getElementById(`old_trans_amount${line_item_id}`);
+        const newAmountElement = document.getElementById(`new_trans_amount${line_item_id}`);
+        const total_transaction_amount = oldAmountElement.textContent;
+        const new_transaction_amount = newAmountElement.value;
+        // Complain if new TA is >= total TA
+        const updated_orig_trans_amount = total_transaction_amount - new_transaction_amount;
+        oldAmountElement.textContent = updated_orig_trans_amount;
     }
 
 </script>
