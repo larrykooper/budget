@@ -184,6 +184,11 @@ def update():
             line_item_write.update_category(form['category'], form['id'])
     return "SUCCESS"
 
+@bp.route('/_split_a_transaction', methods=['POST'])
+def split_a_transaction():
+    mything = 29/0
+    print("I am splitting a thing")
+
 def translate_line_items(line_items: list[dict]) -> list[dict]:
     """
     translate_line_items converts the IDs of dimension tables to their names,

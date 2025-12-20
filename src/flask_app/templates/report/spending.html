@@ -86,21 +86,21 @@
                     <div class="modal-body">
                         <p class="trans_label">Original transaction:</p>
                             <span class="old_trans_label">Description:</span> {{ line_item['description'] }}
-                            <span class="old_amount"><span class="old_trans_label">Amount: </span><span id="old_trans_amount{{ line_item['id']}}">{{ line_item['amount']  }}</span></span>
-                            <p><span class="old_trans_label">New parent transaction amount: </span><span id="adjusted_trans_amount{{ line_item['id']}}"></span></p>
-                        <form>
+                            <span class="old_amount"><span class="old_trans_label">Amount: </span><span id="old_trans_amount{{ line_item['id'] }}">{{ line_item['amount']  }}</span></span>
+                            <p><span class="old_trans_label">New parent transaction amount: </span><span id="adjusted_trans_amount{{ line_item['id'] }}"></span></p>
+                        <form action="{{ url_for('report.split_a_transaction')}}" method="POST" id="split_form{{ line_item['id'] }}">
                             <p class="trans_label new_trans_label">New transaction:</p>
                             <div class="input_container">
                                 <div>
-                                    <label for="new_trans_date{{ line_item['id']}}">Date</label>
-                                    <label for="new_trans_desc{{ line_item['id']}}">Description</label>
-                                    <label for="new_trans_amount{{ line_item['id']}}">Amount</label>
-                                    <label for="new_category{{ line_item['id']}}">Category</label>
+                                    <label for="new_trans_date{{ line_item['id'] }}">Date</label>
+                                    <label for="new_trans_desc{{ line_item['id'] }}">Description</label>
+                                    <label for="new_trans_amount{{ line_item['id'] }}">Amount</label>
+                                    <label for="new_category{{ line_item['id'] }}">Category</label>
                                 </div>
                                 <div>
-                                    <input type="date" id="new_trans_date{{ line_item['id']}}" name="new_trans_date" class="new_trans_date"/>
-                                    <input type="text" id="new_trans_desc{{ line_item['id']}}" name="new_trans_desc" class="new_trans_desc"/>
-                                    <input type="number" id="new_trans_amount{{ line_item['id']}}" name="new_trans_amount"/>
+                                    <input type="date" id="new_trans_date{{ line_item['id'] }}" name="new_trans_date" class="new_trans_date"/>
+                                    <input type="text" id="new_trans_desc{{ line_item['id'] }}" name="new_trans_desc" class="new_trans_desc"/>
+                                    <input type="number" id="new_trans_amount{{ line_item['id'] }}" name="new_trans_amount"/>
                                     <select id="new_category{{ line_item['id']}}" name="new_category">
                                     </select>
                                 </div>
@@ -108,9 +108,9 @@
                         </form>
                     </div> <!-- modal-body -->
                     <div class="modal-footer">
-                        <button type="button" id="apply_split{{ line_item['id']}}">Apply split</button>
+                        <button type="button" id="apply_split{{ line_item['id'] }}">Apply split</button>
                         <button type="button" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit">Save changes</button>
+                        <button type="submit" form="split_form{{ line_item['id'] }}">Save changes</button>
                     </div>
                 </div>
             </div>
