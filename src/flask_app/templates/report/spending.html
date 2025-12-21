@@ -186,7 +186,7 @@
         // Complain if new TA is >= total TA
         const updated_orig_trans_amount_cents = total_transaction_amount_cents - new_transaction_amount_cents;
         const updated_orig_trans_amount_dollars = updated_orig_trans_amount_cents / 100;
-        adjustedAmountElement.textContent = updated_orig_trans_amount_dollars;
+        adjustedAmountElement.textContent = updated_orig_trans_amount_dollars.toFixed(2);
     }
 
 </script>
