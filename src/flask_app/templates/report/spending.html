@@ -179,11 +179,14 @@
         const oldAmountElement = document.getElementById(`old_trans_amount${line_item_id}`);
         const newAmountElement = document.getElementById(`new_trans_amount${line_item_id}`);
         const adjustedAmountElement = document.getElementById(`adjusted_trans_amount${line_item_id}`);
-        const total_transaction_amount = oldAmountElement.textContent;
-        const new_transaction_amount = newAmountElement.value;
+        const total_transaction_amount_dollars = oldAmountElement.textContent;
+        const new_transaction_amount_dollars = newAmountElement.value;
+        const total_transaction_amount_cents = total_transaction_amount_dollars * 100;
+        const new_transaction_amount_cents = new_transaction_amount_dollars * 100;
         // Complain if new TA is >= total TA
-        const updated_orig_trans_amount = total_transaction_amount - new_transaction_amount;
-        adjustedAmountElement.textContent = updated_orig_trans_amount;
+        const updated_orig_trans_amount_cents = total_transaction_amount_cents - new_transaction_amount_cents;
+        const updated_orig_trans_amount_dollars = updated_orig_trans_amount_cents / 100;
+        adjustedAmountElement.textContent = updated_orig_trans_amount_dollars;
     }
 
 </script>
