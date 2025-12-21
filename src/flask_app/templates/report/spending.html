@@ -87,6 +87,7 @@
                         <p class="trans_label">Original transaction:</p>
                             <span class="old_trans_label">Description:</span> {{ line_item['description'] }}
                             <span class="old_amount"><span class="old_trans_label">Amount: </span><span id="old_trans_amount{{ line_item['id'] }}">{{ line_item['amount']  }}</span></span>
+                            <p><span class="old_trans_label">Category: </span>{{ line_item['cat_name'] }}</p>
                             <p><span class="old_trans_label">New parent transaction amount: </span><span id="adjusted_trans_amount{{ line_item['id'] }}"></span></p>
                         <form action="{{ url_for('report.split_a_transaction')}}" method="POST" id="split_form{{ line_item['id'] }}">
                             <p class="trans_label new_trans_label">New transaction:</p>
@@ -150,6 +151,20 @@
         });
     }
 
+    function addAmountListener(line_item_id) {
+        const amount_field = document.getElementById(`new_trans_amount${line_item_id}`);
+        amount_field.addEventListener("input", (event) => {
+            const oldAmountElement = document.getElementById(`old_trans_amount${line_item_id}`);
+            const original_transaction_amount_dollars = oldAmountElement.textContent;
+            if (amount_field.value >= original_transaction_amount_dollars) {
+                amount_field.setCustomValidity("New trans amount must be less than original amount");
+            } else {
+                amount_field.setCustomValidity("");
+            }
+            amount_field.reportValidity();
+        });
+    }
+
     // This is what we do after the user clicks the split button
     // For efficiency, we only want to populate this one select (not all of them)
     function handleSplitButtonClick(event) {
@@ -157,8 +172,9 @@
         const the_button = the_image.parentElement;
         const line_item_id = the_button.getAttribute('data-line-item-id');
         addApplyButtonListener(line_item_id);
+        addAmountListener(line_item_id);
         // default date to today
-        const dateInput = document.getElementById(`new_trans_date${line_item_id}`)
+        const dateInput = document.getElementById(`new_trans_date${line_item_id}`);
         const today = new Date();
         dateInput.valueAsDate = today;
         const category_select_id = `new_category${line_item_id}`
@@ -172,7 +188,7 @@
             option.textContent = optionObject.value;
             option.value = optionObject.index;
         selectElement.appendChild(option);
-        })
+        });
     }
 
     function handleApplyClick(event, line_item_id) {
