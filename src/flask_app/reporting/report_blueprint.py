@@ -57,7 +57,7 @@ def spending():
             month=month,
             sortkey=sortkey,
             sort_direction=sort_direction,
-            month_name = month_name,
+            month_name=month_name,
             total=total,
             lm_year=lm_year,
             lm_month=lm_month,
@@ -186,7 +186,7 @@ def update():
 
 @bp.route('/_split_a_transaction', methods=['POST'])
 def split_a_transaction():
-    mything = 29/0
+    mything = 29/0   # To set off an error to test code path
     print("I am splitting a thing")
 
 def translate_line_items(line_items: list[dict]) -> list[dict]:
