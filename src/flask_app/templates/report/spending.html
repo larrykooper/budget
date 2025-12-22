@@ -46,7 +46,7 @@
                         <td>{{ line_item['type_detail_name'] }}</td>
                         <td>{{ line_item['comment'] }}</td>
                         <td>
-                            <button type="button" class="btn btn-primary split_button" data-bs-toggle="modal" data-bs-target="#split_modal{{ line_item['id']}}" data-line-item-id="{{ line_item['id']}}">
+                            <button type="button" class="btn split_button" data-bs-toggle="modal" data-bs-target="#split_modal{{ line_item['id']}}" data-line-item-id="{{ line_item['id']}}">
                                 <img class="split" src="{{ url_for('static', filename='images/split.png') }}", alt="split" />
                             </button>
                         </td>
