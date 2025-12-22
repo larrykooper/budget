@@ -4,6 +4,8 @@ from logging.config import dictConfig
 from flask import Flask
 from flask import render_template
 
+from flask_bootstrap import Bootstrap5
+
 from src.flask_app.budget import budget_blueprint
 from src.flask_app.ingesting import ingest_blueprint
 from src.flask_app.medres import medres_blueprint
@@ -33,6 +35,8 @@ def create_app(test_config=None):
     app.config.from_mapping(
         SECRET_KEY=os.environ['SECRET_KEY'],
     )
+
+    bootstrap = Bootstrap5(app)
 
     if test_config is None:
         # load the instance config, if it exists, when not testing

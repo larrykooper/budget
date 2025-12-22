@@ -27,6 +27,7 @@
                         <th>Check<br>Number</th>
                         <th>Type Detail</th>
                         <th>Comment</th>
+                        <th>Split</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -44,6 +45,11 @@
                         <td>{{ line_item['check_number'] }}</td>
                         <td>{{ line_item['type_detail_name'] }}</td>
                         <td>{{ line_item['comment'] }}</td>
+                        <td>
+                            <button type="button" class="btn split_button" data-bs-toggle="modal" data-bs-target="#split_modal{{ line_item['id']}}" data-line-item-id="{{ line_item['id']}}">
+                                <img class="split" src="{{ url_for('static', filename='images/split.png') }}", alt="split" />
+                            </button>
+                        </td>
                     </tr>
                 {% endfor %}
                 <tr>
@@ -64,6 +70,58 @@
         </div>
     </div>
 
+    {% for line_item in line_items %}
+        <!-- Modal for splitting a transaction   -->
+        <!-- want to use Ajax for the "apply"   -->
+        <!-- Close the modal for the submit   -->
+        <!-- The modal's parent is div class "page-content"   -->
+
+        <div class="modal" id="split_modal{{ line_item['id']}}" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered split_modal" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title me-auto" id="modalLabel{{ line_item['id']}}">Split a Transaction</h5>
+                        <button class="close" data-bs-dismiss="modal">&times</button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="trans_label">Original transaction:</p>
+                            <span class="old_trans_label">Description:</span> {{ line_item['description'] }}
+                            <span class="old_amount"><span class="old_trans_label">Amount: </span><span id="old_trans_amount{{ line_item['id'] }}">{{ line_item['amount']  }}</span></span>
+                            <p><span class="old_trans_label">Category: </span>{{ line_item['cat_name'] }}</p>
+                            <p><span class="old_trans_label">New parent transaction amount: </span><span id="adjusted_trans_amount{{ line_item['id'] }}"></span></p>
+                        <form action="{{ url_for('report.spending')}}" method="POST" id="split_form{{ line_item['id'] }}">
+                            <input type="hidden" id="line_item_id" name="line_item_id" value="{{ line_item['id'] }}">
+                            <input type="hidden" id="orig_trans_amount" name="orig_trans_amount" value="{{ line_item['amount']  }}">
+                            <input type="hidden" name="year" value="{{ year }}">
+                            <input type="hidden" name="month" value="{{ month }}">
+                            <p class="trans_label new_trans_label">New transaction:</p>
+                            <div class="input_container">
+                                <div>
+                                    <label for="new_trans_date{{ line_item['id'] }}">Date</label>
+                                    <label for="new_trans_desc{{ line_item['id'] }}">Description</label>
+                                    <label for="new_trans_amount{{ line_item['id'] }}">Amount</label>
+                                    <label for="new_category{{ line_item['id'] }}">Category</label>
+                                </div>
+                                <div>
+                                    <input type="date" id="new_trans_date{{ line_item['id'] }}" name="new_trans_date" class="new_trans_date"/>
+                                    <input type="text" id="new_trans_desc{{ line_item['id'] }}" name="new_trans_desc" class="new_trans_desc" required/>
+                                    <input type="number" id="new_trans_amount{{ line_item['id'] }}" name="new_trans_amount" step="0.01" min="0.01"/>
+                                    <select id="new_category{{ line_item['id']}}" name="new_category">
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
+                    </div> <!-- modal-body -->
+                    <div class="modal-footer">
+                        <button type="button" id="apply_split{{ line_item['id'] }}">Apply split</button>
+                        <button type="button" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" form="split_form{{ line_item['id'] }}">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
 <script type="text/javascript">
     $('#spending').Tabledit({
         url: '_update',
@@ -76,6 +134,80 @@
             editable: [[10, 'comment'], [5, 'category', '{{ categories|safe }}']]
         }
     });
+
+   // Add event listeners to the split buttons
+    const split_buttons = document.getElementsByClassName('split_button');
+    for (split_button of split_buttons) {
+        split_button.addEventListener('click', handleSplitButtonClick);
+    }
+
+    // I need this to translate HTML entities in the JSON
+    function decodeHTMLEntities(encodedString) {
+        const textarea = document.createElement('textarea');
+        textarea.innerHTML = encodedString;
+        return textarea.value;
+    }
+
+    function addApplyButtonListener(line_item_id) {
+        const apply_button = document.getElementById(`apply_split${line_item_id}`);
+        apply_button.addEventListener('click', (event) => {
+            handleApplyClick(event, line_item_id);
+        });
+    }
+
+    function addAmountListener(line_item_id) {
+        const amount_field = document.getElementById(`new_trans_amount${line_item_id}`);
+         // Complain if new Transaction Amount is > total Transaction Amoun
+        amount_field.addEventListener("blur", (event) => {
+            const oldAmountElement = document.getElementById(`old_trans_amount${line_item_id}`);
+            const original_transaction_amount_dollars = oldAmountElement.textContent;
+            if (Number(amount_field.value) > Number(original_transaction_amount_dollars)) {
+                amount_field.setCustomValidity("New trans amount cannot be more than original amount");
+            } else {
+                amount_field.setCustomValidity("");
+            }
+            amount_field.reportValidity();
+        });
+    }
+
+    // This is what we do after the user clicks the split button
+    // For efficiency, we only want to populate this one select (not all of them)
+    function handleSplitButtonClick(event) {
+        const the_image = event.target;
+        const the_button = the_image.parentElement;
+        const line_item_id = the_button.getAttribute('data-line-item-id');
+        addApplyButtonListener(line_item_id);
+        addAmountListener(line_item_id);
+        // default date to today
+        const dateInput = document.getElementById(`new_trans_date${line_item_id}`);
+        const today = new Date();
+        dateInput.valueAsDate = today;
+        const category_select_id = `new_category${line_item_id}`
+        const selectElement = document.getElementById(category_select_id);
+        // populate the select
+        const categoriesJson = '{{categories}}';
+        const decoded = decodeHTMLEntities(categoriesJson)
+        const categoriesArray = JSON.parse(decoded);
+        categoriesArray.forEach(optionObject => {
+            const option = document.createElement("option");
+            option.textContent = optionObject.value;
+            option.value = optionObject.index;
+        selectElement.appendChild(option);
+        });
+    }
+
+    function handleApplyClick(event, line_item_id) {
+        const oldAmountElement = document.getElementById(`old_trans_amount${line_item_id}`);
+        const newAmountElement = document.getElementById(`new_trans_amount${line_item_id}`);
+        const adjustedAmountElement = document.getElementById(`adjusted_trans_amount${line_item_id}`);
+        const total_transaction_amount_dollars = oldAmountElement.textContent;
+        const new_transaction_amount_dollars = newAmountElement.value;
+        const total_transaction_amount_cents = total_transaction_amount_dollars * 100;
+        const new_transaction_amount_cents = new_transaction_amount_dollars * 100;
+        const updated_orig_trans_amount_cents = total_transaction_amount_cents - new_transaction_amount_cents;
+        const updated_orig_trans_amount_dollars = updated_orig_trans_amount_cents / 100;
+        adjustedAmountElement.textContent = updated_orig_trans_amount_dollars.toFixed(2);
+    }
 
 </script>
 

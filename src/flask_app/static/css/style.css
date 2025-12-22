@@ -74,6 +74,55 @@ div.month-nav {
     float: right;
 }
 
+button > img.split {
+    width: 24px;
+    height: 24px;
+}
+
+/* MODAL FOR SPLITTING A TRANSACTION */
+
+.new_trans_desc {
+    width: 315px;
+}
+
+.new_trans_date {
+    width: 110px;
+}
+
+.trans_label {
+    font-weight: bold;
+}
+
+.new_trans_label {
+    margin-top: 17px;
+}
+
+.split_modal .modal-footer > button {
+    margin-left: 61px;
+}
+
+.split_modal .old_amount {
+    margin-left: 34px;
+}
+
+.split_modal .old_trans_label {
+    color: blue
+}
+
+.split_modal .input_container {
+    display: grid;
+    grid-template-columns: 98px 1fr; /* Creates two equal-width columns */
+    gap: 20px; /* Adds space between columns */
+}
+
+.split_modal .input_container input {
+    margin-bottom: 20px;
+}
+
+.split_modal .input_container label {
+    margin-bottom: 25px;
+}
+
 /* SPENDING BY CATEGORY REPORT   */
 
 div.spending-cat-report {

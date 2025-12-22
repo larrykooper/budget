@@ -73,7 +73,7 @@ def create_synthetic_transactions(deposits_to_update: list):
     is_medical_reimbursement: false (that's only for deposits)
     is_synthetic: true
 
-    Also create a row in synthetic_line_item.
+    Also create a row in the synthetic_line_item table.
     """
     line_item_write = LineItemWrite()
     line_item_select = LineItemSelect()
@@ -105,6 +105,6 @@ def create_synthetic_transactions(deposits_to_update: list):
         line_item_dict['is_synthetic'] = 't'
         line_item = LineItem(**line_item_dict)
         new_line_item_key = line_item_write.add_line_item(line_item)
-        # Add a row to synthetic_line_item
+        # Add a row to the synthetic_line_item table
         synthetic_line_item = SyntheticLineItem(new_line_item_key, line_item_id)
         synthetic_line_item_repo.add_synthetic_line_item(synthetic_line_item)

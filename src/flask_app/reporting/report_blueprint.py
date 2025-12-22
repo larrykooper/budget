@@ -2,7 +2,7 @@ import calendar
 import datetime
 from decimal import Decimal
 from flask import (
-    Blueprint, render_template, request
+    Blueprint, redirect, render_template, request, url_for
 )
 
 from src.adapters.repositories.authority_repository import AuthorityRepository
@@ -11,6 +11,8 @@ from src.adapters.repositories.line_item.line_item_select import LineItemSelect
 from src.adapters.repositories.line_item.line_item_write import LineItemWrite
 from src.flask_app.utils.utils import Utils
 from src.models.category import Category
+from src.models.input_field_types.input_field import InputField
+from src.models.line_item import LineItem
 
 bp = Blueprint('report', __name__, url_prefix='/report')
 
@@ -19,51 +21,64 @@ def report_home():
     return render_template('report/home.html')
 
 # Spending details by month
-@bp.route('/spending', methods=['GET'])
+@bp.route('/spending', methods=['GET', 'POST'])
 def spending():
-    qs = request.query_string
-    # If there is no querystring
-    if qs.decode('ASCII') == "":
-        return render_template('report/month_picker.html', path='spending')
-    else:
-        year = int(request.args.get('year'))
-        month = int(request.args.get('month'))
-        month_name = calendar.month_name[month]
-        if 'sortkey' in request.args:
-            sortkey = request.args.get('sortkey')
+    if request.method == 'GET':
+        qs = request.query_string
+        # If there is no querystring
+        if qs.decode('ASCII') == "":
+            return render_template('report/month_picker.html', path='spending')
         else:
-            sortkey = "li.transaction_date"
-        if 'direction' in request.args:
-            sort_direction = request.args.get('direction')
-        else:
-            sort_direction  = "desc"
-        sortspec = sortkey.split(".")
-        sort_table = sortspec[0]
-        sort_column = sortspec[1]
-        start_date, end_date = get_start_end(year, month)
-        line_item_select = LineItemSelect()
-        # Query the database for what we need to report
-        line_items = line_item_select.get_for_spending_report(start_date, end_date, sort_column, sort_direction, sort_table)
-        line_items_translated = translate_line_items(line_items)
-        categories = Category.categories_for_select()
-        total = line_item_select.total_spending_per_month(start_date, end_date)
-        if total['sum'] is None:
-            total['sum'] = 0
-        lm_year, lm_month, nm_year, nm_month = get_months_nav(month, year)
-        return render_template('report/spending.html',
-            line_items=line_items_translated,
-            categories=categories,
-            year=year,
-            month=month,
-            sortkey=sortkey,
-            sort_direction=sort_direction,
-            month_name = month_name,
-            total=total,
-            lm_year=lm_year,
-            lm_month=lm_month,
-            nm_year=nm_year,
-            nm_month=nm_month
+            year = int(request.args.get('year'))
+            month = int(request.args.get('month'))
+            month_name = calendar.month_name[month]
+            if 'sortkey' in request.args:
+                sortkey = request.args.get('sortkey')
+            else:
+                sortkey = "li.transaction_date"
+            if 'direction' in request.args:
+                sort_direction = request.args.get('direction')
+            else:
+                sort_direction  = "desc"
+            sortspec = sortkey.split(".")
+            sort_table = sortspec[0]
+            sort_column = sortspec[1]
+            start_date, end_date = get_start_end(year, month)
+            line_item_select = LineItemSelect()
+            # Query the database for what we need to report
+            line_items = line_item_select.get_for_spending_report(start_date, end_date, sort_column, sort_direction, sort_table)
+            line_items_translated = translate_line_items(line_items)
+            categories = Category.categories_for_select()
+            total = line_item_select.total_spending_per_month(start_date, end_date)
+            if total['sum'] is None:
+                total['sum'] = 0
+            lm_year, lm_month, nm_year, nm_month = get_months_nav(month, year)
+            return render_template('report/spending.html',
+                line_items=line_items_translated,
+                categories=categories,
+                year=year,
+                month=month,
+                sortkey=sortkey,
+                sort_direction=sort_direction,
+                month_name=month_name,
+                total=total,
+                lm_year=lm_year,
+                lm_month=lm_month,
+                nm_year=nm_year,
+                nm_month=nm_month
+            )
+    if request.method == 'POST':
+        split_a_transaction()
+        form = request.form
+        year = form['year']
+        month = form['month']
+        # do a redirect
+        redirect_url = url_for('report.spending',
+            year = year,
+            month = month
         )
+        return redirect(redirect_url)
+
 
 # Budget for year
 @bp.route('/budyear', methods=['GET'])
@@ -183,6 +198,83 @@ def update():
         if 'category' in form:
             line_item_write.update_category(form['category'], form['id'])
     return "SUCCESS"
+
+# Split a Transaction (server-side processing)
+def split_a_transaction():
+    # Note that the name (not id) is in the form
+    line_item_write = LineItemWrite()
+    form = request.form
+    form_is_valid = validate_split_form(form)
+    if form_is_valid:
+        # Update the amount of the original transaction
+        # For the adjusted old amount, we don't get it from the form
+        # What we do is calculate it by subtracting new transo amount from orig transo amount
+        orig_trans_amount = Decimal(form['orig_trans_amount'])
+        new_trans_amount = Decimal(form['new_trans_amount'])
+        adjusted_orig_trans_amount = orig_trans_amount - new_trans_amount
+        line_item_write.update_amount(adjusted_orig_trans_amount, form['line_item_id'])
+
+        # Create one new transaction
+        """
+        Create a new transaction split from the original.
+            transaction_date: Date the user input
+            post_date: Date the user input
+            description: Description the user input
+            amount: The new transaction amount the user input
+            category_id: The category ID the user input
+            transaction_type: debit
+            account_id: id for Cash
+            check_number: None
+            type_detail: None
+            comment: None
+            show_on_spending_report: true
+            is_medical_reimbursement: false
+            is_synthetic: false
+        """
+        line_item_write = LineItemWrite()
+        authority_repo = AuthorityRepository()
+        account = 'Cash'
+        transaction_type_wanted = "debit"
+        transaction_type_field = InputField.instantiate_input_field("TRANSACTION_TYPE")
+        transaction_type_id = transaction_type_field.what_to_persist(transaction_type_wanted)['transaction_type_id']
+        account_id = authority_repo.authority_lookup("account", account)
+        # Add the new transaction that was split off
+        line_item_dict = {}
+        line_item_dict['transaction_date'] = form['new_trans_date']
+        line_item_dict['post_date'] = form['new_trans_date']
+        line_item_dict['description'] = form['new_trans_desc']
+        line_item_dict['amount'] = new_trans_amount
+        line_item_dict['category_id'] = form['new_category']
+        line_item_dict['transaction_type_id'] = transaction_type_id
+        line_item_dict['account_id'] = account_id
+        line_item_dict['show_on_spending_report'] = 't'
+        line_item_dict['is_synthetic'] = 'f'
+        line_item = LineItem(**line_item_dict)
+        line_item_write.add_line_item(line_item)
+        return "SUCCESS"
+    else:
+        # find some way to display the errors
+        return "FAILURE"
+
+def validate_split_form(form):
+    errors = []
+    # Description is required
+    if (form['new_trans_desc'] == ""):
+        errors.append("Description is required.")
+    # New trans amount can't be zero or negative
+    new_trans_amount = Decimal(form['new_trans_amount'])
+    if new_trans_amount <= 0:
+        errors.append("New transaction amount must be greater than zero.")
+    # New trans amount can't be bigger than original trans amount
+    orig_trans_amount = Decimal(form['orig_trans_amount'])
+    if (new_trans_amount > orig_trans_amount):
+        errors.append("New transaction amount cannot be bigger than original transaction amount")
+    if not errors:
+        return True
+    else:
+        return False
+
+
 
 def translate_line_items(line_items: list[dict]) -> list[dict]:
     """
