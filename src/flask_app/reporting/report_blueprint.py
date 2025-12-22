@@ -2,7 +2,7 @@ import calendar
 import datetime
 from decimal import Decimal
 from flask import (
-    Blueprint, render_template, request
+    Blueprint, flash, render_template, request
 )
 
 from src.adapters.repositories.authority_repository import AuthorityRepository
@@ -190,55 +190,80 @@ def update():
 @bp.route('/_split_a_transaction', methods=['POST'])
 def split_a_transaction():
     # Note that the name (not id) is in the form
-    # Update the amount of the original transaction
     line_item_write = LineItemWrite()
     form = request.form
-    # For the adjusted old amount, we don't get it from the form
-     # What we do is calculate it by subtracting new transo amount from orig transo amount
-    orig_trans_amount = Decimal(form['orig_trans_amount'])
-    new_trans_amount = Decimal(form['new_trans_amount'])
-    adjusted_orig_trans_amount = orig_trans_amount - new_trans_amount
-    line_item_write.update_amount(adjusted_orig_trans_amount, form['line_item_id'])
+    form_is_valid = validate_split_form(form)
+    if form_is_valid:
+        # Update the amount of the original transaction
+        # For the adjusted old amount, we don't get it from the form
+        # What we do is calculate it by subtracting new transo amount from orig transo amount
+        orig_trans_amount = Decimal(form['orig_trans_amount'])
+        new_trans_amount = Decimal(form['new_trans_amount'])
+        adjusted_orig_trans_amount = orig_trans_amount - new_trans_amount
+        line_item_write.update_amount(adjusted_orig_trans_amount, form['line_item_id'])
 
-    # Create one new transaction
-    """
-    Create a new transaction split from the original.
-        transaction_date: Date the user input
-        post_date: Date the user input
-        description: Description the user input
-        amount: The new transaction amount the user input
-        category_id: The category ID the user input
-        transaction_type: debit
-        account_id: id for Checking
-        check_number: None
-        type_detail: None
-        comment: None
-        show_on_spending_report: true
-        is_medical_reimbursement: false
-        is_synthetic: false
-    """
-    line_item_write = LineItemWrite()
-    authority_repo = AuthorityRepository()
-    account = 'Checking'
-    transaction_type_wanted = "debit"
-    transaction_type_field = InputField.instantiate_input_field("TRANSACTION_TYPE")
-    transaction_type_id = transaction_type_field.what_to_persist(transaction_type_wanted)['transaction_type_id']
-    account_id = authority_repo.authority_lookup("account", account)
-    # Add the new transaction that was split off
-    line_item_dict = {}
-    line_item_dict['transaction_date'] = form['new_trans_date']
-    line_item_dict['post_date'] = form['new_trans_date']
-    line_item_dict['description'] = form['new_trans_desc']
-    line_item_dict['amount'] = new_trans_amount
-    line_item_dict['category_id'] = form['new_category']
-    line_item_dict['transaction_type_id'] = transaction_type_id
-    line_item_dict['account_id'] = account_id
-    line_item_dict['show_on_spending_report'] = 't'
-    line_item_dict['is_synthetic'] = 'f'
-    line_item = LineItem(**line_item_dict)
-    line_item_write.add_line_item(line_item)
-    # return render_template('report/spending.html',
-    return "SUCCESS"  # PLACEHOLDER
+        # Create one new transaction
+        """
+        Create a new transaction split from the original.
+            transaction_date: Date the user input
+            post_date: Date the user input
+            description: Description the user input
+            amount: The new transaction amount the user input
+            category_id: The category ID the user input
+            transaction_type: debit
+            account_id: id for Cash
+            check_number: None
+            type_detail: None
+            comment: None
+            show_on_spending_report: true
+            is_medical_reimbursement: false
+            is_synthetic: false
+        """
+        line_item_write = LineItemWrite()
+        authority_repo = AuthorityRepository()
+        account = 'Cash'
+        transaction_type_wanted = "debit"
+        transaction_type_field = InputField.instantiate_input_field("TRANSACTION_TYPE")
+        transaction_type_id = transaction_type_field.what_to_persist(transaction_type_wanted)['transaction_type_id']
+        account_id = authority_repo.authority_lookup("account", account)
+        # Add the new transaction that was split off
+        line_item_dict = {}
+        line_item_dict['transaction_date'] = form['new_trans_date']
+        line_item_dict['post_date'] = form['new_trans_date']
+        line_item_dict['description'] = form['new_trans_desc']
+        line_item_dict['amount'] = new_trans_amount
+        line_item_dict['category_id'] = form['new_category']
+        line_item_dict['transaction_type_id'] = transaction_type_id
+        line_item_dict['account_id'] = account_id
+        line_item_dict['show_on_spending_report'] = 't'
+        line_item_dict['is_synthetic'] = 'f'
+        line_item = LineItem(**line_item_dict)
+        line_item_write.add_line_item(line_item)
+        # return render_template('report/spending.html',
+        return "SUCCESS"  # PLACEHOLDER
+    else:
+        # find some way to display the errors
+        return "FAILURE" # PLACEHOLDER
+
+def validate_split_form(form):
+    errors = []
+    # Description is required
+    if (form['new_trans_desc'] == ""):
+        errors.append("Description is required.")
+    # New trans amount can't be zero or negative
+    new_trans_amount = Decimal(form['new_trans_amount'])
+    if new_trans_amount <= 0:
+        errors.append("New transaction amount must be greater than zero.")
+    # New trans amount can't be bigger than original trans amount
+    orig_trans_amount = Decimal(form['orig_trans_amount'])
+    if (new_trans_amount > orig_trans_amount):
+        errors.append("New transaction amount cannot be bigger than original transaction amount")
+    if not errors:
+        return True
+    else:
+        return False
+
+
 
 def translate_line_items(line_items: list[dict]) -> list[dict]:
     """
