@@ -84,6 +84,21 @@ class LineItemWrite():
         }
         db_pool.update(query, params)
 
+    def update_amount(self, new_value, id):
+        current_time = datetime.datetime.now(pytz.timezone("America/New_York"))
+        query = """
+        UPDATE line_item
+        SET amount = %(new_value)s,
+        updated = %(time)s
+        WHERE id = %(line_item_id)s
+        """
+        params = {
+            'new_value': new_value,
+            'line_item_id': id,
+            'time': current_time
+        }
+        db_pool.update(query, params)
+
     def update_category(self, new_value, id):
         category_repo = CategoryRepository()
         current_time = datetime.datetime.now(pytz.timezone("America/New_York"))
