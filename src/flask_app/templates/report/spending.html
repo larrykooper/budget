@@ -155,11 +155,12 @@
 
     function addAmountListener(line_item_id) {
         const amount_field = document.getElementById(`new_trans_amount${line_item_id}`);
+         // Complain if new Transaction Amount is > total Transaction Amoun
         amount_field.addEventListener("blur", (event) => {
             const oldAmountElement = document.getElementById(`old_trans_amount${line_item_id}`);
             const original_transaction_amount_dollars = oldAmountElement.textContent;
-            if (Number(amount_field.value) >= Number(original_transaction_amount_dollars)) {
-                amount_field.setCustomValidity("New trans amount must be less than original amount");
+            if (Number(amount_field.value) > Number(original_transaction_amount_dollars)) {
+                amount_field.setCustomValidity("New trans amount cannot be more than original amount");
             } else {
                 amount_field.setCustomValidity("");
             }
@@ -201,7 +202,6 @@
         const new_transaction_amount_dollars = newAmountElement.value;
         const total_transaction_amount_cents = total_transaction_amount_dollars * 100;
         const new_transaction_amount_cents = new_transaction_amount_dollars * 100;
-        // Complain if new TA is >= total TA
         const updated_orig_trans_amount_cents = total_transaction_amount_cents - new_transaction_amount_cents;
         const updated_orig_trans_amount_dollars = updated_orig_trans_amount_cents / 100;
         adjustedAmountElement.textContent = updated_orig_trans_amount_dollars.toFixed(2);
