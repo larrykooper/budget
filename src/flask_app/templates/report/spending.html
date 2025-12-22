@@ -90,6 +90,8 @@
                             <p><span class="old_trans_label">Category: </span>{{ line_item['cat_name'] }}</p>
                             <p><span class="old_trans_label">New parent transaction amount: </span><span id="adjusted_trans_amount{{ line_item['id'] }}"></span></p>
                         <form action="{{ url_for('report.split_a_transaction')}}" method="POST" id="split_form{{ line_item['id'] }}">
+                            <input type="hidden" id="line_item_id" name="line_item_id" value="{{ line_item['id'] }}">
+                            <input type="hidden" id="orig_trans_amount" name="orig_trans_amount" value="{{ line_item['amount']  }}"
                             <p class="trans_label new_trans_label">New transaction:</p>
                             <div class="input_container">
                                 <div>
@@ -153,10 +155,10 @@
 
     function addAmountListener(line_item_id) {
         const amount_field = document.getElementById(`new_trans_amount${line_item_id}`);
-        amount_field.addEventListener("input", (event) => {
+        amount_field.addEventListener("blur", (event) => {
             const oldAmountElement = document.getElementById(`old_trans_amount${line_item_id}`);
             const original_transaction_amount_dollars = oldAmountElement.textContent;
-            if (amount_field.value >= original_transaction_amount_dollars) {
+            if (Number(amount_field.value) >= Number(original_transaction_amount_dollars)) {
                 amount_field.setCustomValidity("New trans amount must be less than original amount");
             } else {
                 amount_field.setCustomValidity("");
