@@ -89,9 +89,11 @@
                             <span class="old_amount"><span class="old_trans_label">Amount: </span><span id="old_trans_amount{{ line_item['id'] }}">{{ line_item['amount']  }}</span></span>
                             <p><span class="old_trans_label">Category: </span>{{ line_item['cat_name'] }}</p>
                             <p><span class="old_trans_label">New parent transaction amount: </span><span id="adjusted_trans_amount{{ line_item['id'] }}"></span></p>
-                        <form action="{{ url_for('report.split_a_transaction')}}" method="POST" id="split_form{{ line_item['id'] }}">
+                        <form action="{{ url_for('report.spending')}}" method="POST" id="split_form{{ line_item['id'] }}">
                             <input type="hidden" id="line_item_id" name="line_item_id" value="{{ line_item['id'] }}">
-                            <input type="hidden" id="orig_trans_amount" name="orig_trans_amount" value="{{ line_item['amount']  }}"
+                            <input type="hidden" id="orig_trans_amount" name="orig_trans_amount" value="{{ line_item['amount']  }}">
+                            <input type="hidden" name="year" value="{{ year }}">
+                            <input type="hidden" name="month" value="{{ month }}">
                             <p class="trans_label new_trans_label">New transaction:</p>
                             <div class="input_container">
                                 <div>
