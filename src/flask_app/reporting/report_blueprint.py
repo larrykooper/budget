@@ -2,7 +2,7 @@ import calendar
 import datetime
 from decimal import Decimal
 from flask import (
-    Blueprint, flash, render_template, request
+    Blueprint, redirect, render_template, request, url_for
 )
 
 from src.adapters.repositories.authority_repository import AuthorityRepository
@@ -21,51 +21,64 @@ def report_home():
     return render_template('report/home.html')
 
 # Spending details by month
-@bp.route('/spending', methods=['GET'])
+@bp.route('/spending', methods=['GET', 'POST'])
 def spending():
-    qs = request.query_string
-    # If there is no querystring
-    if qs.decode('ASCII') == "":
-        return render_template('report/month_picker.html', path='spending')
-    else:
-        year = int(request.args.get('year'))
-        month = int(request.args.get('month'))
-        month_name = calendar.month_name[month]
-        if 'sortkey' in request.args:
-            sortkey = request.args.get('sortkey')
+    if request.method == 'GET':
+        qs = request.query_string
+        # If there is no querystring
+        if qs.decode('ASCII') == "":
+            return render_template('report/month_picker.html', path='spending')
         else:
-            sortkey = "li.transaction_date"
-        if 'direction' in request.args:
-            sort_direction = request.args.get('direction')
-        else:
-            sort_direction  = "desc"
-        sortspec = sortkey.split(".")
-        sort_table = sortspec[0]
-        sort_column = sortspec[1]
-        start_date, end_date = get_start_end(year, month)
-        line_item_select = LineItemSelect()
-        # Query the database for what we need to report
-        line_items = line_item_select.get_for_spending_report(start_date, end_date, sort_column, sort_direction, sort_table)
-        line_items_translated = translate_line_items(line_items)
-        categories = Category.categories_for_select()
-        total = line_item_select.total_spending_per_month(start_date, end_date)
-        if total['sum'] is None:
-            total['sum'] = 0
-        lm_year, lm_month, nm_year, nm_month = get_months_nav(month, year)
-        return render_template('report/spending.html',
-            line_items=line_items_translated,
-            categories=categories,
-            year=year,
-            month=month,
-            sortkey=sortkey,
-            sort_direction=sort_direction,
-            month_name=month_name,
-            total=total,
-            lm_year=lm_year,
-            lm_month=lm_month,
-            nm_year=nm_year,
-            nm_month=nm_month
+            year = int(request.args.get('year'))
+            month = int(request.args.get('month'))
+            month_name = calendar.month_name[month]
+            if 'sortkey' in request.args:
+                sortkey = request.args.get('sortkey')
+            else:
+                sortkey = "li.transaction_date"
+            if 'direction' in request.args:
+                sort_direction = request.args.get('direction')
+            else:
+                sort_direction  = "desc"
+            sortspec = sortkey.split(".")
+            sort_table = sortspec[0]
+            sort_column = sortspec[1]
+            start_date, end_date = get_start_end(year, month)
+            line_item_select = LineItemSelect()
+            # Query the database for what we need to report
+            line_items = line_item_select.get_for_spending_report(start_date, end_date, sort_column, sort_direction, sort_table)
+            line_items_translated = translate_line_items(line_items)
+            categories = Category.categories_for_select()
+            total = line_item_select.total_spending_per_month(start_date, end_date)
+            if total['sum'] is None:
+                total['sum'] = 0
+            lm_year, lm_month, nm_year, nm_month = get_months_nav(month, year)
+            return render_template('report/spending.html',
+                line_items=line_items_translated,
+                categories=categories,
+                year=year,
+                month=month,
+                sortkey=sortkey,
+                sort_direction=sort_direction,
+                month_name=month_name,
+                total=total,
+                lm_year=lm_year,
+                lm_month=lm_month,
+                nm_year=nm_year,
+                nm_month=nm_month
+            )
+    if request.method == 'POST':
+        split_a_transaction()
+        form = request.form
+        year = form['year']
+        month = form['month']
+        # do a redirect
+        redirect_url = url_for('report.spending',
+            year = year,
+            month = month
         )
+        return redirect(redirect_url)
+
 
 # Budget for year
 @bp.route('/budyear', methods=['GET'])
@@ -187,7 +200,6 @@ def update():
     return "SUCCESS"
 
 # Split a Transaction (server-side processing)
-@bp.route('/_split_a_transaction', methods=['POST'])
 def split_a_transaction():
     # Note that the name (not id) is in the form
     line_item_write = LineItemWrite()
@@ -239,11 +251,10 @@ def split_a_transaction():
         line_item_dict['is_synthetic'] = 'f'
         line_item = LineItem(**line_item_dict)
         line_item_write.add_line_item(line_item)
-        # return render_template('report/spending.html',
-        return "SUCCESS"  # PLACEHOLDER
+        return "SUCCESS"
     else:
         # find some way to display the errors
-        return "FAILURE" # PLACEHOLDER
+        return "FAILURE"
 
 def validate_split_form(form):
     errors = []
